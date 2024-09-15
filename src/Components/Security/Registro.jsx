@@ -5,10 +5,10 @@ import {
   TextField,
   Button,
   MenuItem,
-  Link,
   Grid,
   Box,
 } from "@mui/material";
+import { Link } from "react-router-dom";
 
 const Registro = () => {
   const [form, setForm] = useState({
@@ -50,7 +50,7 @@ const Registro = () => {
           Crea tu cuenta
         </Typography>
         <Typography variant="subtitle1" gutterBottom>
-          ¿Ya tienes cuenta? <Link href="/login">Inicia sesión aquí</Link>
+          ¿Ya tienes cuenta? <Link to="/login">Inicia sesión aquí</Link>
         </Typography>
         <Typography variant="subtitle1" gutterBottom>
           Completa los siguientes campos
@@ -67,8 +67,8 @@ const Registro = () => {
                 fullWidth
                 required
               >
-                <MenuItem value="admin">Admin</MenuItem>
-                <MenuItem value="user">User</MenuItem>
+                <MenuItem value="user">Usuario</MenuItem>
+                <MenuItem value="admin">Proveedor</MenuItem>
               </TextField>
             </Grid>
             <Grid item xs={12}>
@@ -81,7 +81,7 @@ const Registro = () => {
                 fullWidth
                 required
               >
-                <MenuItem value="dni">DNI</MenuItem>
+                <MenuItem value="dni">Cedula</MenuItem>
                 <MenuItem value="passport">Pasaporte</MenuItem>
                 <MenuItem value="nit">NIT</MenuItem>
               </TextField>

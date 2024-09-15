@@ -8,6 +8,8 @@ import SearchIcon from "@mui/icons-material/Search";
 import InputBase from "@mui/material/InputBase";
 import { styled, alpha } from "@mui/material/styles";
 import Button from "@mui/material/Button";
+import { Link } from "react-router-dom";
+import "./MenuAppBar.css";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -78,11 +80,21 @@ const MenuAppBar = () => {
             inputProps={{ "aria-label": "search" }}
           />
         </Search>
-        <Button color="inherit">Inicio</Button>
-        <Button color="inherit">Eventos</Button>
+        <Button color="inherit">
+          <Link className="Link" to="/" color="inherit">
+            Inicio
+          </Link>
+        </Button>
+        <Button href="/registro" color="inherit">
+          Eventos
+        </Button>
         <Button color="inherit">Conócenos</Button>
         <Button color="inherit">Centro de Ayuda</Button>
-        <Button color="inherit">Login</Button>
+        <Button color="inherit">
+          <Link className="Link" to="/login">
+            Login
+          </Link>
+        </Button>
       </Toolbar>
     </AppBar>
   );

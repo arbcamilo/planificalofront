@@ -1,15 +1,18 @@
 import React from "react";
-// import Login from './Components/Security/Login';
+import Login from "./Components/Security/Login";
 import Registro from "./Components/Security/Registro";
 import MenuAppBar from "./Components/Navegation/MenuAppBar";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 function App() {
   return (
-    <div className="App">
-      {/* <Login /> */}
+    <Router>
       <MenuAppBar />
-      <Registro />
-    </div>
+      <Routes>
+        <Route exact path="/login" element={<Login />} />
+        <Route exact path="/registro" element={<Registro />} />
+      </Routes>
+    </Router>
   );
 }
 
