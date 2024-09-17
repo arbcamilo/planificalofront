@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
@@ -9,6 +9,9 @@ import InputBase from "@mui/material/InputBase";
 import { styled, alpha } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import { Link } from "react-router-dom";
+import Brightness4Icon from "@mui/icons-material/Brightness4";
+import Brightness7Icon from "@mui/icons-material/Brightness7";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
 import "./MenuAppBar.css";
 
 const Search = styled("div")(({ theme }) => ({
@@ -52,51 +55,70 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 const MenuAppBar = () => {
+  const [darkMode, setDarkMode] = useState(false);
+  //   const theme = useTheme();
+  const darkTheme = createTheme({
+    palette: {
+      mode: darkMode ? "dark" : "light",
+    },
+  });
+
+  const handleThemeChange = () => {
+    setDarkMode(!darkMode);
+  };
+
   return (
-    <AppBar position="static">
-      <Toolbar>
-        <IconButton
-          edge="start"
-          color="inherit"
-          aria-label="open drawer"
-          sx={{ mr: 2 }}
-        >
-          <MenuIcon />
-        </IconButton>
-        <Typography
-          variant="h6"
-          noWrap
-          component="div"
-          sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}
-        >
-          LOGO
-        </Typography>
-        <Search>
-          <SearchIconWrapper>
-            <SearchIcon />
-          </SearchIconWrapper>
-          <StyledInputBase
-            placeholder="Buscar…"
-            inputProps={{ "aria-label": "search" }}
-          />
-        </Search>
-        <Button color="inherit">
-          <Link className="Link" to="/" color="inherit">
-            Inicio
-          </Link>
-        </Button>
-        <Button href="/registro" color="inherit">
-          Eventos
-        </Button>
-        <Button color="inherit">Conócenos</Button>
-        <Button color="inherit">Centro de Ayuda</Button>
-        <Button color="inherit">
-          <Link className="Link" to="/login">
-            Login
-          </Link>
-        </Button>
-      </Toolbar>
-    </AppBar>
+    <ThemeProvider theme={darkTheme}>
+      <AppBar position="static">
+        <Toolbar>
+          <IconButton
+            edge="start"
+            color="inherit"
+            aria-label="open drawer"
+            sx={{ mr: 2 }}
+          >
+            <MenuIcon />
+          </IconButton>
+          <Typography
+            variant="h6"
+            noWrap
+            component="div"
+            sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}
+          >
+            LOGO
+          </Typography>
+          <Search>
+            <SearchIconWrapper>
+              <SearchIcon />
+            </SearchIconWrapper>
+            <StyledInputBase
+              placeholder="Buscar eventos"
+              inputProps={{ "aria-label": "search" }}
+            />
+          </Search>
+          <Button color="inherit">
+            <Link className="Link" to="/" color="inherit">
+              Inicio
+            </Link>
+          </Button>
+          <Button color="inherit">
+            <Link className="Link" to="/eventosprivados">
+              Eventos
+            </Link>
+          </Button>
+          <Button color="inherit">Conócenos</Button>
+          <Button color="inherit">Centro de Ayuda</Button>
+          <Button color="inherit">
+            <Link className="Link" to="/login">
+              Login
+            </Link>
+          </Button>
+          <IconButton color="inherit" onClick={handleThemeChange}>
+            {darkMode ? <Brightness7Icon /> : <Brightness4Icon />}
+          </IconButton>
+        </Toolbar>
+      </AppBar>
+    </ThemeProvider>
   );
 };
 
