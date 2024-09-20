@@ -1,14 +1,13 @@
 import React, { useState } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { ThemeProvider } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+import { createMyTheme } from "./styles/Theme";
+import NavBar from "./Components/Navegation/NavBar";
 import Login from "./Components/Security/Login";
 import Registro from "./Components/Security/Registro";
-import MenuAppBar from "./Components/Navegation/MenuAppBar";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import EventosPrivados from "./Components/Events/EventosPrivados";
 import Inicio from "./Components/Home/Inicio";
-import { ThemeProvider } from "@mui/material/styles";
-import { createMyTheme } from "./styles/Theme";
-import CssBaseline from "@mui/material/CssBaseline";
-// import OtherComponent from "./Components/OtherComponent";
 
 function App() {
   const [mode, setMode] = useState("light");
@@ -23,13 +22,24 @@ function App() {
     <Router>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <MenuAppBar toggleTheme={toggleTheme} />
-        <Routes>
-          <Route exact path="/login" element={<Login />} />
-          <Route exact path="/registro" element={<Registro />} />
-          <Route exact path="/eventosprivados" element={<EventosPrivados />} />
-          <Route path="/" element={<Inicio />} />
-        </Routes>
+        <NavBar toggleTheme={toggleTheme} mode={mode} />
+        <main
+          style={{
+            padding: "16px",
+            marginTop: "64px", // Ajuste para la altura del AppBar
+          }}
+        >
+          <Routes>
+            <Route exact path="/login" element={<Login />} />
+            <Route exact path="/registro" element={<Registro />} />
+            <Route
+              exact
+              path="/eventosprivados"
+              element={<EventosPrivados />}
+            />
+            <Route path="/" element={<Inicio />} />
+          </Routes>
+        </main>
       </ThemeProvider>
     </Router>
   );
