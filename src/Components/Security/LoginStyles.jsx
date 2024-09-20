@@ -18,10 +18,6 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: theme.shape.borderRadius,
     boxShadow: theme.shadows[5],
   },
-  link: {
-    textDecoration: "none",
-    color: "white",
-  },
 }));
 
 export default useStyles;

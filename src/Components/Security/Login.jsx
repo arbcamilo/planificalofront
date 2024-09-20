@@ -23,7 +23,7 @@ const Login = () => {
           <PersonIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Inicia Sesión
+          Iniciar Sesión
         </Typography>
         <Box component="form" noValidate sx={{ mt: 1 }}>
           <TextField
@@ -62,14 +62,14 @@ const Login = () => {
             </Grid>
           </Grid>
           <Button
-            type="submit"
+            color="primary"
+            component={Link}
+            to="/registro"
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
           >
-            <Link className={classes.link} to="/registro">
-              Registrarse
-            </Link>
+            Registrarse
           </Button>
         </Box>
       </Box>
