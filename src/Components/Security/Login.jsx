@@ -11,27 +11,14 @@ import {
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import PersonIcon from "@mui/icons-material/Person";
+import useStyles from "./LoginStyles";
 
 const Login = () => {
+  const classes = useStyles();
   return (
-    <Container
-      component="main"
-      maxWidth="xs"
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        height: "100vh",
-      }}
-    >
+    <Container component="main" maxWidth="xs" className={classes.container}>
       <CssBaseline />
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
+      <Box className={classes.box}>
         <Avatar sx={{ m: 1, bgcolor: "primary.main" }}>
           <PersonIcon />
         </Avatar>
@@ -80,7 +67,7 @@ const Login = () => {
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
           >
-            <Link className="Link" to="/registro">
+            <Link className={classes.link} to="/registro">
               Registrarse
             </Link>
           </Button>
