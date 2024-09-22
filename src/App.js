@@ -8,6 +8,7 @@ import Login from "./Components/Security/Login";
 import Registro from "./Components/Security/Registro";
 import EventosPrivados from "./Components/Events/EventosPrivados";
 import Inicio from "./Components/Home/Inicio";
+import Proveedores from "./Components/Proveedores/Proveedores";
 
 function App() {
   const [mode, setMode] = useState("light");
@@ -38,6 +39,7 @@ function App() {
               element={<EventosPrivados />}
             />
             <Route path="/" element={<Inicio />} />
+            <Route path="/proveedores" element={<Proveedores />} />
           </Routes>
         </main>
       </ThemeProvider>
