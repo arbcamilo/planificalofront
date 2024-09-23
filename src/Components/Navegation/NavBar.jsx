@@ -12,7 +12,7 @@ import {
 import HomeIcon from "@mui/icons-material/Home";
 import EventIcon from "@mui/icons-material/Event";
 import InfoIcon from "@mui/icons-material/Info";
-import HelpIcon from "@mui/icons-material/Help";
+import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
 import { Link } from "react-router-dom";
@@ -42,30 +42,30 @@ const NavBar = ({ toggleTheme, mode }) => {
             <HomeIcon sx={{ marginRight: 1 }} />
             Inicio
           </Button>
-          <Button color="inherit" onClick={handleMenu}>
+          <Button color="inherit" component={Link} to="/eventosprivados">
             <EventIcon sx={{ marginRight: 1 }} />
             Eventos
+          </Button>
+          <Button color="inherit" component={Link} to="/conocenos">
+            <InfoIcon sx={{ marginRight: 1 }} />
+            Conócenos
+          </Button>
+          <Button color="inherit" onClick={handleMenu}>
+            <AdminPanelSettingsIcon sx={{ marginRight: 1 }} />
+            ADMIN
           </Button>
           <Menu
             anchorEl={anchorEl}
             open={Boolean(anchorEl)}
             onClose={handleClose}
           >
-            <MenuItem component={Link} to="/eventosprivados">
-              <ListItemText primary="Eventos Privados" />
+            <MenuItem component={Link} to="/proveedores">
+              <ListItemText primary="Proveedores" />
             </MenuItem>
-            <MenuItem component={Link} to="/eventospublicos">
-              <ListItemText primary="Eventos Públicos" />
+            <MenuItem component={Link} to="/usuarios">
+              <ListItemText primary="Usuarios" />
             </MenuItem>
           </Menu>
-          <Button color="inherit" component={Link} to="/conocenos">
-            <InfoIcon sx={{ marginRight: 1 }} />
-            Conócenos
-          </Button>
-          <Button color="inherit" component={Link} to="/centrodeayuda">
-            <HelpIcon sx={{ marginRight: 1 }} />
-            Centro de Ayuda
-          </Button>
         </Box>
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <Button color="inherit" component={Link} to="/login">
