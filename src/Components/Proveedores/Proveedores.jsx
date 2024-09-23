@@ -1,7 +1,6 @@
 // src/Components/Proveedores/Proveedores.jsx
 import React, { useState, useEffect } from "react";
 import {
-  Container,
   Table,
   TableBody,
   TableCell,
@@ -10,7 +9,7 @@ import {
   TableRow,
   TablePagination,
   Paper,
-  Typography,
+  Button,
 } from "@mui/material";
 import axios from "../../axiosConfig";
 
@@ -46,23 +45,33 @@ const Proveedores = () => {
   };
 
   return (
-    <Container>
-      <Typography variant="h4" gutterBottom>
-        Proveedores
-      </Typography>
+    <Paper>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <h1>Proveedores</h1>
+        <Button
+          variant="contained"
+          color="primary"
+          style={{ marginBottom: 16 }}
+        >
+          Crear Proveedor
+        </Button>
+      </div>
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
             <TableRow>
               <TableCell>Nombre</TableCell>
-              <TableCell>País</TableCell>
-              <TableCell>Departamento</TableCell>
               <TableCell>Ciudad</TableCell>
               <TableCell>Dirección</TableCell>
               <TableCell>Email</TableCell>
               <TableCell>Teléfono</TableCell>
               <TableCell>Estado</TableCell>
-              <TableCell>Calificación</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -71,14 +80,23 @@ const Proveedores = () => {
               .map((proveedor) => (
                 <TableRow key={proveedor.id}>
                   <TableCell>{proveedor.nombre}</TableCell>
-                  <TableCell>{proveedor.pais}</TableCell>
-                  <TableCell>{proveedor.departamento}</TableCell>
                   <TableCell>{proveedor.ciudad}</TableCell>
                   <TableCell>{proveedor.direccion}</TableCell>
                   <TableCell>{proveedor.email}</TableCell>
                   <TableCell>{proveedor.telefonoContacto}</TableCell>
                   <TableCell>{proveedor.estado}</TableCell>
-                  <TableCell>{proveedor.calificacion}</TableCell>
+                  <TableCell>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      style={{ marginRight: 8 }}
+                    >
+                      Editar
+                    </Button>
+                    <Button variant="contained" color="error">
+                      Eliminar
+                    </Button>
+                  </TableCell>
                 </TableRow>
               ))}
           </TableBody>
@@ -93,7 +111,7 @@ const Proveedores = () => {
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
-    </Container>
+    </Paper>
   );
 };
 
