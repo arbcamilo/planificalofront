@@ -14,7 +14,6 @@ import {
   TextField,
   Button,
   Dialog,
-  DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
@@ -109,7 +108,7 @@ const Proveedores = () => {
       esPersonaNatural: true,
       estado: "Activo",
       calificacion: 0,
-      tipoDocumento: "CC",
+      tipoDocumento: "NIT",
       documentoIdentidad: "",
     });
   };
@@ -213,6 +212,24 @@ const Proveedores = () => {
           </DialogContentText>
           <form onSubmit={handleSubmit}>
             <TextField
+              margin="dense"
+              name="tipoDocumento"
+              label="Tipo de Documento"
+              type="text"
+              fullWidth
+              value={newProveedor.tipoDocumento}
+              onChange={handleInputChange}
+            />
+            <TextField
+              margin="dense"
+              name="documentoIdentidad"
+              label="Numero de Documento"
+              type="text"
+              fullWidth
+              value={newProveedor.documentoIdentidad}
+              onChange={handleInputChange}
+            />
+            <TextField
               autoFocus
               margin="dense"
               name="nombre"
@@ -276,34 +293,27 @@ const Proveedores = () => {
               value={newProveedor.telefonoContacto}
               onChange={handleInputChange}
             />
-            <TextField
-              margin="dense"
-              name="tipoDocumento"
-              label="Tipo de Documento"
-              type="text"
-              fullWidth
-              value={newProveedor.tipoDocumento}
-              onChange={handleInputChange}
-            />
-            <TextField
-              margin="dense"
-              name="documentoIdentidad"
-              label="Documento de Identidad"
-              type="text"
-              fullWidth
-              value={newProveedor.documentoIdentidad}
-              onChange={handleInputChange}
-            />
-            <Button type="submit" color="primary">
-              {editMode ? "Actualizar" : "Crear"}
-            </Button>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                gap: "10px",
+                marginTop: "20px",
+              }}
+            >
+              <Button
+                onClick={handleClose}
+                color="secondary"
+                variant="outlined"
+              >
+                Cancelar
+              </Button>
+              <Button type="submit" color="primary" variant="contained">
+                {editMode ? "Actualizar" : "Crear"}
+              </Button>
+            </div>
           </form>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            Cancelar
-          </Button>
-        </DialogActions>
       </Dialog>
       <TableContainer component={Paper}>
         <Table>
@@ -327,10 +337,10 @@ const Proveedores = () => {
                   <TableCell>
                     <div style={{ display: "flex", gap: "2px" }}>
                       <IconButton onClick={() => handleEdit(proveedor)}>
-                        <Edit />
+                        <Edit color="primary" />
                       </IconButton>
                       <IconButton onClick={() => handleDelete(proveedor.id)}>
-                        <Delete />
+                        <Delete color="error" />
                       </IconButton>
                     </div>
                   </TableCell>
