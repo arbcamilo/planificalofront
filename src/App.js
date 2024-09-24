@@ -1,24 +1,49 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { ThemeProvider } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+import { createMyTheme } from "./styles/Theme";
+import NavBar from "./Components/Navegation/NavBar";
+import Login from "./Components/Security/Login";
+import Registro from "./Components/Security/Registro";
+import EventosPrivados from "./Components/Events/EventosPrivados";
+import Inicio from "./Components/Home/Inicio";
+import Proveedores from "./Components/Proveedores/Proveedores";
 
 function App() {
+  const [mode, setMode] = useState("light");
+
+  const toggleTheme = () => {
+    setMode((prevMode) => (prevMode === "light" ? "dark" : "light"));
+  };
+
+  const theme = createMyTheme(mode);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+    <Router>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <NavBar toggleTheme={toggleTheme} mode={mode} />
+        <main
+          style={{
+            padding: "16px",
+            marginTop: "64px", // Ajuste para la altura del AppBar
+          }}
         >
-          Learn React
-        </a>
-      </header>
-    </div>
+          <Routes>
+            <Route exact path="/login" element={<Login />} />
+            <Route exact path="/registro" element={<Registro />} />
+            <Route
+              exact
+              path="/eventosprivados"
+              element={<EventosPrivados />}
+            />
+            <Route path="/" element={<Inicio />} />
+            <Route path="/proveedores" element={<Proveedores />} />
+          </Routes>
+        </main>
+      </ThemeProvider>
+    </Router>
   );
 }
 
