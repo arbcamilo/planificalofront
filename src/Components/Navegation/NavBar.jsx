@@ -69,7 +69,7 @@ const NavBar = ({ toggleTheme, mode }) => {
         </Box>
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <Button color="inherit" component={Link} to="/login">
-            Login
+            Iniciar Sesión
           </Button>
           <Button color="inherit" component={Link} to="/registro">
             Crear Cuenta

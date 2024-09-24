@@ -219,6 +219,7 @@ const Proveedores = () => {
               fullWidth
               value={newProveedor.tipoDocumento}
               onChange={handleInputChange}
+              InputLabelProps={{ style: { fontWeight: "bold" } }}
             />
             <TextField
               margin="dense"
@@ -228,6 +229,7 @@ const Proveedores = () => {
               fullWidth
               value={newProveedor.documentoIdentidad}
               onChange={handleInputChange}
+              InputLabelProps={{ style: { fontWeight: "bold" } }}
             />
             <TextField
               autoFocus
@@ -238,6 +240,7 @@ const Proveedores = () => {
               fullWidth
               value={newProveedor.nombre}
               onChange={handleInputChange}
+              InputLabelProps={{ style: { fontWeight: "bold" } }}
             />
             <TextField
               margin="dense"
@@ -247,6 +250,7 @@ const Proveedores = () => {
               fullWidth
               value={newProveedor.pais}
               onChange={handleInputChange}
+              InputLabelProps={{ style: { fontWeight: "bold" } }}
             />
             <TextField
               margin="dense"
@@ -256,6 +260,7 @@ const Proveedores = () => {
               fullWidth
               value={newProveedor.departamento}
               onChange={handleInputChange}
+              InputLabelProps={{ style: { fontWeight: "bold" } }}
             />
             <TextField
               margin="dense"
@@ -265,6 +270,7 @@ const Proveedores = () => {
               fullWidth
               value={newProveedor.ciudad}
               onChange={handleInputChange}
+              InputLabelProps={{ style: { fontWeight: "bold" } }}
             />
             <TextField
               margin="dense"
@@ -274,6 +280,7 @@ const Proveedores = () => {
               fullWidth
               value={newProveedor.direccion}
               onChange={handleInputChange}
+              InputLabelProps={{ style: { fontWeight: "bold" } }}
             />
             <TextField
               margin="dense"
@@ -283,6 +290,7 @@ const Proveedores = () => {
               fullWidth
               value={newProveedor.email}
               onChange={handleInputChange}
+              InputLabelProps={{ style: { fontWeight: "bold" } }}
             />
             <TextField
               margin="dense"
@@ -292,6 +300,7 @@ const Proveedores = () => {
               fullWidth
               value={newProveedor.telefonoContacto}
               onChange={handleInputChange}
+              InputLabelProps={{ style: { fontWeight: "bold" } }}
             />
             <div
               style={{
@@ -320,13 +329,27 @@ const Proveedores = () => {
           <TableHead>
             <TableRow>
               <TableCell></TableCell>
-              <TableCell>Nombre</TableCell>
-              <TableCell>TD</TableCell>
-              <TableCell>Numero </TableCell>
-              <TableCell>Ciudad</TableCell>
-              <TableCell>Email</TableCell>
-              <TableCell>Teléfono</TableCell>
-              <TableCell>Estado</TableCell>
+              <TableCell>
+                <strong>Nombre</strong>
+              </TableCell>
+              <TableCell>
+                <strong>TD</strong>
+              </TableCell>
+              <TableCell>
+                <strong>Numero</strong>
+              </TableCell>
+              <TableCell>
+                <strong>Ciudad</strong>
+              </TableCell>
+              <TableCell>
+                <strong>Email</strong>
+              </TableCell>
+              <TableCell>
+                <strong>Teléfono</strong>
+              </TableCell>
+              <TableCell>
+                <strong>Estado</strong>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
