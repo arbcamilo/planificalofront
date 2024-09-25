@@ -14,7 +14,6 @@ import {
   TextField,
   Button,
   Dialog,
-  DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
@@ -109,7 +108,7 @@ const Proveedores = () => {
       esPersonaNatural: true,
       estado: "Activo",
       calificacion: 0,
-      tipoDocumento: "CC",
+      tipoDocumento: "NIT",
       documentoIdentidad: "",
     });
   };
@@ -213,6 +212,26 @@ const Proveedores = () => {
           </DialogContentText>
           <form onSubmit={handleSubmit}>
             <TextField
+              margin="dense"
+              name="tipoDocumento"
+              label="Tipo de Documento"
+              type="text"
+              fullWidth
+              value={newProveedor.tipoDocumento}
+              onChange={handleInputChange}
+              InputLabelProps={{ style: { fontWeight: "bold" } }}
+            />
+            <TextField
+              margin="dense"
+              name="documentoIdentidad"
+              label="Numero de Documento"
+              type="text"
+              fullWidth
+              value={newProveedor.documentoIdentidad}
+              onChange={handleInputChange}
+              InputLabelProps={{ style: { fontWeight: "bold" } }}
+            />
+            <TextField
               autoFocus
               margin="dense"
               name="nombre"
@@ -221,6 +240,7 @@ const Proveedores = () => {
               fullWidth
               value={newProveedor.nombre}
               onChange={handleInputChange}
+              InputLabelProps={{ style: { fontWeight: "bold" } }}
             />
             <TextField
               margin="dense"
@@ -230,6 +250,7 @@ const Proveedores = () => {
               fullWidth
               value={newProveedor.pais}
               onChange={handleInputChange}
+              InputLabelProps={{ style: { fontWeight: "bold" } }}
             />
             <TextField
               margin="dense"
@@ -239,6 +260,7 @@ const Proveedores = () => {
               fullWidth
               value={newProveedor.departamento}
               onChange={handleInputChange}
+              InputLabelProps={{ style: { fontWeight: "bold" } }}
             />
             <TextField
               margin="dense"
@@ -248,6 +270,7 @@ const Proveedores = () => {
               fullWidth
               value={newProveedor.ciudad}
               onChange={handleInputChange}
+              InputLabelProps={{ style: { fontWeight: "bold" } }}
             />
             <TextField
               margin="dense"
@@ -257,6 +280,7 @@ const Proveedores = () => {
               fullWidth
               value={newProveedor.direccion}
               onChange={handleInputChange}
+              InputLabelProps={{ style: { fontWeight: "bold" } }}
             />
             <TextField
               margin="dense"
@@ -266,6 +290,7 @@ const Proveedores = () => {
               fullWidth
               value={newProveedor.email}
               onChange={handleInputChange}
+              InputLabelProps={{ style: { fontWeight: "bold" } }}
             />
             <TextField
               margin="dense"
@@ -275,48 +300,56 @@ const Proveedores = () => {
               fullWidth
               value={newProveedor.telefonoContacto}
               onChange={handleInputChange}
+              InputLabelProps={{ style: { fontWeight: "bold" } }}
             />
-            <TextField
-              margin="dense"
-              name="tipoDocumento"
-              label="Tipo de Documento"
-              type="text"
-              fullWidth
-              value={newProveedor.tipoDocumento}
-              onChange={handleInputChange}
-            />
-            <TextField
-              margin="dense"
-              name="documentoIdentidad"
-              label="Documento de Identidad"
-              type="text"
-              fullWidth
-              value={newProveedor.documentoIdentidad}
-              onChange={handleInputChange}
-            />
-            <Button type="submit" color="primary">
-              {editMode ? "Actualizar" : "Crear"}
-            </Button>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                gap: "10px",
+                marginTop: "20px",
+              }}
+            >
+              <Button
+                onClick={handleClose}
+                color="secondary"
+                variant="outlined"
+              >
+                Cancelar
+              </Button>
+              <Button type="submit" color="primary" variant="contained">
+                {editMode ? "Actualizar" : "Crear"}
+              </Button>
+            </div>
           </form>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            Cancelar
-          </Button>
-        </DialogActions>
       </Dialog>
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
             <TableRow>
               <TableCell></TableCell>
-              <TableCell>Nombre</TableCell>
-              <TableCell>TD</TableCell>
-              <TableCell>Numero </TableCell>
-              <TableCell>Ciudad</TableCell>
-              <TableCell>Email</TableCell>
-              <TableCell>Teléfono</TableCell>
-              <TableCell>Estado</TableCell>
+              <TableCell>
+                <strong>Nombre</strong>
+              </TableCell>
+              <TableCell>
+                <strong>TD</strong>
+              </TableCell>
+              <TableCell>
+                <strong>Numero</strong>
+              </TableCell>
+              <TableCell>
+                <strong>Ciudad</strong>
+              </TableCell>
+              <TableCell>
+                <strong>Email</strong>
+              </TableCell>
+              <TableCell>
+                <strong>Teléfono</strong>
+              </TableCell>
+              <TableCell>
+                <strong>Estado</strong>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -327,10 +360,10 @@ const Proveedores = () => {
                   <TableCell>
                     <div style={{ display: "flex", gap: "2px" }}>
                       <IconButton onClick={() => handleEdit(proveedor)}>
-                        <Edit />
+                        <Edit color="primary" />
                       </IconButton>
                       <IconButton onClick={() => handleDelete(proveedor.id)}>
-                        <Delete />
+                        <Delete color="error" />
                       </IconButton>
                     </div>
                   </TableCell>
