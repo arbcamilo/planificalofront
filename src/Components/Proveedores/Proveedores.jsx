@@ -1,4 +1,3 @@
-// src/Components/Proveedores/Proveedores.jsx
 import React, { useState, useEffect } from "react";
 import {
   Container,
@@ -19,6 +18,8 @@ import {
   DialogTitle,
   IconButton,
   InputAdornment,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import { Edit, Delete, FilterList } from "@mui/icons-material";
 import {
@@ -27,9 +28,6 @@ import {
   updateProveedor,
   deleteProveedor,
 } from "./ProveedoresServices";
-
-// El componente utiliza varios estados para manejar la paginación, los datos de los proveedores, el filtro de búsqueda, el estado del diálogo (abierto o cerrado),
-// el modo de edición, el proveedor seleccionado y los datos del nuevo proveedor.
 
 const Proveedores = () => {
   const [page, setPage] = useState(0);
@@ -54,9 +52,8 @@ const Proveedores = () => {
     tipoDocumento: "CC",
     documentoIdentidad: "",
   });
-
-  //Este efecto se ejecuta una vez cuando el componente se monta y llama a la función fetchProveedores para obtener la lista de proveedores desde la API.
-  // Luego, actualiza el estado dataProveedores con los datos obtenidos.
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
 
   useEffect(() => {
     const getProveedores = async () => {
@@ -76,8 +73,6 @@ const Proveedores = () => {
     );
   }, [filter, dataProveedores]);
 
-  // Estas funciones manejan los cambios de página y el número de filas por página en la tabla de proveedores.
-
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -86,8 +81,6 @@ const Proveedores = () => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
-
-  // Estas funciones manejan la apertura y cierre del diálogo de creación/edición de proveedores, así como la creación y actualización de proveedores.
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -113,15 +106,10 @@ const Proveedores = () => {
     });
   };
 
-  // Esta función maneja los cambios en los campos del formulario de creación/edición de proveedores.
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewProveedor({ ...newProveedor, [name]: value });
   };
-
-  // Esta función maneja el envío del formulario para crear o actualizar un proveedor. Dependiendo del modo (editMode),
-  // llama a updateProveedor o createProveedor y actualiza el estado dataProveedores en consecuencia.
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -136,19 +124,20 @@ const Proveedores = () => {
             prov.id === selectedProveedor.id ? updatedProveedor : prov
           )
         );
+        setSnackbarMessage("Proveedor actualizado exitosamente");
+        setSnackbarOpen(true);
         handleClose();
       }
     } else {
       const createdProveedor = await createProveedor(newProveedor);
       if (createdProveedor) {
         setDataProveedores([...dataProveedores, createdProveedor]);
+        setSnackbarMessage("Proveedor creado exitosamente");
+        setSnackbarOpen(true);
         handleClose();
       }
     }
   };
-
-  // Estas funciones manejan la edición y eliminación de proveedores. handleEdit abre el diálogo en modo de edición
-  // y handleDelete elimina un proveedor llamando a la API y actualizando el estado dataProveedores.
 
   const handleEdit = (proveedor) => {
     setSelectedProveedor(proveedor);
@@ -164,13 +153,14 @@ const Proveedores = () => {
     }
   };
 
-  // Esta función maneja el cambio en el filtro de búsqueda.
-
   const handleFilterChange = (e) => {
     setFilter(e.target.value);
   };
 
-  // Finalmente, el componente renderiza una tabla con los datos de los proveedores, un botón para crear un nuevo proveedor y un diálogo para crear/editar proveedores.
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
+
   return (
     <Container>
       <div
@@ -388,6 +378,19 @@ const Proveedores = () => {
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+      >
+        <Alert
+          onClose={handleSnackbarClose}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 };
