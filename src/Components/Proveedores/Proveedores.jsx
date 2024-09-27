@@ -16,6 +16,7 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  DialogActions,
   IconButton,
   InputAdornment,
   Snackbar,
@@ -54,6 +55,8 @@ const Proveedores = () => {
   });
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [deleteProveedorId, setDeleteProveedorId] = useState(null);
 
   useEffect(() => {
     const getProveedores = async () => {
@@ -150,7 +153,10 @@ const Proveedores = () => {
     const success = await deleteProveedor(id);
     if (success) {
       setDataProveedores(dataProveedores.filter((prov) => prov.id !== id));
+      setSnackbarMessage("Proveedor eliminado exitosamente");
+      setSnackbarOpen(true);
     }
+    setDeleteDialogOpen(false);
   };
 
   const handleFilterChange = (e) => {
@@ -159,6 +165,16 @@ const Proveedores = () => {
 
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
+  };
+
+  const handleDeleteDialogOpen = (id) => {
+    setDeleteProveedorId(id);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteDialogClose = () => {
+    setDeleteDialogOpen(false);
+    setDeleteProveedorId(null);
   };
 
   return (
@@ -314,6 +330,26 @@ const Proveedores = () => {
           </form>
         </DialogContent>
       </Dialog>
+      <Dialog open={deleteDialogOpen} onClose={handleDeleteDialogClose}>
+        <DialogTitle>Confirmar Eliminación</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            ¿Estás seguro de que deseas eliminar este proveedor?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDeleteDialogClose} color="secondary">
+            Cancelar
+          </Button>
+          <Button
+            onClick={() => handleDelete(deleteProveedorId)}
+            color="primary"
+            variant="contained"
+          >
+            Eliminar
+          </Button>
+        </DialogActions>
+      </Dialog>
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -352,7 +388,9 @@ const Proveedores = () => {
                       <IconButton onClick={() => handleEdit(proveedor)}>
                         <Edit color="primary" />
                       </IconButton>
-                      <IconButton onClick={() => handleDelete(proveedor.id)}>
+                      <IconButton
+                        onClick={() => handleDeleteDialogOpen(proveedor.id)}
+                      >
                         <Delete color="error" />
                       </IconButton>
                     </div>
