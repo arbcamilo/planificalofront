@@ -27,12 +27,14 @@ import {
   updateProveedor,
   deleteProveedor,
 } from "./ProveedoresServices";
+import { useTranslation } from "react-i18next";
 
 // El componente utiliza varios estados para manejar la paginación, los datos de los proveedores, el filtro de búsqueda, el estado del diálogo (abierto o cerrado),
 // el modo de edición, el proveedor seleccionado y los datos del nuevo proveedor.
 
 const Proveedores = () => {
   const [page, setPage] = useState(0);
+  const { t } = useTranslation();
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [dataProveedores, setDataProveedores] = useState([]);
   const [filteredProveedores, setFilteredProveedores] = useState([]);
@@ -182,7 +184,7 @@ const Proveedores = () => {
         }}
       >
         <Typography variant="h4" gutterBottom>
-          Proveedores
+          {t("provider")}
         </Typography>
         <TextField
           label="Filtrar por nombre"
