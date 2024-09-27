@@ -29,9 +29,11 @@ import {
   updateProveedor,
   deleteProveedor,
 } from "./ProveedoresServices";
+import { useTranslation } from "react-i18next";
 
 const Proveedores = () => {
   const [page, setPage] = useState(0);
+  const { t } = useTranslation();
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [dataProveedores, setDataProveedores] = useState([]);
   const [filteredProveedores, setFilteredProveedores] = useState([]);
@@ -188,7 +190,7 @@ const Proveedores = () => {
         }}
       >
         <Typography variant="h4" gutterBottom>
-          Proveedores
+          {t("provider")}
         </Typography>
         <TextField
           label="Filtrar por nombre"
