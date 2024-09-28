@@ -67,15 +67,15 @@ const NavBar = ({ toggleTheme, mode }) => {
           </Box>
           <Button color="inherit" component={Link} to="/">
             <HomeIcon sx={{ marginRight: 1 }} />
-            Inicio
+            {t("home")}
           </Button>
           <Button color="inherit" component={Link} to="/eventosprivados">
             <EventIcon sx={{ marginRight: 1 }} />
-            Eventos
+            {t("events")}
           </Button>
           <Button color="inherit" component={Link} to="/conocenos">
             <InfoIcon sx={{ marginRight: 1 }} />
-            Conócenos
+            {t("knowUs")}
           </Button>
           <Button color="inherit" onClick={handleMenu}>
             <AdminPanelSettingsIcon sx={{ marginRight: 1 }} />
@@ -102,7 +102,7 @@ const NavBar = ({ toggleTheme, mode }) => {
             {t("login")}
           </Button>
           <Button color="inherit" component={Link} to="/registro">
-            Crear Cuenta
+            {t("createAccount")}
           </Button>
           <IconButton color="inherit" onClick={toggleTheme}>
             {mode === "dark" ? <Brightness7Icon /> : <Brightness4Icon />}

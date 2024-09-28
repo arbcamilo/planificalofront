@@ -24,59 +24,55 @@ import {
 } from "@mui/material";
 import { Edit, Delete, FilterList } from "@mui/icons-material";
 import {
-  fetchProveedores,
-  createProveedor,
-  updateProveedor,
-  deleteProveedor,
-} from "./ProveedoresServices";
+  fetchUsuarios,
+  createUsuario,
+  updateUsuario,
+  deleteUsuario,
+} from "./UsuariosServices";
 import { useTranslation } from "react-i18next";
 
-const Proveedores = () => {
+const Usuarios = () => {
   const [page, setPage] = useState(0);
   const { t } = useTranslation();
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [dataProveedores, setDataProveedores] = useState([]);
-  const [filteredProveedores, setFilteredProveedores] = useState([]);
+  const [dataUsuarios, setDataUsuarios] = useState([]);
+  const [filteredUsuarios, setFilteredUsuarios] = useState([]);
   const [filter, setFilter] = useState("");
   const [open, setOpen] = useState(false);
   const [editMode, setEditMode] = useState(false);
-  const [selectedProveedor, setSelectedProveedor] = useState(null);
-  const [newProveedor, setNewProveedor] = useState({
-    nombre: "",
-    pais: "",
-    departamento: "",
-    ciudad: "",
-    direccion: "",
-    email: "",
-    telefonoContacto: "",
-    esPersonaNatural: true,
-    estado: "Activo",
-    calificacion: 0,
+  const [selectedUsuario, setSelectedUsuario] = useState(null);
+  const [newUsuario, setNewUsuario] = useState({
     tipoDocumento: "CC",
     documentoIdentidad: "",
+    nombre: "",
+    email: "",
+    telefono: "",
+    estadoUsuario: "Activo",
+    fechaNacimiento: "27/09/2024",
+    fechaCreacionCuenta: "27/09/2024",
   });
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [deleteProveedorId, setDeleteProveedorId] = useState(null);
+  const [deleteUsuarioId, setDeleteUsuarioId] = useState(null);
 
   useEffect(() => {
-    const getProveedores = async () => {
-      const proveedores = await fetchProveedores();
-      setDataProveedores(proveedores);
-      setFilteredProveedores(proveedores);
+    const getUsuarios = async () => {
+      const usuarios = await fetchUsuarios();
+      setDataUsuarios(usuarios);
+      setFilteredUsuarios(usuarios);
     };
 
-    getProveedores();
+    getUsuarios();
   }, []);
 
   useEffect(() => {
-    setFilteredProveedores(
-      dataProveedores.filter((prov) =>
+    setFilteredUsuarios(
+      dataUsuarios.filter((prov) =>
         prov.nombre.toLowerCase().includes(filter.toLowerCase())
       )
     );
-  }, [filter, dataProveedores]);
+  }, [filter, dataUsuarios]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -94,68 +90,64 @@ const Proveedores = () => {
   const handleClose = () => {
     setOpen(false);
     setEditMode(false);
-    setSelectedProveedor(null);
-    setNewProveedor({
-      nombre: "",
-      pais: "",
-      departamento: "",
-      ciudad: "",
-      direccion: "",
-      email: "",
-      telefonoContacto: "",
-      esPersonaNatural: true,
-      estado: "Activo",
-      calificacion: 0,
-      tipoDocumento: "NIT",
+    setSelectedUsuario(null);
+    setNewUsuario({
+      tipoDocumento: "CC",
       documentoIdentidad: "",
+      nombre: "",
+      email: "",
+      telefono: "",
+      estadoUsuario: "Activo",
+      fechaNacimiento: "27/09/2024",
+      fechaCreacionCuenta: "27/09/2024",
     });
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setNewProveedor({ ...newProveedor, [name]: value });
+    setNewUsuario({ ...newUsuario, [name]: value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (editMode) {
-      const updatedProveedor = await updateProveedor(
-        selectedProveedor.id,
-        newProveedor
+      const updatedUsuario = await updateUsuario(
+        selectedUsuario.id,
+        newUsuario
       );
-      if (updatedProveedor) {
-        setDataProveedores(
-          dataProveedores.map((prov) =>
-            prov.id === selectedProveedor.id ? updatedProveedor : prov
+      if (updatedUsuario) {
+        setDataUsuarios(
+          dataUsuarios.map((prov) =>
+            prov.id === selectedUsuario.id ? updatedUsuario : prov
           )
         );
-        setSnackbarMessage("Proveedor actualizado exitosamente");
+        setSnackbarMessage("Usuario actualizado exitosamente");
         setSnackbarOpen(true);
         handleClose();
       }
     } else {
-      const createdProveedor = await createProveedor(newProveedor);
-      if (createdProveedor) {
-        setDataProveedores([...dataProveedores, createdProveedor]);
-        setSnackbarMessage("Proveedor creado exitosamente");
+      const createdUsuario = await createUsuario(newUsuario);
+      if (createdUsuario) {
+        setDataUsuarios([...dataUsuarios, createdUsuario]);
+        setSnackbarMessage("Usuario creado exitosamente");
         setSnackbarOpen(true);
         handleClose();
       }
     }
   };
 
-  const handleEdit = (proveedor) => {
-    setSelectedProveedor(proveedor);
-    setNewProveedor(proveedor);
+  const handleEdit = (usuario) => {
+    setSelectedUsuario(usuario);
+    setNewUsuario(usuario);
     setEditMode(true);
     handleClickOpen();
   };
 
   const handleDelete = async (id) => {
-    const success = await deleteProveedor(id);
+    const success = await deleteUsuario(id);
     if (success) {
-      setDataProveedores(dataProveedores.filter((prov) => prov.id !== id));
-      setSnackbarMessage("Proveedor eliminado exitosamente");
+      setDataUsuarios(dataUsuarios.filter((prov) => prov.id !== id));
+      setSnackbarMessage("Usuario eliminado exitosamente");
       setSnackbarOpen(true);
     }
     setDeleteDialogOpen(false);
@@ -170,13 +162,13 @@ const Proveedores = () => {
   };
 
   const handleDeleteDialogOpen = (id) => {
-    setDeleteProveedorId(id);
+    setDeleteUsuarioId(id);
     setDeleteDialogOpen(true);
   };
 
   const handleDeleteDialogClose = () => {
     setDeleteDialogOpen(false);
-    setDeleteProveedorId(null);
+    setDeleteUsuarioId(null);
   };
 
   return (
@@ -190,7 +182,7 @@ const Proveedores = () => {
         }}
       >
         <Typography variant="h4" gutterBottom>
-          {t("provider")}
+          {t("users")}
         </Typography>
         <TextField
           label="Filtrar por nombre"
@@ -206,17 +198,17 @@ const Proveedores = () => {
           }}
         />
         <Button variant="contained" color="primary" onClick={handleClickOpen}>
-          Crear Proveedor
+          Crear Usuario
         </Button>
       </div>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>
-          {editMode ? "Editar Proveedor" : "Crear Nuevo Proveedor"}
+          {editMode ? "Editar Usuario" : "Crear Nuevo Usuario"}
         </DialogTitle>
         <DialogContent>
           <DialogContentText>
             Por favor, complete el siguiente formulario para{" "}
-            {editMode ? "editar" : "crear"} un proveedor.
+            {editMode ? "editar" : "crear"} un usuario.
           </DialogContentText>
           <form onSubmit={handleSubmit}>
             <TextField
@@ -225,7 +217,7 @@ const Proveedores = () => {
               label="Tipo de Documento"
               type="text"
               fullWidth
-              value={newProveedor.tipoDocumento}
+              value={newUsuario.tipoDocumento}
               onChange={handleInputChange}
               InputLabelProps={{ style: { fontWeight: "bold" } }}
             />
@@ -235,7 +227,7 @@ const Proveedores = () => {
               label="Numero de Documento"
               type="text"
               fullWidth
-              value={newProveedor.documentoIdentidad}
+              value={newUsuario.documentoIdentidad}
               onChange={handleInputChange}
               InputLabelProps={{ style: { fontWeight: "bold" } }}
             />
@@ -246,47 +238,7 @@ const Proveedores = () => {
               label="Nombre"
               type="text"
               fullWidth
-              value={newProveedor.nombre}
-              onChange={handleInputChange}
-              InputLabelProps={{ style: { fontWeight: "bold" } }}
-            />
-            <TextField
-              margin="dense"
-              name="pais"
-              label="País"
-              type="text"
-              fullWidth
-              value={newProveedor.pais}
-              onChange={handleInputChange}
-              InputLabelProps={{ style: { fontWeight: "bold" } }}
-            />
-            <TextField
-              margin="dense"
-              name="departamento"
-              label="Departamento"
-              type="text"
-              fullWidth
-              value={newProveedor.departamento}
-              onChange={handleInputChange}
-              InputLabelProps={{ style: { fontWeight: "bold" } }}
-            />
-            <TextField
-              margin="dense"
-              name="ciudad"
-              label="Ciudad"
-              type="text"
-              fullWidth
-              value={newProveedor.ciudad}
-              onChange={handleInputChange}
-              InputLabelProps={{ style: { fontWeight: "bold" } }}
-            />
-            <TextField
-              margin="dense"
-              name="direccion"
-              label="Dirección"
-              type="text"
-              fullWidth
-              value={newProveedor.direccion}
+              value={newUsuario.nombre}
               onChange={handleInputChange}
               InputLabelProps={{ style: { fontWeight: "bold" } }}
             />
@@ -296,17 +248,47 @@ const Proveedores = () => {
               label="Email"
               type="email"
               fullWidth
-              value={newProveedor.email}
+              value={newUsuario.email}
               onChange={handleInputChange}
               InputLabelProps={{ style: { fontWeight: "bold" } }}
             />
             <TextField
               margin="dense"
-              name="telefonoContacto"
+              name="telefono"
               label="Teléfono de Contacto"
               type="text"
               fullWidth
-              value={newProveedor.telefonoContacto}
+              value={newUsuario.telefono}
+              onChange={handleInputChange}
+              InputLabelProps={{ style: { fontWeight: "bold" } }}
+            />
+            <TextField
+              margin="dense"
+              name="estadoUsuario"
+              label="Estado usuario"
+              type="text"
+              fullWidth
+              value={newUsuario.estadoUsuario}
+              onChange={handleInputChange}
+              InputLabelProps={{ style: { fontWeight: "bold" } }}
+            />
+            <TextField
+              margin="dense"
+              name="fechaNacimiento"
+              label="Fecha nacimiento"
+              type="date"
+              fullWidth
+              value={newUsuario.fechaNacimiento}
+              onChange={handleInputChange}
+              InputLabelProps={{ style: { fontWeight: "bold" } }}
+            />
+            <TextField
+              margin="dense"
+              name="fechaCreacionCuenta"
+              label="Fecha creacion cuenta"
+              type="date"
+              fullWidth
+              value={newUsuario.fechaCreacionCuenta}
               onChange={handleInputChange}
               InputLabelProps={{ style: { fontWeight: "bold" } }}
             />
@@ -336,7 +318,7 @@ const Proveedores = () => {
         <DialogTitle>Confirmar Eliminación</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            ¿Estás seguro de que deseas eliminar este proveedor?
+            ¿Estás seguro de que deseas eliminar este usuario?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -344,7 +326,7 @@ const Proveedores = () => {
             Cancelar
           </Button>
           <Button
-            onClick={() => handleDelete(deleteProveedorId)}
+            onClick={() => handleDelete(deleteUsuarioId)}
             color="primary"
             variant="contained"
           >
@@ -367,9 +349,6 @@ const Proveedores = () => {
                 <strong>Numero</strong>
               </TableCell>
               <TableCell>
-                <strong>Ciudad</strong>
-              </TableCell>
-              <TableCell>
                 <strong>Email</strong>
               </TableCell>
               <TableCell>
@@ -381,29 +360,28 @@ const Proveedores = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {filteredProveedores
+            {filteredUsuarios
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((proveedor) => (
-                <TableRow key={proveedor.id}>
+              .map((usuario) => (
+                <TableRow key={usuario.id}>
                   <TableCell>
                     <div style={{ display: "flex", gap: "2px" }}>
-                      <IconButton onClick={() => handleEdit(proveedor)}>
+                      <IconButton onClick={() => handleEdit(usuario)}>
                         <Edit color="primary" />
                       </IconButton>
                       <IconButton
-                        onClick={() => handleDeleteDialogOpen(proveedor.id)}
+                        onClick={() => handleDeleteDialogOpen(usuario.id)}
                       >
                         <Delete color="error" />
                       </IconButton>
                     </div>
                   </TableCell>
-                  <TableCell>{proveedor.nombre}</TableCell>
-                  <TableCell>{proveedor.tipoDocumento}</TableCell>
-                  <TableCell>{proveedor.documentoIdentidad}</TableCell>
-                  <TableCell>{proveedor.ciudad}</TableCell>
-                  <TableCell>{proveedor.email}</TableCell>
-                  <TableCell>{proveedor.telefonoContacto}</TableCell>
-                  <TableCell>{proveedor.estado}</TableCell>
+                  <TableCell>{usuario.nombre}</TableCell>
+                  <TableCell>{usuario.tipoDocumento}</TableCell>
+                  <TableCell>{usuario.documentoIdentidad}</TableCell>
+                  <TableCell>{usuario.email}</TableCell>
+                  <TableCell>{usuario.telefono}</TableCell>
+                  <TableCell>{usuario.estadoUsuario}</TableCell>
                 </TableRow>
               ))}
           </TableBody>
@@ -412,7 +390,7 @@ const Proveedores = () => {
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
-        count={filteredProveedores.length}
+        count={filteredUsuarios.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}
@@ -435,4 +413,4 @@ const Proveedores = () => {
   );
 };
 
-export default Proveedores;
+export default Usuarios;
