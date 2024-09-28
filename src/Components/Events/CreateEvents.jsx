@@ -1,265 +1,122 @@
-import React, { useState } from "react";
-import {
-  Container,
-  TextField,
-  Button,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
-  FormControlLabel,
-  RadioGroup,
-  Radio,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-} from "@mui/material";
+import React, { useState, useEffect } from "react";
+import { Container, TextField, Button, Snackbar, Alert } from "@mui/material";
+import { useNavigate, useLocation } from "react-router-dom";
+import { createEvent, updateEvent } from "./EventsServices";
 
 const CreateEvents = () => {
-  const [eventType, setEventType] = useState("");
-  const [title, setTitle] = useState("");
-  const [date, setDate] = useState("");
-  const [location, setLocation] = useState("");
-  const [privacy, setPrivacy] = useState("public");
-  const [services, setServices] = useState([]);
-  const [products, setProducts] = useState([]);
-  const [serviceDialogOpen, setServiceDialogOpen] = useState(false);
-  const [productDialogOpen, setProductDialogOpen] = useState(false);
-  const [service, setService] = useState({
-    provider: "",
-    service: "",
-    quantity: "",
+  const [eventData, setEventData] = useState({
+    title: "",
+    date: "",
+    userId: 0,
+    location: "",
+    eventTypeId: 0,
+    isPrivate: true,
+    quotes: [],
   });
-  const [product, setProduct] = useState({
-    provider: "",
-    product: "",
-    quantity: "",
-  });
+  const [editMode, setEditMode] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const history = useNavigate();
+  const location = useLocation();
 
-  const handleAddService = () => {
-    setServices([...services, service]);
-    setService({ provider: "", service: "", quantity: "" });
-    setServiceDialogOpen(false);
+  useEffect(() => {
+    if (location.state && location.state.event) {
+      setEventData(location.state.event);
+      setEditMode(true);
+    }
+  }, [location.state]);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setEventData({ ...eventData, [name]: value });
   };
 
-  const handleAddProduct = () => {
-    setProducts([...products, product]);
-    setProduct({ provider: "", product: "", quantity: "" });
-    setProductDialogOpen(false);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (editMode) {
+      const updatedEvent = await updateEvent(eventData.id, eventData);
+      if (updatedEvent) {
+        setSnackbarMessage("Evento actualizado exitosamente");
+        setSnackbarOpen(true);
+      }
+    } else {
+      const createdEvent = await createEvent(eventData);
+      if (createdEvent) {
+        setSnackbarMessage("Evento creado exitosamente");
+        setSnackbarOpen(true);
+      }
+    }
+  };
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
+
+  const handleGoToEvents = () => {
+    history.push("/events");
+  };
+
+  const handleGoToHome = () => {
+    history.push("/");
   };
 
   return (
     <Container>
-      <h1>Crear Evento</h1>
-      <FormControl fullWidth margin="normal">
-        <InputLabel>Tipo de Evento</InputLabel>
-        <Select
-          value={eventType}
-          onChange={(e) => setEventType(e.target.value)}
-        >
-          <MenuItem value="conferencia">Conferencia</MenuItem>
-          <MenuItem value="taller">Taller</MenuItem>
-          <MenuItem value="seminario">Seminario</MenuItem>
-        </Select>
-      </FormControl>
-      <TextField
-        fullWidth
-        margin="normal"
-        label="Título del Evento"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-      />
-      <TextField
-        fullWidth
-        margin="normal"
-        type="date"
-        label="Fecha"
-        InputLabelProps={{ shrink: true }}
-        value={date}
-        onChange={(e) => setDate(e.target.value)}
-      />
-      <TextField
-        fullWidth
-        margin="normal"
-        label="Lugar"
-        value={location}
-        onChange={(e) => setLocation(e.target.value)}
-      />
-      <FormControl component="fieldset" margin="normal">
-        <RadioGroup
-          row
-          value={privacy}
-          onChange={(e) => setPrivacy(e.target.value)}
-        >
-          <FormControlLabel
-            value="public"
-            control={<Radio />}
-            label="Público"
-          />
-          <FormControlLabel
-            value="private"
-            control={<Radio />}
-            label="Privado"
-          />
-        </RadioGroup>
-      </FormControl>
-      <Button variant="contained" component="label">
-        Subir Imagen
-        <input type="file" hidden />
-      </Button>
-      <h2>Servicios</h2>
-      <Button variant="contained" onClick={() => setServiceDialogOpen(true)}>
-        Añadir Servicio
-      </Button>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>Proveedor</TableCell>
-            <TableCell>Servicio</TableCell>
-            <TableCell>Cantidad</TableCell>
-            <TableCell>Acciones</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {services.map((s, index) => (
-            <TableRow key={index}>
-              <TableCell>{s.provider}</TableCell>
-              <TableCell>{s.service}</TableCell>
-              <TableCell>{s.quantity}</TableCell>
-              <TableCell>
-                <Button
-                  onClick={() => {
-                    const newServices = services.filter((_, i) => i !== index);
-                    setServices(newServices);
-                  }}
-                >
-                  Eliminar
-                </Button>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-      <Dialog
-        open={serviceDialogOpen}
-        onClose={() => setServiceDialogOpen(false)}
+      <form onSubmit={handleSubmit}>
+        <TextField
+          margin="dense"
+          name="title"
+          label="Nombre del Evento"
+          type="text"
+          fullWidth
+          value={eventData.title}
+          onChange={handleInputChange}
+        />
+        <TextField
+          margin="dense"
+          name="date"
+          label="Fecha del Evento"
+          type="date"
+          fullWidth
+          value={eventData.date}
+          onChange={handleInputChange}
+          InputLabelProps={{ shrink: true }}
+        />
+        <TextField
+          margin="dense"
+          name="location"
+          label="Ubicación del Evento"
+          type="text"
+          fullWidth
+          value={eventData.location}
+          onChange={handleInputChange}
+        />
+        <Button type="submit" color="primary" variant="contained">
+          {editMode ? "Actualizar Evento" : "Crear Evento"}
+        </Button>
+      </form>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
       >
-        <DialogTitle>Añadir Servicio</DialogTitle>
-        <DialogContent>
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Proveedor"
-            value={service.provider}
-            onChange={(e) =>
-              setService({ ...service, provider: e.target.value })
-            }
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Servicio"
-            value={service.service}
-            onChange={(e) =>
-              setService({ ...service, service: e.target.value })
-            }
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Cantidad"
-            value={service.quantity}
-            onChange={(e) =>
-              setService({ ...service, quantity: e.target.value })
-            }
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setServiceDialogOpen(false)}>Cancelar</Button>
-          <Button onClick={handleAddService}>Añadir</Button>
-        </DialogActions>
-      </Dialog>
-      <h2>Productos</h2>
-      <Button variant="contained" onClick={() => setProductDialogOpen(true)}>
-        Añadir Producto
-      </Button>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>Proveedor</TableCell>
-            <TableCell>Producto</TableCell>
-            <TableCell>Cantidad</TableCell>
-            <TableCell>Acciones</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {products.map((p, index) => (
-            <TableRow key={index}>
-              <TableCell>{p.provider}</TableCell>
-              <TableCell>{p.product}</TableCell>
-              <TableCell>{p.quantity}</TableCell>
-              <TableCell>
-                <Button
-                  onClick={() => {
-                    const newProducts = products.filter((_, i) => i !== index);
-                    setProducts(newProducts);
-                  }}
-                >
-                  Eliminar
-                </Button>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-      <Dialog
-        open={productDialogOpen}
-        onClose={() => setProductDialogOpen(false)}
-      >
-        <DialogTitle>Añadir Producto</DialogTitle>
-        <DialogContent>
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Proveedor"
-            value={product.provider}
-            onChange={(e) =>
-              setProduct({ ...product, provider: e.target.value })
-            }
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Producto"
-            value={product.product}
-            onChange={(e) =>
-              setProduct({ ...product, product: e.target.value })
-            }
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Cantidad"
-            value={product.quantity}
-            onChange={(e) =>
-              setProduct({ ...product, quantity: e.target.value })
-            }
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setProductDialogOpen(false)}>Cancelar</Button>
-          <Button onClick={handleAddProduct}>Añadir</Button>
-        </DialogActions>
-      </Dialog>
-      <Button variant="contained" color="primary" style={{ marginTop: "20px" }}>
-        Crear
-      </Button>
+        <Alert
+          onClose={handleSnackbarClose}
+          severity="success"
+          action={
+            <>
+              <Button color="inherit" size="small" onClick={handleGoToEvents}>
+                Ir a Mis Eventos
+              </Button>
+              <Button color="inherit" size="small" onClick={handleGoToHome}>
+                Ir a Home
+              </Button>
+            </>
+          }
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 };

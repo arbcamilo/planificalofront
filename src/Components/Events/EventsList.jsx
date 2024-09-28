@@ -52,7 +52,7 @@ const Events = () => {
   useEffect(() => {
     setFilteredEvents(
       dataEvents.filter((prov) =>
-        prov.name.toLowerCase().includes(filter.toLowerCase())
+        prov.title.toLowerCase().includes(filter.toLowerCase())
       )
     );
   }, [filter, dataEvents]);
@@ -153,22 +153,13 @@ const Events = () => {
                 <strong>Nombre</strong>
               </TableCell>
               <TableCell>
-                <strong>TD</strong>
+                <strong>Fecha</strong>
               </TableCell>
               <TableCell>
-                <strong>Numero</strong>
+                <strong>Ubicación</strong>
               </TableCell>
               <TableCell>
-                <strong>Ciudad</strong>
-              </TableCell>
-              <TableCell>
-                <strong>Email</strong>
-              </TableCell>
-              <TableCell>
-                <strong>Teléfono</strong>
-              </TableCell>
-              <TableCell>
-                <strong>Estado</strong>
+                <strong>Es Privado</strong>
               </TableCell>
             </TableRow>
           </TableHead>
@@ -189,13 +180,10 @@ const Events = () => {
                       </IconButton>
                     </div>
                   </TableCell>
-                  <TableCell>{event.name}</TableCell>
-                  <TableCell>{event.documentType}</TableCell>
-                  <TableCell>{event.identityDocument}</TableCell>
-                  <TableCell>{event.city}</TableCell>
-                  <TableCell>{event.email}</TableCell>
-                  <TableCell>{event.contactPhone}</TableCell>
-                  <TableCell>{event.status}</TableCell>
+                  <TableCell>{event.title}</TableCell>
+                  <TableCell>{event.date}</TableCell>
+                  <TableCell>{event.location}</TableCell>
+                  <TableCell>{event.isPrivate}</TableCell>
                 </TableRow>
               ))}
           </TableBody>
