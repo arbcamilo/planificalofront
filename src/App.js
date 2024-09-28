@@ -7,7 +7,7 @@ import NavBar from "./Components/Navegation/NavBar";
 import Inicio from "./Components/Home/Inicio";
 import Providers from "./Components/Providers/Providers";
 import Users from "./Components/Users/Users";
-// import Services from "./Components/Services/Services";
+import Services from "./Components/Services/Services";
 
 function App() {
   const [mode, setMode] = useState("light");
@@ -33,7 +33,7 @@ function App() {
             <Route path="/" element={<Inicio />} />
             <Route path="/providers" element={<Providers />} />
             <Route path="/users" element={<Users />} />
-            {/* <Route path="/services" element={<Services />} /> */}
+            <Route path="/services" element={<Services />} />
           </Routes>
         </main>
       </ThemeProvider>
