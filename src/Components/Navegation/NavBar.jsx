@@ -50,11 +50,21 @@ const NavBar = ({ toggleTheme, mode }) => {
       <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <Box
-            component="img"
-            src="/logo1.png"
-            alt="Logo"
-            sx={{ height: 60, width: 150, marginRight: 2 }}
-          />
+            component={Link}
+            to="/"
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              textDecoration: "none",
+            }}
+          >
+            <Box
+              component="img"
+              src="/logo1.png"
+              alt="Logo"
+              sx={{ height: 60, width: 150, marginRight: 2 }}
+            />
+          </Box>
           <Button color="inherit" component={Link} to="/">
             <HomeIcon sx={{ marginRight: 1 }} />
             Inicio
@@ -75,6 +85,9 @@ const NavBar = ({ toggleTheme, mode }) => {
             anchorEl={anchorEl}
             open={Boolean(anchorEl)}
             onClose={handleClose}
+            MenuListProps={{
+              onMouseLeave: handleClose,
+            }}
           >
             <MenuItem component={Link} to="/proveedores">
               <ListItemText primary="Proveedores" />
@@ -101,6 +114,9 @@ const NavBar = ({ toggleTheme, mode }) => {
             anchorEl={languageAnchorEl}
             open={Boolean(languageAnchorEl)}
             onClose={handleLanguageClose}
+            MenuListProps={{
+              onMouseLeave: handleLanguageClose,
+            }}
           >
             <MenuItem onClick={() => changeLanguage("en")}>
               <ListItemText primary="Español" />
