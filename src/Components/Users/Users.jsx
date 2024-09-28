@@ -24,55 +24,55 @@ import {
 } from "@mui/material";
 import { Edit, Delete, FilterList } from "@mui/icons-material";
 import {
-  fetchUsuarios,
-  createUsuario,
-  updateUsuario,
-  deleteUsuario,
-} from "./UsuariosServices";
+  fetchUsers,
+  createUser,
+  updateUser,
+  deleteUser,
+} from "./UsersServices";
 import { useTranslation } from "react-i18next";
 
-const Usuarios = () => {
+const Users = () => {
   const [page, setPage] = useState(0);
   const { t } = useTranslation();
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [dataUsuarios, setDataUsuarios] = useState([]);
-  const [filteredUsuarios, setFilteredUsuarios] = useState([]);
+  const [dataUsers, setDataUsers] = useState([]);
+  const [filteredUsers, setFilteredUsers] = useState([]);
   const [filter, setFilter] = useState("");
   const [open, setOpen] = useState(false);
   const [editMode, setEditMode] = useState(false);
-  const [selectedUsuario, setSelectedUsuario] = useState(null);
-  const [newUsuario, setNewUsuario] = useState({
-    tipoDocumento: "CC",
-    documentoIdentidad: "",
-    nombre: "",
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [newUser, setNewUser] = useState({
+    documentType: "CC",
+    identityDocument: "",
+    name: "",
     email: "",
-    telefono: "",
-    estadoUsuario: "Activo",
-    fechaNacimiento: "27/09/2024",
-    fechaCreacionCuenta: "27/09/2024",
+    phone: "",
+    userStatus: "Activo",
+    birthDate: "27/09/2024",
+    accountCreationDate: "27/09/2024",
   });
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [deleteUsuarioId, setDeleteUsuarioId] = useState(null);
+  const [deleteUserId, setDeleteUserId] = useState(null);
 
   useEffect(() => {
-    const getUsuarios = async () => {
-      const usuarios = await fetchUsuarios();
-      setDataUsuarios(usuarios);
-      setFilteredUsuarios(usuarios);
+    const getUsers = async () => {
+      const users = await fetchUsers();
+      setDataUsers(users);
+      setFilteredUsers(users);
     };
 
-    getUsuarios();
+    getUsers();
   }, []);
 
   useEffect(() => {
-    setFilteredUsuarios(
-      dataUsuarios.filter((prov) =>
-        prov.nombre.toLowerCase().includes(filter.toLowerCase())
+    setFilteredUsers(
+      dataUsers.filter((prov) =>
+        prov.name.toLowerCase().includes(filter.toLowerCase())
       )
     );
-  }, [filter, dataUsuarios]);
+  }, [filter, dataUsers]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -90,64 +90,61 @@ const Usuarios = () => {
   const handleClose = () => {
     setOpen(false);
     setEditMode(false);
-    setSelectedUsuario(null);
-    setNewUsuario({
-      tipoDocumento: "CC",
-      documentoIdentidad: "",
-      nombre: "",
+    setSelectedUser(null);
+    setNewUser({
+      documentType: "CC",
+      identityDocument: "",
+      name: "",
       email: "",
-      telefono: "",
-      estadoUsuario: "Activo",
-      fechaNacimiento: "27/09/2024",
-      fechaCreacionCuenta: "27/09/2024",
+      phone: "",
+      userStatus: "Activo",
+      birthDate: "27/09/2024",
+      accountCreationDate: "27/09/2024",
     });
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setNewUsuario({ ...newUsuario, [name]: value });
+    setNewUser({ ...newUser, [name]: value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (editMode) {
-      const updatedUsuario = await updateUsuario(
-        selectedUsuario.id,
-        newUsuario
-      );
-      if (updatedUsuario) {
-        setDataUsuarios(
-          dataUsuarios.map((prov) =>
-            prov.id === selectedUsuario.id ? updatedUsuario : prov
+      const updatedUser = await updateUser(selectedUser.id, newUser);
+      if (updatedUser) {
+        setDataUsers(
+          dataUsers.map((prov) =>
+            prov.id === selectedUser.id ? updatedUser : prov
           )
         );
-        setSnackbarMessage("Usuario actualizado exitosamente");
+        setSnackbarMessage("User actualizado exitosamente");
         setSnackbarOpen(true);
         handleClose();
       }
     } else {
-      const createdUsuario = await createUsuario(newUsuario);
-      if (createdUsuario) {
-        setDataUsuarios([...dataUsuarios, createdUsuario]);
-        setSnackbarMessage("Usuario creado exitosamente");
+      const createdUser = await createUser(newUser);
+      if (createdUser) {
+        setDataUsers([...dataUsers, createdUser]);
+        setSnackbarMessage("User creado exitosamente");
         setSnackbarOpen(true);
         handleClose();
       }
     }
   };
 
-  const handleEdit = (usuario) => {
-    setSelectedUsuario(usuario);
-    setNewUsuario(usuario);
+  const handleEdit = (user) => {
+    setSelectedUser(user);
+    setNewUser(user);
     setEditMode(true);
     handleClickOpen();
   };
 
   const handleDelete = async (id) => {
-    const success = await deleteUsuario(id);
+    const success = await deleteUser(id);
     if (success) {
-      setDataUsuarios(dataUsuarios.filter((prov) => prov.id !== id));
-      setSnackbarMessage("Usuario eliminado exitosamente");
+      setDataUsers(dataUsers.filter((prov) => prov.id !== id));
+      setSnackbarMessage("User eliminado exitosamente");
       setSnackbarOpen(true);
     }
     setDeleteDialogOpen(false);
@@ -162,13 +159,13 @@ const Usuarios = () => {
   };
 
   const handleDeleteDialogOpen = (id) => {
-    setDeleteUsuarioId(id);
+    setDeleteUserId(id);
     setDeleteDialogOpen(true);
   };
 
   const handleDeleteDialogClose = () => {
     setDeleteDialogOpen(false);
-    setDeleteUsuarioId(null);
+    setDeleteUserId(null);
   };
 
   return (
@@ -185,7 +182,7 @@ const Usuarios = () => {
           {t("users")}
         </Typography>
         <TextField
-          label="Filtrar por nombre"
+          label="Filtrar por name"
           variant="outlined"
           value={filter}
           onChange={handleFilterChange}
@@ -198,47 +195,47 @@ const Usuarios = () => {
           }}
         />
         <Button variant="contained" color="primary" onClick={handleClickOpen}>
-          Crear Usuario
+          Crear User
         </Button>
       </div>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>
-          {editMode ? "Editar Usuario" : "Crear Nuevo Usuario"}
+          {editMode ? "Editar User" : "Crear Nuevo User"}
         </DialogTitle>
         <DialogContent>
           <DialogContentText>
             Por favor, complete el siguiente formulario para{" "}
-            {editMode ? "editar" : "crear"} un usuario.
+            {editMode ? "editar" : "crear"} un user.
           </DialogContentText>
           <form onSubmit={handleSubmit}>
             <TextField
               margin="dense"
-              name="tipoDocumento"
+              name="documentType"
               label="Tipo de Documento"
               type="text"
               fullWidth
-              value={newUsuario.tipoDocumento}
+              value={newUser.documentType}
               onChange={handleInputChange}
               InputLabelProps={{ style: { fontWeight: "bold" } }}
             />
             <TextField
               margin="dense"
-              name="documentoIdentidad"
+              name="identityDocument"
               label="Numero de Documento"
               type="text"
               fullWidth
-              value={newUsuario.documentoIdentidad}
+              value={newUser.identityDocument}
               onChange={handleInputChange}
               InputLabelProps={{ style: { fontWeight: "bold" } }}
             />
             <TextField
               autoFocus
               margin="dense"
-              name="nombre"
+              name="name"
               label="Nombre"
               type="text"
               fullWidth
-              value={newUsuario.nombre}
+              value={newUser.name}
               onChange={handleInputChange}
               InputLabelProps={{ style: { fontWeight: "bold" } }}
             />
@@ -248,47 +245,47 @@ const Usuarios = () => {
               label="Email"
               type="email"
               fullWidth
-              value={newUsuario.email}
+              value={newUser.email}
               onChange={handleInputChange}
               InputLabelProps={{ style: { fontWeight: "bold" } }}
             />
             <TextField
               margin="dense"
-              name="telefono"
+              name="phone"
               label="Teléfono de Contacto"
               type="text"
               fullWidth
-              value={newUsuario.telefono}
+              value={newUser.phone}
               onChange={handleInputChange}
               InputLabelProps={{ style: { fontWeight: "bold" } }}
             />
             <TextField
               margin="dense"
-              name="estadoUsuario"
-              label="Estado usuario"
+              name="userStatus"
+              label="Estado user"
               type="text"
               fullWidth
-              value={newUsuario.estadoUsuario}
+              value={newUser.userStatus}
               onChange={handleInputChange}
               InputLabelProps={{ style: { fontWeight: "bold" } }}
             />
             <TextField
               margin="dense"
-              name="fechaNacimiento"
+              name="birthDate"
               label="Fecha nacimiento"
               type="date"
               fullWidth
-              value={newUsuario.fechaNacimiento}
+              value={newUser.birthDate}
               onChange={handleInputChange}
               InputLabelProps={{ style: { fontWeight: "bold" } }}
             />
             <TextField
               margin="dense"
-              name="fechaCreacionCuenta"
+              name="accountCreationDate"
               label="Fecha creacion cuenta"
               type="date"
               fullWidth
-              value={newUsuario.fechaCreacionCuenta}
+              value={newUser.accountCreationDate}
               onChange={handleInputChange}
               InputLabelProps={{ style: { fontWeight: "bold" } }}
             />
@@ -318,7 +315,7 @@ const Usuarios = () => {
         <DialogTitle>Confirmar Eliminación</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            ¿Estás seguro de que deseas eliminar este usuario?
+            ¿Estás seguro de que deseas eliminar este user?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -326,7 +323,7 @@ const Usuarios = () => {
             Cancelar
           </Button>
           <Button
-            onClick={() => handleDelete(deleteUsuarioId)}
+            onClick={() => handleDelete(deleteUserId)}
             color="primary"
             variant="contained"
           >
@@ -360,28 +357,28 @@ const Usuarios = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {filteredUsuarios
+            {filteredUsers
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((usuario) => (
-                <TableRow key={usuario.id}>
+              .map((user) => (
+                <TableRow key={user.id}>
                   <TableCell>
                     <div style={{ display: "flex", gap: "2px" }}>
-                      <IconButton onClick={() => handleEdit(usuario)}>
+                      <IconButton onClick={() => handleEdit(user)}>
                         <Edit color="primary" />
                       </IconButton>
                       <IconButton
-                        onClick={() => handleDeleteDialogOpen(usuario.id)}
+                        onClick={() => handleDeleteDialogOpen(user.id)}
                       >
                         <Delete color="error" />
                       </IconButton>
                     </div>
                   </TableCell>
-                  <TableCell>{usuario.nombre}</TableCell>
-                  <TableCell>{usuario.tipoDocumento}</TableCell>
-                  <TableCell>{usuario.documentoIdentidad}</TableCell>
-                  <TableCell>{usuario.email}</TableCell>
-                  <TableCell>{usuario.telefono}</TableCell>
-                  <TableCell>{usuario.estadoUsuario}</TableCell>
+                  <TableCell>{user.name}</TableCell>
+                  <TableCell>{user.documentType}</TableCell>
+                  <TableCell>{user.identityDocument}</TableCell>
+                  <TableCell>{user.email}</TableCell>
+                  <TableCell>{user.phone}</TableCell>
+                  <TableCell>{user.userStatus}</TableCell>
                 </TableRow>
               ))}
           </TableBody>
@@ -390,7 +387,7 @@ const Usuarios = () => {
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
-        count={filteredUsuarios.length}
+        count={filteredUsers.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}
@@ -413,4 +410,4 @@ const Usuarios = () => {
   );
 };
 
-export default Usuarios;
+export default Users;
