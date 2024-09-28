@@ -15,12 +15,14 @@ import InfoIcon from "@mui/icons-material/Info";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
+import LanguageIcon from "@mui/icons-material/Language";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 const NavBar = ({ toggleTheme, mode }) => {
   const { t, i18n } = useTranslation();
   const [anchorEl, setAnchorEl] = useState(null);
+  const [languageAnchorEl, setLanguageAnchorEl] = useState(null);
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -30,8 +32,17 @@ const NavBar = ({ toggleTheme, mode }) => {
     setAnchorEl(null);
   };
 
+  const handleLanguageMenu = (event) => {
+    setLanguageAnchorEl(event.currentTarget);
+  };
+
+  const handleLanguageClose = () => {
+    setLanguageAnchorEl(null);
+  };
+
   const changeLanguage = (lng) => {
     i18n.changeLanguage(lng);
+    handleLanguageClose();
   };
 
   return (
@@ -46,15 +57,15 @@ const NavBar = ({ toggleTheme, mode }) => {
           />
           <Button color="inherit" component={Link} to="/">
             <HomeIcon sx={{ marginRight: 1 }} />
-            Inicio
+            {t("home")}
           </Button>
           <Button color="inherit" component={Link} to="/eventosprivados">
             <EventIcon sx={{ marginRight: 1 }} />
-            Eventos
+            {t("events")}
           </Button>
           <Button color="inherit" component={Link} to="/conocenos">
             <InfoIcon sx={{ marginRight: 1 }} />
-            Conócenos
+            {t("knowUs")}
           </Button>
           <Button color="inherit" onClick={handleMenu}>
             <AdminPanelSettingsIcon sx={{ marginRight: 1 }} />
@@ -78,17 +89,26 @@ const NavBar = ({ toggleTheme, mode }) => {
             {t("login")}
           </Button>
           <Button color="inherit" component={Link} to="/registro">
-            Crear Cuenta
+            {t("createAccount")}
           </Button>
           <IconButton color="inherit" onClick={toggleTheme}>
             {mode === "dark" ? <Brightness7Icon /> : <Brightness4Icon />}
           </IconButton>
-          <Button color="inherit" onClick={() => changeLanguage("en")}>
-            ES
-          </Button>
-          <Button color="inherit" onClick={() => changeLanguage("es")}>
-            EN
-          </Button>
+          <IconButton color="inherit" onClick={handleLanguageMenu}>
+            <LanguageIcon />
+          </IconButton>
+          <Menu
+            anchorEl={languageAnchorEl}
+            open={Boolean(languageAnchorEl)}
+            onClose={handleLanguageClose}
+          >
+            <MenuItem onClick={() => changeLanguage("en")}>
+              <ListItemText primary="Español" />
+            </MenuItem>
+            <MenuItem onClick={() => changeLanguage("es")}>
+              <ListItemText primary="English" />
+            </MenuItem>
+          </Menu>
         </Box>
       </Toolbar>
     </AppBar>
