@@ -4,8 +4,6 @@ import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { createMyTheme } from "./styles/Theme";
 import NavBar from "./Components/Navegation/NavBar";
-import Login from "./Components/Security/Login";
-import Registro from "./Components/Security/Registro";
 import Inicio from "./Components/Home/Inicio";
 import Providers from "./Components/Providers/Providers";
 import Users from "./Components/Users/Users";
@@ -32,8 +30,6 @@ function App() {
           }}
         >
           <Routes>
-            <Route exact path="/login" element={<Login />} />
-            <Route exact path="/registro" element={<Registro />} />
             <Route path="/" element={<Inicio />} />
             <Route path="/providers" element={<Providers />} />
             <Route path="/users" element={<Users />} />
