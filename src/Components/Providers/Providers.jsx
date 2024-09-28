@@ -24,59 +24,58 @@ import {
 } from "@mui/material";
 import { Edit, Delete, FilterList } from "@mui/icons-material";
 import {
-  fetchProveedores,
-  createProveedor,
-  updateProveedor,
-  deleteProveedor,
-} from "./ProveedoresServices";
+  fetchProviders,
+  createProvider,
+  updateProvider,
+  deleteProvider,
+} from "./ProvidersServices";
 import { useTranslation } from "react-i18next";
 
-const Proveedores = () => {
+const Providers = () => {
   const [page, setPage] = useState(0);
   const { t } = useTranslation();
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [dataProveedores, setDataProveedores] = useState([]);
-  const [filteredProveedores, setFilteredProveedores] = useState([]);
+  const [dataProviders, setDataProviders] = useState([]);
+  const [filteredProviders, setFilteredProviders] = useState([]);
   const [filter, setFilter] = useState("");
   const [open, setOpen] = useState(false);
   const [editMode, setEditMode] = useState(false);
-  const [selectedProveedor, setSelectedProveedor] = useState(null);
-  const [newProveedor, setNewProveedor] = useState({
-    nombre: "",
-    pais: "",
-    departamento: "",
-    ciudad: "",
-    direccion: "",
+  const [selectedProvider, setSelectedProvider] = useState(null);
+  const [newProvider, setNewProvider] = useState({
+    name: "",
+    country: "",
+    department: "",
+    city: "",
+    address: "",
     email: "",
-    telefonoContacto: "",
-    esPersonaNatural: true,
-    estado: "Activo",
-    calificacion: 0,
-    tipoDocumento: "CC",
-    documentoIdentidad: "",
+    contactPhone: "",
+    isNaturalPerson: true,
+    status: "Activo",
+    documentType: "CC",
+    identityDocument: "",
   });
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [deleteProveedorId, setDeleteProveedorId] = useState(null);
+  const [deleteProviderId, setDeleteProviderId] = useState(null);
 
   useEffect(() => {
-    const getProveedores = async () => {
-      const proveedores = await fetchProveedores();
-      setDataProveedores(proveedores);
-      setFilteredProveedores(proveedores);
+    const getProviders = async () => {
+      const providers = await fetchProviders();
+      setDataProviders(providers);
+      setFilteredProviders(providers);
     };
 
-    getProveedores();
+    getProviders();
   }, []);
 
   useEffect(() => {
-    setFilteredProveedores(
-      dataProveedores.filter((prov) =>
-        prov.nombre.toLowerCase().includes(filter.toLowerCase())
+    setFilteredProviders(
+      dataProviders.filter((prov) =>
+        prov.name.toLowerCase().includes(filter.toLowerCase())
       )
     );
-  }, [filter, dataProveedores]);
+  }, [filter, dataProviders]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -94,68 +93,67 @@ const Proveedores = () => {
   const handleClose = () => {
     setOpen(false);
     setEditMode(false);
-    setSelectedProveedor(null);
-    setNewProveedor({
-      nombre: "",
-      pais: "",
-      departamento: "",
-      ciudad: "",
-      direccion: "",
+    setSelectedProvider(null);
+    setNewProvider({
+      name: "",
+      country: "",
+      department: "",
+      city: "",
+      address: "",
       email: "",
-      telefonoContacto: "",
-      esPersonaNatural: true,
-      estado: "Activo",
-      calificacion: 0,
-      tipoDocumento: "NIT",
-      documentoIdentidad: "",
+      contactPhone: "",
+      isNaturalPerson: true,
+      status: "Activo",
+      documentType: "NIT",
+      identityDocument: "",
     });
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setNewProveedor({ ...newProveedor, [name]: value });
+    setNewProvider({ ...newProvider, [name]: value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (editMode) {
-      const updatedProveedor = await updateProveedor(
-        selectedProveedor.id,
-        newProveedor
+      const updatedProvider = await updateProvider(
+        selectedProvider.id,
+        newProvider
       );
-      if (updatedProveedor) {
-        setDataProveedores(
-          dataProveedores.map((prov) =>
-            prov.id === selectedProveedor.id ? updatedProveedor : prov
+      if (updatedProvider) {
+        setDataProviders(
+          dataProviders.map((prov) =>
+            prov.id === selectedProvider.id ? updatedProvider : prov
           )
         );
-        setSnackbarMessage("Proveedor actualizado exitosamente");
+        setSnackbarMessage("Provider actualizado exitosamente");
         setSnackbarOpen(true);
         handleClose();
       }
     } else {
-      const createdProveedor = await createProveedor(newProveedor);
-      if (createdProveedor) {
-        setDataProveedores([...dataProveedores, createdProveedor]);
-        setSnackbarMessage("Proveedor creado exitosamente");
+      const createdProvider = await createProvider(newProvider);
+      if (createdProvider) {
+        setDataProviders([...dataProviders, createdProvider]);
+        setSnackbarMessage("Provider creado exitosamente");
         setSnackbarOpen(true);
         handleClose();
       }
     }
   };
 
-  const handleEdit = (proveedor) => {
-    setSelectedProveedor(proveedor);
-    setNewProveedor(proveedor);
+  const handleEdit = (provider) => {
+    setSelectedProvider(provider);
+    setNewProvider(provider);
     setEditMode(true);
     handleClickOpen();
   };
 
   const handleDelete = async (id) => {
-    const success = await deleteProveedor(id);
+    const success = await deleteProvider(id);
     if (success) {
-      setDataProveedores(dataProveedores.filter((prov) => prov.id !== id));
-      setSnackbarMessage("Proveedor eliminado exitosamente");
+      setDataProviders(dataProviders.filter((prov) => prov.id !== id));
+      setSnackbarMessage("Provider eliminado exitosamente");
       setSnackbarOpen(true);
     }
     setDeleteDialogOpen(false);
@@ -170,13 +168,13 @@ const Proveedores = () => {
   };
 
   const handleDeleteDialogOpen = (id) => {
-    setDeleteProveedorId(id);
+    setDeleteProviderId(id);
     setDeleteDialogOpen(true);
   };
 
   const handleDeleteDialogClose = () => {
     setDeleteDialogOpen(false);
-    setDeleteProveedorId(null);
+    setDeleteProviderId(null);
   };
 
   return (
@@ -193,7 +191,7 @@ const Proveedores = () => {
           {t("provider")}
         </Typography>
         <TextField
-          label="Filtrar por nombre"
+          label="Filtrar por name"
           variant="outlined"
           value={filter}
           onChange={handleFilterChange}
@@ -206,87 +204,87 @@ const Proveedores = () => {
           }}
         />
         <Button variant="contained" color="primary" onClick={handleClickOpen}>
-          Crear Proveedor
+          Crear Provider
         </Button>
       </div>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>
-          {editMode ? "Editar Proveedor" : "Crear Nuevo Proveedor"}
+          {editMode ? "Editar Provider" : "Crear Nuevo Provider"}
         </DialogTitle>
         <DialogContent>
           <DialogContentText>
             Por favor, complete el siguiente formulario para{" "}
-            {editMode ? "editar" : "crear"} un proveedor.
+            {editMode ? "editar" : "crear"} un provider.
           </DialogContentText>
           <form onSubmit={handleSubmit}>
             <TextField
               margin="dense"
-              name="tipoDocumento"
+              name="documentType"
               label="Tipo de Documento"
               type="text"
               fullWidth
-              value={newProveedor.tipoDocumento}
+              value={newProvider.documentType}
               onChange={handleInputChange}
               InputLabelProps={{ style: { fontWeight: "bold" } }}
             />
             <TextField
               margin="dense"
-              name="documentoIdentidad"
+              name="identityDocument"
               label="Numero de Documento"
               type="text"
               fullWidth
-              value={newProveedor.documentoIdentidad}
+              value={newProvider.identityDocument}
               onChange={handleInputChange}
               InputLabelProps={{ style: { fontWeight: "bold" } }}
             />
             <TextField
               autoFocus
               margin="dense"
-              name="nombre"
+              name="name"
               label="Nombre"
               type="text"
               fullWidth
-              value={newProveedor.nombre}
+              value={newProvider.name}
               onChange={handleInputChange}
               InputLabelProps={{ style: { fontWeight: "bold" } }}
             />
             <TextField
               margin="dense"
-              name="pais"
+              name="country"
               label="País"
               type="text"
               fullWidth
-              value={newProveedor.pais}
+              value={newProvider.country}
               onChange={handleInputChange}
               InputLabelProps={{ style: { fontWeight: "bold" } }}
             />
             <TextField
               margin="dense"
-              name="departamento"
+              name="department"
               label="Departamento"
               type="text"
               fullWidth
-              value={newProveedor.departamento}
+              value={newProvider.department}
               onChange={handleInputChange}
               InputLabelProps={{ style: { fontWeight: "bold" } }}
             />
             <TextField
               margin="dense"
-              name="ciudad"
+              name="city"
               label="Ciudad"
               type="text"
               fullWidth
-              value={newProveedor.ciudad}
+              value={newProvider.city}
               onChange={handleInputChange}
               InputLabelProps={{ style: { fontWeight: "bold" } }}
             />
             <TextField
               margin="dense"
-              name="direccion"
+              name="address"
               label="Dirección"
               type="text"
               fullWidth
-              value={newProveedor.direccion}
+              value={newProvider.address}
               onChange={handleInputChange}
               InputLabelProps={{ style: { fontWeight: "bold" } }}
             />
@@ -296,17 +294,17 @@ const Proveedores = () => {
               label="Email"
               type="email"
               fullWidth
-              value={newProveedor.email}
+              value={newProvider.email}
               onChange={handleInputChange}
               InputLabelProps={{ style: { fontWeight: "bold" } }}
             />
             <TextField
               margin="dense"
-              name="telefonoContacto"
+              name="contactPhone"
               label="Teléfono de Contacto"
               type="text"
               fullWidth
-              value={newProveedor.telefonoContacto}
+              value={newProvider.contactPhone}
               onChange={handleInputChange}
               InputLabelProps={{ style: { fontWeight: "bold" } }}
             />
@@ -336,7 +334,7 @@ const Proveedores = () => {
         <DialogTitle>Confirmar Eliminación</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            ¿Estás seguro de que deseas eliminar este proveedor?
+            ¿Estás seguro de que deseas eliminar este provider?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -344,7 +342,7 @@ const Proveedores = () => {
             Cancelar
           </Button>
           <Button
-            onClick={() => handleDelete(deleteProveedorId)}
+            onClick={() => handleDelete(deleteProviderId)}
             color="primary"
             variant="contained"
           >
@@ -381,29 +379,29 @@ const Proveedores = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {filteredProveedores
+            {filteredProviders
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((proveedor) => (
-                <TableRow key={proveedor.id}>
+              .map((provider) => (
+                <TableRow key={provider.id}>
                   <TableCell>
                     <div style={{ display: "flex", gap: "2px" }}>
-                      <IconButton onClick={() => handleEdit(proveedor)}>
+                      <IconButton onClick={() => handleEdit(provider)}>
                         <Edit color="primary" />
                       </IconButton>
                       <IconButton
-                        onClick={() => handleDeleteDialogOpen(proveedor.id)}
+                        onClick={() => handleDeleteDialogOpen(provider.id)}
                       >
                         <Delete color="error" />
                       </IconButton>
                     </div>
                   </TableCell>
-                  <TableCell>{proveedor.nombre}</TableCell>
-                  <TableCell>{proveedor.tipoDocumento}</TableCell>
-                  <TableCell>{proveedor.documentoIdentidad}</TableCell>
-                  <TableCell>{proveedor.ciudad}</TableCell>
-                  <TableCell>{proveedor.email}</TableCell>
-                  <TableCell>{proveedor.telefonoContacto}</TableCell>
-                  <TableCell>{proveedor.estado}</TableCell>
+                  <TableCell>{provider.name}</TableCell>
+                  <TableCell>{provider.documentType}</TableCell>
+                  <TableCell>{provider.identityDocument}</TableCell>
+                  <TableCell>{provider.city}</TableCell>
+                  <TableCell>{provider.email}</TableCell>
+                  <TableCell>{provider.contactPhone}</TableCell>
+                  <TableCell>{provider.status}</TableCell>
                 </TableRow>
               ))}
           </TableBody>
@@ -412,7 +410,7 @@ const Proveedores = () => {
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
-        count={filteredProveedores.length}
+        count={filteredProviders.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}
@@ -435,4 +433,4 @@ const Proveedores = () => {
   );
 };
 
-export default Proveedores;
+export default Providers;

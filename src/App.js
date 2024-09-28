@@ -4,12 +4,10 @@ import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { createMyTheme } from "./styles/Theme";
 import NavBar from "./Components/Navegation/NavBar";
-import Login from "./Components/Security/Login";
-import Registro from "./Components/Security/Registro";
-import EventosPrivados from "./Components/Events/EventosPrivados";
 import Inicio from "./Components/Home/Inicio";
-import Proveedores from "./Components/Proveedores/Proveedores";
-import Usuarios from "./Components/Usuarios/Usuarios";
+import Providers from "./Components/Providers/Providers";
+import Users from "./Components/Users/Users";
+// import Services from "./Components/Services/Services";
 
 function App() {
   const [mode, setMode] = useState("light");
@@ -32,16 +30,10 @@ function App() {
           }}
         >
           <Routes>
-            <Route exact path="/login" element={<Login />} />
-            <Route exact path="/registro" element={<Registro />} />
-            <Route
-              exact
-              path="/eventosprivados"
-              element={<EventosPrivados />}
-            />
             <Route path="/" element={<Inicio />} />
-            <Route path="/proveedores" element={<Proveedores />} />
-            <Route path="/usuarios" element={<Usuarios />} />
+            <Route path="/providers" element={<Providers />} />
+            <Route path="/users" element={<Users />} />
+            {/* <Route path="/services" element={<Services />} /> */}
           </Routes>
         </main>
       </ThemeProvider>
