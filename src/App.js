@@ -8,6 +8,8 @@ import Inicio from "./Components/Home/Inicio";
 import Providers from "./Components/Providers/Providers";
 import Users from "./Components/Users/Users";
 import Services from "./Components/Services/Services";
+import Products from "./Components/Products/Products";
+import Guests from "./Components/Guests/Guests";
 
 function App() {
   const [mode, setMode] = useState("light");
@@ -34,6 +36,8 @@ function App() {
             <Route path="/providers" element={<Providers />} />
             <Route path="/users" element={<Users />} />
             <Route path="/services" element={<Services />} />
+            <Route path="/products" element={<Products />} />
+            <Route path="/guest" element={<Guests />} />
           </Routes>
         </main>
       </ThemeProvider>

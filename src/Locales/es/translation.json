@@ -10,5 +10,7 @@
   "welcomeTo": "Bienvenido a",
   "users": "Usuarios",
   "email": "Correo Electrónico",
-  "services": "Servicios"
+  "services": "Servicios",
+  "products": "Productos",
+  "guests": "Invitados"
 }

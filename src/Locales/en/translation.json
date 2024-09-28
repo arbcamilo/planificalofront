@@ -10,5 +10,7 @@
   "welcomeTo": "Welcome To",
   "users": "Users",
   "email": "Email",
-  "services": "Services"
+  "services": "Services",
+  "products": "Products",
+  "guests": "Guests"
 }
