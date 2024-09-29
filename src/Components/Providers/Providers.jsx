@@ -51,7 +51,7 @@ const Providers = () => {
     contactPhone: "",
     isNaturalPerson: true,
     status: "Active",
-    documentType: "CC",
+    documentType: "NIT",
     identityDocument: "",
   });
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -215,15 +215,20 @@ const Providers = () => {
           </DialogContentText>
           <form onSubmit={handleSubmit}>
             <TextField
+              select
               margin="dense"
               name="documentType"
               label={t("documentType")}
-              type="text"
               fullWidth
               value={newProvider.documentType}
               onChange={handleInputChange}
+              SelectProps={{
+                native: true,
+              }}
               InputLabelProps={{ style: { fontWeight: "bold" } }}
-            />
+            >
+              <option value="NIT">NIT</option>
+            </TextField>
             <TextField
               margin="dense"
               name="identityDocument"
@@ -305,6 +310,22 @@ const Providers = () => {
               onChange={handleInputChange}
               InputLabelProps={{ style: { fontWeight: "bold" } }}
             />
+            <TextField
+              select
+              margin="dense"
+              name="status"
+              label={t("status")}
+              fullWidth
+              value={newProvider.status}
+              onChange={handleInputChange}
+              SelectProps={{
+                native: true,
+              }}
+              InputLabelProps={{ style: { fontWeight: "bold" } }}
+            >
+              <option value="Active">{t("active")}</option>
+              <option value="Inactive">{t("inactive")}</option>
+            </TextField>
             <div
               style={{
                 display: "flex",
