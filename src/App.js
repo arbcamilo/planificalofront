@@ -42,7 +42,7 @@ function App() {
             <Route path="/events-list" element={<EventsList />} />
             <Route path="/create-events/:id" element={<CreateEvents />} />
             <Route path="/products" element={<Products />} />
-            <Route path="/guest" element={<Guests />} />
+            <Route path="/guests" element={<Guests />} />
           </Routes>
         </main>
       </ThemeProvider>
