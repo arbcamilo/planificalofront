@@ -75,7 +75,7 @@ const Events = (events) => {
     const success = await deleteEvent(id);
     if (success) {
       setDataEvents(dataEvents.filter((prov) => prov.id !== id));
-      setSnackbarMessage("Event eliminado exitosamente");
+      setSnackbarMessage(t("text3"));
       setSnackbarOpen(true);
     }
     setDeleteDialogOpen(false);
@@ -113,7 +113,7 @@ const Events = (events) => {
           {t("event")}
         </Typography>
         <TextField
-          label="Filtrar por name"
+          label={t("filter")}
           variant="outlined"
           value={filter}
           onChange={handleFilterChange}
@@ -131,26 +131,26 @@ const Events = (events) => {
           component={Link}
           to="/create-events"
         >
-          Crear Event
+          {t("create")} {t("event")}
         </Button>
       </div>
       <Dialog open={deleteDialogOpen} onClose={handleDeleteDialogClose}>
-        <DialogTitle>Confirmar Eliminación</DialogTitle>
+        <DialogTitle>{t("confirmDelete")}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            ¿Estás seguro de que deseas eliminar este event?
+            {t("text2")} {t("event")}?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleDeleteDialogClose} color="secondary">
-            Cancelar
+            {t("cancel")}
           </Button>
           <Button
             onClick={() => handleDelete(deleteEventId)}
             color="primary"
             variant="contained"
           >
-            Eliminar
+            {t("delete")}
           </Button>
         </DialogActions>
       </Dialog>
@@ -160,16 +160,16 @@ const Events = (events) => {
             <TableRow>
               <TableCell></TableCell>
               <TableCell>
-                <strong>Nombre</strong>
+                <strong>{t("name")}</strong>
               </TableCell>
               <TableCell>
-                <strong>Fecha</strong>
+                <strong>{t("date")}</strong>
               </TableCell>
               <TableCell>
-                <strong>Ubicación</strong>
+                <strong>{t("location")}</strong>
               </TableCell>
               <TableCell>
-                <strong>Es Privado</strong>
+                <strong>{t("isPrivate")}</strong>
               </TableCell>
             </TableRow>
           </TableHead>

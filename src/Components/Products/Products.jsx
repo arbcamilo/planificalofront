@@ -117,7 +117,7 @@ const Products = () => {
             prov.id === selectedProduct.id ? updatedProduct : prov
           )
         );
-        setSnackbarMessage("Product actualizado exitosamente");
+        setSnackbarMessage(t("text4"));
         setSnackbarOpen(true);
         handleClose();
       }
@@ -125,7 +125,7 @@ const Products = () => {
       const createdProduct = await createProduct(newProduct);
       if (createdProduct) {
         setDataProducts([...dataProducts, createdProduct]);
-        setSnackbarMessage("Product creado exitosamente");
+        setSnackbarMessage(t("text5"));
         setSnackbarOpen(true);
         handleClose();
       }
@@ -143,7 +143,7 @@ const Products = () => {
     const success = await deleteProduct(id);
     if (success) {
       setDataProducts(dataProducts.filter((prov) => prov.id !== id));
-      setSnackbarMessage("Product eliminado exitosamente");
+      setSnackbarMessage(t("text3"));
       setSnackbarOpen(true);
     }
     setDeleteDialogOpen(false);
@@ -181,7 +181,7 @@ const Products = () => {
           {t("products")}
         </Typography>
         <TextField
-          label="Filtrar por tipo de producto"
+          label={t("filter")}
           variant="outlined"
           value={filter}
           onChange={handleFilterChange}
@@ -194,23 +194,20 @@ const Products = () => {
           }}
         />
         <Button variant="contained" color="primary" onClick={handleClickOpen}>
-          Crear Product
+          {t("create")} {t("product")}
         </Button>
       </div>
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>
-          {editMode ? "Editar Product" : "Crear Nuevo Product"}
-        </DialogTitle>
+        <DialogTitle>{editMode ? t("edit") : t("createNew")}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Por favor, complete el siguiente formulario para{" "}
-            {editMode ? "editar" : "crear"} un product.
+            {t("text1")} {t(editMode ? "edit" : "create")}
           </DialogContentText>
           <form onSubmit={handleSubmit}>
             <TextField
               margin="dense"
               name="productType"
-              label="Tipo de Product"
+              label={t("productType")}
               type="text"
               fullWidth
               value={newProduct.productType}
@@ -220,7 +217,7 @@ const Products = () => {
             <TextField
               margin="dense"
               name="price"
-              label="Precio"
+              label={t("price")}
               type="number"
               fullWidth
               value={newProduct.price}
@@ -231,7 +228,7 @@ const Products = () => {
               autoFocus
               margin="dense"
               name="amount"
-              label="Cantidad"
+              label={t("amount")}
               type="number"
               fullWidth
               value={newProduct.amount}
@@ -241,7 +238,7 @@ const Products = () => {
             <TextField
               margin="dense"
               name="description"
-              label="Descripción"
+              label={t("description")}
               type="text"
               fullWidth
               value={newProduct.description}
@@ -261,32 +258,32 @@ const Products = () => {
                 color="secondary"
                 variant="outlined"
               >
-                Cancelar
+                {t("cancel")}
               </Button>
               <Button type="submit" color="primary" variant="contained">
-                {editMode ? "Actualizar" : "Crear"}
+                {t(editMode ? "edit" : "create")}
               </Button>
             </div>
           </form>
         </DialogContent>
       </Dialog>
       <Dialog open={deleteDialogOpen} onClose={handleDeleteDialogClose}>
-        <DialogTitle>Confirmar Eliminación</DialogTitle>
+        <DialogTitle>{t("confirmDelete")}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            ¿Estás seguro de que deseas eliminar este product?
+            {t("text2")} {t("user")}?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleDeleteDialogClose} color="secondary">
-            Cancelar
+            {t("cancel")}
           </Button>
           <Button
             onClick={() => handleDelete(deleteProductId)}
             color="primary"
             variant="contained"
           >
-            Eliminar
+            {t("delete")}
           </Button>
         </DialogActions>
       </Dialog>
@@ -296,16 +293,16 @@ const Products = () => {
             <TableRow>
               <TableCell></TableCell>
               <TableCell>
-                <strong>Tipo de Product</strong>
+                <strong>{t("productType")}</strong>
               </TableCell>
               <TableCell>
-                <strong>Precio</strong>
+                <strong>{t("price")}</strong>
               </TableCell>
               <TableCell>
-                <strong>Cantidad</strong>
+                <strong>{t("amount")}</strong>
               </TableCell>
               <TableCell>
-                <strong>Descripción</strong>
+                <strong>{t("description")}</strong>
               </TableCell>
             </TableRow>
           </TableHead>
