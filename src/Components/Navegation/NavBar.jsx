@@ -10,7 +10,7 @@ import {
   Box,
 } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
-import EventIcon from "@mui/icons-material/Event";
+// import EventIcon from "@mui/icons-material/Event";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
@@ -88,10 +88,10 @@ const NavBar = ({ toggleTheme, mode }) => {
             <HomeIcon sx={{ marginRight: 1 }} />
             {t("home")}
           </Button>
-          <Button color="inherit" component={Link} to="/">
+          {/* <Button color="inherit" component={Link} to="/">
             <EventIcon sx={{ marginRight: 1 }} />
             {t("events")}
-          </Button>
+          </Button> */}
           <Button color="inherit" onClick={handleUsersMenu}>
             <PeopleIcon sx={{ marginRight: 1 }} />
             Usuarios
@@ -104,11 +104,11 @@ const NavBar = ({ toggleTheme, mode }) => {
               onMouseLeave: handleUsersClose,
             }}
           >
-            <MenuItem component={Link} to="/events">
+            <MenuItem component={Link} to="/events-list">
               <ListItemText primary="Eventos" />
             </MenuItem>
-            <MenuItem component={Link} to="/revocations">
-              <ListItemText primary="Revocations" />
+            <MenuItem component={Link} to="/guests">
+              <ListItemText primary="Guests" />
             </MenuItem>
           </Menu>
           <Button color="inherit" onClick={handleProvidersMenu}>
@@ -123,9 +123,9 @@ const NavBar = ({ toggleTheme, mode }) => {
               onMouseLeave: handleProvidersClose,
             }}
           >
-            <MenuItem component={Link} to="/requests">
+            {/* <MenuItem component={Link} to="/requests">
               <ListItemText primary="Solicitudes" />
-            </MenuItem>
+            </MenuItem> */}
             <MenuItem component={Link} to="/products">
               <ListItemText primary="Productos" />
             </MenuItem>

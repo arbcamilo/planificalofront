@@ -4,10 +4,12 @@ import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { createMyTheme } from "./styles/Theme";
 import NavBar from "./Components/Navegation/NavBar";
-import Inicio from "./Components/Home/Inicio";
+import Inicio from "./Components/Home/Home";
 import Providers from "./Components/Providers/Providers";
 import Users from "./Components/Users/Users";
 import Services from "./Components/Services/Services";
+import CreateEvents from "./Components/Events/CreateEvents";
+import EventsList from "./Components/Events/EventsList";
 import Products from "./Components/Products/Products";
 import Guests from "./Components/Guests/Guests";
 
@@ -36,6 +38,9 @@ function App() {
             <Route path="/providers" element={<Providers />} />
             <Route path="/users" element={<Users />} />
             <Route path="/services" element={<Services />} />
+            <Route path="/create-events" element={<CreateEvents />} />
+            <Route path="/events-list" element={<EventsList />} />
+            <Route path="/create-events/:id" element={<CreateEvents />} />
             <Route path="/products" element={<Products />} />
             <Route path="/guest" element={<Guests />} />
           </Routes>
