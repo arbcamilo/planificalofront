@@ -118,7 +118,7 @@ const Users = () => {
             prov.id === selectedUser.id ? updatedUser : prov
           )
         );
-        setSnackbarMessage("User actualizado exitosamente");
+        setSnackbarMessage(t("text4"));
         setSnackbarOpen(true);
         handleClose();
       }
@@ -126,7 +126,7 @@ const Users = () => {
       const createdUser = await createUser(newUser);
       if (createdUser) {
         setDataUsers([...dataUsers, createdUser]);
-        setSnackbarMessage("User creado exitosamente");
+        setSnackbarMessage(t("text5"));
         setSnackbarOpen(true);
         handleClose();
       }
@@ -144,7 +144,7 @@ const Users = () => {
     const success = await deleteUser(id);
     if (success) {
       setDataUsers(dataUsers.filter((prov) => prov.id !== id));
-      setSnackbarMessage("User eliminado exitosamente");
+      setSnackbarMessage(t("text3"));
       setSnackbarOpen(true);
     }
     setDeleteDialogOpen(false);
@@ -182,7 +182,7 @@ const Users = () => {
           {t("users")}
         </Typography>
         <TextField
-          label="Filtrar por name"
+          label={t("filter")}
           variant="outlined"
           value={filter}
           onChange={handleFilterChange}
@@ -195,23 +195,20 @@ const Users = () => {
           }}
         />
         <Button variant="contained" color="primary" onClick={handleClickOpen}>
-          Crear User
+          {t("create")} {t("user")}
         </Button>
       </div>
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>
-          {editMode ? "Editar User" : "Crear Nuevo User"}
-        </DialogTitle>
+        <DialogTitle>{editMode ? t("edit") : t("createNew")}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Por favor, complete el siguiente formulario para{" "}
-            {editMode ? "editar" : "crear"} un user.
+            {t("text1")} {t(editMode ? "edit" : "create")}
           </DialogContentText>
           <form onSubmit={handleSubmit}>
             <TextField
               margin="dense"
               name="documentType"
-              label="Tipo de Documento"
+              label={t("documentType")}
               type="text"
               fullWidth
               value={newUser.documentType}
@@ -221,7 +218,7 @@ const Users = () => {
             <TextField
               margin="dense"
               name="identityDocument"
-              label="Numero de Documento"
+              label={t("number")}
               type="text"
               fullWidth
               value={newUser.identityDocument}
@@ -232,7 +229,7 @@ const Users = () => {
               autoFocus
               margin="dense"
               name="name"
-              label="Nombre"
+              label={t("name")}
               type="text"
               fullWidth
               value={newUser.name}
@@ -242,7 +239,7 @@ const Users = () => {
             <TextField
               margin="dense"
               name="email"
-              label="Email"
+              label={t("email")}
               type="email"
               fullWidth
               value={newUser.email}
@@ -252,7 +249,7 @@ const Users = () => {
             <TextField
               margin="dense"
               name="phone"
-              label="Teléfono de Contacto"
+              label={t("telephone")}
               type="text"
               fullWidth
               value={newUser.phone}
@@ -262,7 +259,7 @@ const Users = () => {
             <TextField
               margin="dense"
               name="userStatus"
-              label="Estado user"
+              label={t("userStatus")}
               type="text"
               fullWidth
               value={newUser.userStatus}
@@ -272,7 +269,7 @@ const Users = () => {
             <TextField
               margin="dense"
               name="birthDate"
-              label="Fecha nacimiento"
+              label={t("birthDate")}
               type="date"
               fullWidth
               value={newUser.birthDate}
@@ -282,7 +279,7 @@ const Users = () => {
             <TextField
               margin="dense"
               name="accountCreationDate"
-              label="Fecha creacion cuenta"
+              label={t("accountCreationDate")}
               type="date"
               fullWidth
               value={newUser.accountCreationDate}
@@ -302,32 +299,32 @@ const Users = () => {
                 color="secondary"
                 variant="outlined"
               >
-                Cancelar
+                {t("cancel")}
               </Button>
               <Button type="submit" color="primary" variant="contained">
-                {editMode ? "Actualizar" : "Crear"}
+                {t(editMode ? "edit" : "create")}
               </Button>
             </div>
           </form>
         </DialogContent>
       </Dialog>
       <Dialog open={deleteDialogOpen} onClose={handleDeleteDialogClose}>
-        <DialogTitle>Confirmar Eliminación</DialogTitle>
+        <DialogTitle>{t("confirmDelete")}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            ¿Estás seguro de que deseas eliminar este user?
+            {t("text2")} {t("user")}?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleDeleteDialogClose} color="secondary">
-            Cancelar
+            {t("cancel")}
           </Button>
           <Button
             onClick={() => handleDelete(deleteUserId)}
             color="primary"
             variant="contained"
           >
-            Eliminar
+            {t("delete")}
           </Button>
         </DialogActions>
       </Dialog>
@@ -337,22 +334,22 @@ const Users = () => {
             <TableRow>
               <TableCell></TableCell>
               <TableCell>
-                <strong>Nombre</strong>
+                <strong>{t("name")}</strong>
               </TableCell>
               <TableCell>
-                <strong>TD</strong>
+                <strong>{t("documentType")}</strong>
               </TableCell>
               <TableCell>
-                <strong>Numero</strong>
+                <strong>{t("number")}</strong>
               </TableCell>
               <TableCell>
-                <strong>Email</strong>
+                <strong>{t("email")}</strong>
               </TableCell>
               <TableCell>
-                <strong>Teléfono</strong>
+                <strong>{t("Telephone")}</strong>
               </TableCell>
               <TableCell>
-                <strong>Estado</strong>
+                <strong>{t("userStatus")}</strong>
               </TableCell>
             </TableRow>
           </TableHead>
