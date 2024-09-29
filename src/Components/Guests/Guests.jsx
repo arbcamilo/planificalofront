@@ -108,7 +108,7 @@ const Guests = () => {
             prov.id === selectedGuest.id ? updatedGuest : prov
           )
         );
-        setSnackbarMessage("Guest actualizado exitosamente");
+        setSnackbarMessage(t("text4"));
         setSnackbarOpen(true);
         handleClose();
       }
@@ -116,7 +116,7 @@ const Guests = () => {
       const createdGuest = await createGuest(newGuest);
       if (createdGuest) {
         setDataGuests([...dataGuests, createdGuest]);
-        setSnackbarMessage("Guest creado exitosamente");
+        setSnackbarMessage(t("text5"));
         setSnackbarOpen(true);
         handleClose();
       }
@@ -134,7 +134,7 @@ const Guests = () => {
     const success = await deleteGuest(id);
     if (success) {
       setDataGuests(dataGuests.filter((prov) => prov.id !== id));
-      setSnackbarMessage("Guest eliminado exitosamente");
+      setSnackbarMessage(t("text3"));
       setSnackbarOpen(true);
     }
     setDeleteDialogOpen(false);
@@ -172,7 +172,7 @@ const Guests = () => {
           {t("guests")}
         </Typography>
         <TextField
-          label="Filtrar por name"
+          label={t("filter")}
           variant="outlined"
           value={filter}
           onChange={handleFilterChange}
@@ -185,24 +185,21 @@ const Guests = () => {
           }}
         />
         <Button variant="contained" color="primary" onClick={handleClickOpen}>
-          Crear Guest
+          {t("create")} {t("guest")}
         </Button>
       </div>
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>
-          {editMode ? "Editar Guest" : "Crear Nuevo Guest"}
-        </DialogTitle>
+        <DialogTitle>{editMode ? t("edit") : t("createNew")}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Por favor, complete el siguiente formulario para{" "}
-            {editMode ? "editar" : "crear"} un guest.
+            {t("text1")} {t(editMode ? "edit" : "create")}
           </DialogContentText>
           <form onSubmit={handleSubmit}>
             <TextField
               autoFocus
               margin="dense"
               name="name"
-              label="Nombre"
+              label={t("name")}
               type="text"
               fullWidth
               value={newGuest.name}
@@ -212,7 +209,7 @@ const Guests = () => {
             <TextField
               margin="dense"
               name="email"
-              label="Email"
+              label={t("email")}
               type="email"
               fullWidth
               value={newGuest.email}
@@ -222,7 +219,7 @@ const Guests = () => {
             <TextField
               margin="dense"
               name="guestStatus"
-              label="Estado del invitado"
+              label={t("guestStatus")}
               type="text"
               fullWidth
               value={newGuest.guestStatus}
@@ -242,32 +239,32 @@ const Guests = () => {
                 color="secondary"
                 variant="outlined"
               >
-                Cancelar
+                {t("cancel")}
               </Button>
               <Button type="submit" color="primary" variant="contained">
-                {editMode ? "Actualizar" : "Crear"}
+                {t(editMode ? "edit" : "create")}
               </Button>
             </div>
           </form>
         </DialogContent>
       </Dialog>
       <Dialog open={deleteDialogOpen} onClose={handleDeleteDialogClose}>
-        <DialogTitle>Confirmar Eliminación</DialogTitle>
+        <DialogTitle>{t("confirmDelete")}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            ¿Estás seguro de que deseas eliminar este guest?
+            {t("text2")} {t("guest")}?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleDeleteDialogClose} color="secondary">
-            Cancelar
+            {t("cancel")}
           </Button>
           <Button
             onClick={() => handleDelete(deleteGuestId)}
             color="primary"
             variant="contained"
           >
-            Eliminar
+            {t("delete")}
           </Button>
         </DialogActions>
       </Dialog>
@@ -277,13 +274,13 @@ const Guests = () => {
             <TableRow>
               <TableCell></TableCell>
               <TableCell>
-                <strong>Nombre</strong>
+                <strong>{t("name")}</strong>
               </TableCell>
               <TableCell>
-                <strong>Email</strong>
+                <strong>{t("email")}</strong>
               </TableCell>
               <TableCell>
-                <strong>Estado</strong>
+                <strong>{t("guestStatus")}</strong>
               </TableCell>
             </TableRow>
           </TableHead>

@@ -50,7 +50,7 @@ const Providers = () => {
     email: "",
     contactPhone: "",
     isNaturalPerson: true,
-    status: "Activo",
+    status: "Active",
     documentType: "CC",
     identityDocument: "",
   });
@@ -103,7 +103,7 @@ const Providers = () => {
       email: "",
       contactPhone: "",
       isNaturalPerson: true,
-      status: "Activo",
+      status: "Active",
       documentType: "NIT",
       identityDocument: "",
     });
@@ -127,7 +127,7 @@ const Providers = () => {
             prov.id === selectedProvider.id ? updatedProvider : prov
           )
         );
-        setSnackbarMessage("Provider actualizado exitosamente");
+        setSnackbarMessage(t("text4"));
         setSnackbarOpen(true);
         handleClose();
       }
@@ -135,7 +135,7 @@ const Providers = () => {
       const createdProvider = await createProvider(newProvider);
       if (createdProvider) {
         setDataProviders([...dataProviders, createdProvider]);
-        setSnackbarMessage("Provider creado exitosamente");
+        setSnackbarMessage(t("text5"));
         setSnackbarOpen(true);
         handleClose();
       }
@@ -153,7 +153,7 @@ const Providers = () => {
     const success = await deleteProvider(id);
     if (success) {
       setDataProviders(dataProviders.filter((prov) => prov.id !== id));
-      setSnackbarMessage("Provider eliminado exitosamente");
+      setSnackbarMessage(t("text3"));
       setSnackbarOpen(true);
     }
     setDeleteDialogOpen(false);
@@ -191,7 +191,7 @@ const Providers = () => {
           {t("provider")}
         </Typography>
         <TextField
-          label="Filtrar por name"
+          label={t("filter")}
           variant="outlined"
           value={filter}
           onChange={handleFilterChange}
@@ -204,23 +204,20 @@ const Providers = () => {
           }}
         />
         <Button variant="contained" color="primary" onClick={handleClickOpen}>
-          Crear Provider
+          {t("create")} {t("provider")}
         </Button>
       </div>
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>
-          {editMode ? "Editar Provider" : "Crear Nuevo Provider"}
-        </DialogTitle>
+        <DialogTitle>{editMode ? t("edit") : t("createNew")}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Por favor, complete el siguiente formulario para{" "}
-            {editMode ? "editar" : "crear"} un provider.
+            {t("text1")} {t(editMode ? "edit" : "create")}
           </DialogContentText>
           <form onSubmit={handleSubmit}>
             <TextField
               margin="dense"
               name="documentType"
-              label="Tipo de Documento"
+              label={t("documentType")}
               type="text"
               fullWidth
               value={newProvider.documentType}
@@ -230,7 +227,7 @@ const Providers = () => {
             <TextField
               margin="dense"
               name="identityDocument"
-              label="Numero de Documento"
+              label={t("number")}
               type="text"
               fullWidth
               value={newProvider.identityDocument}
@@ -241,7 +238,7 @@ const Providers = () => {
               autoFocus
               margin="dense"
               name="name"
-              label="Nombre"
+              label={t("name")}
               type="text"
               fullWidth
               value={newProvider.name}
@@ -251,7 +248,7 @@ const Providers = () => {
             <TextField
               margin="dense"
               name="country"
-              label="País"
+              label={t("country")}
               type="text"
               fullWidth
               value={newProvider.country}
@@ -261,7 +258,7 @@ const Providers = () => {
             <TextField
               margin="dense"
               name="department"
-              label="Departamento"
+              label={t("department")}
               type="text"
               fullWidth
               value={newProvider.department}
@@ -271,7 +268,7 @@ const Providers = () => {
             <TextField
               margin="dense"
               name="city"
-              label="Ciudad"
+              label={t("city")}
               type="text"
               fullWidth
               value={newProvider.city}
@@ -281,7 +278,7 @@ const Providers = () => {
             <TextField
               margin="dense"
               name="address"
-              label="Dirección"
+              label={t("address")}
               type="text"
               fullWidth
               value={newProvider.address}
@@ -291,7 +288,7 @@ const Providers = () => {
             <TextField
               margin="dense"
               name="email"
-              label="Email"
+              label={t("email")}
               type="email"
               fullWidth
               value={newProvider.email}
@@ -301,7 +298,7 @@ const Providers = () => {
             <TextField
               margin="dense"
               name="contactPhone"
-              label="Teléfono de Contacto"
+              label={t("telephone")}
               type="text"
               fullWidth
               value={newProvider.contactPhone}
@@ -321,32 +318,32 @@ const Providers = () => {
                 color="secondary"
                 variant="outlined"
               >
-                Cancelar
+                {t("cancel")}
               </Button>
               <Button type="submit" color="primary" variant="contained">
-                {editMode ? "Actualizar" : "Crear"}
+                {t(editMode ? "edit" : "create")}
               </Button>
             </div>
           </form>
         </DialogContent>
       </Dialog>
       <Dialog open={deleteDialogOpen} onClose={handleDeleteDialogClose}>
-        <DialogTitle>Confirmar Eliminación</DialogTitle>
+        <DialogTitle>{t("confirmDelete")}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            ¿Estás seguro de que deseas eliminar este provider?
+            {t("text2")} {t("provider")}?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleDeleteDialogClose} color="secondary">
-            Cancelar
+            {t("cancel")}
           </Button>
           <Button
             onClick={() => handleDelete(deleteProviderId)}
             color="primary"
             variant="contained"
           >
-            Eliminar
+            {t("delete")}
           </Button>
         </DialogActions>
       </Dialog>
@@ -356,25 +353,25 @@ const Providers = () => {
             <TableRow>
               <TableCell></TableCell>
               <TableCell>
-                <strong>Nombre</strong>
+                <strong>{t("name")}</strong>
               </TableCell>
               <TableCell>
-                <strong>TD</strong>
+                <strong>{t("documentType")}</strong>
               </TableCell>
               <TableCell>
-                <strong>Numero</strong>
+                <strong>{t("number")}</strong>
               </TableCell>
               <TableCell>
-                <strong>Ciudad</strong>
+                <strong>{t("city")}</strong>
               </TableCell>
               <TableCell>
-                <strong>Email</strong>
+                <strong>{t("email")}</strong>
               </TableCell>
               <TableCell>
-                <strong>Teléfono</strong>
+                <strong>{t("telephone")}</strong>
               </TableCell>
               <TableCell>
-                <strong>Estado</strong>
+                <strong>{t("status")}</strong>
               </TableCell>
             </TableRow>
           </TableHead>
