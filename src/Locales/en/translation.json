@@ -52,5 +52,10 @@
   "goto": "Go to",
   "filter": "Filter",
   "edit": "Edit",
-  "createNew": "Create New"
+  "createNew": "Create New",
+  "Notification": "Notification",
+  "editEvent": "Edit Event",
+  "createEvent": "Create Event",
+  "yes": "Yes",
+  "no": "No"
 }

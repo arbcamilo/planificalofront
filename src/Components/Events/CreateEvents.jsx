@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { Container, TextField, Button, Snackbar, Alert } from "@mui/material";
+import {
+  Container,
+  TextField,
+  Button,
+  Dialog,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  DialogActions,
+} from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { createEvent, updateEvent } from "./EventsServices";
 import { useParams } from "react-router-dom";
@@ -20,7 +29,7 @@ const CreateEvents = () => {
   });
   const [editMode, setEditMode] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarMessage, setSnackbarMessage] = useState(""); // Corregido aquí
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -70,9 +79,7 @@ const CreateEvents = () => {
 
   return (
     <Container>
-      <h1>
-        {t("create")} {t("event")}
-      </h1>
+      <h1>{t(editMode ? "editEvent" : "createEvent")}</h1>
       <form onSubmit={handleSubmit}>
         <TextField
           margin="dense"
@@ -106,37 +113,40 @@ const CreateEvents = () => {
           margin="dense"
           name="isPrivate"
           label={t("isPrivate")}
-          type="text"
+          select
           fullWidth
           value={eventData.isPrivate}
           onChange={handleInputChange}
-        />
+          SelectProps={{
+            native: true,
+          }}
+        >
+          <option value=""></option>
+          <option value="true">{t("yes")}</option>
+          <option value="false">{t("no")}</option>
+        </TextField>
         <Button type="submit" color="primary" variant="contained">
           {t(editMode ? "edit" : "create")}
         </Button>
       </form>
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={6000}
-        onClose={handleSnackbarClose}
-      >
-        <Alert
-          onClose={handleSnackbarClose}
-          severity="success"
-          action={
-            <>
-              <Button color="inherit" size="small" onClick={handleGoToEvents}>
-                {t("goto")} {t("events")}
-              </Button>
-              <Button color="inherit" size="small" onClick={handleGoToHome}>
-                {t("goto")} {t("home")}
-              </Button>
-            </>
-          }
-        >
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
+      <Dialog open={snackbarOpen} onClose={handleSnackbarClose}>
+        <DialogTitle>{t("Notification")}</DialogTitle>
+        <DialogContent>
+          <DialogContentText>{snackbarMessage}</DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={handleGoToEvents}
+            color="primary"
+            variant="contained"
+          >
+            {t("goto")} {t("events")}
+          </Button>
+          <Button onClick={handleGoToHome} color="primary" variant="contained">
+            {t("goto")} {t("home")}
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Container>
   );
 };
