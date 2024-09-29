@@ -56,5 +56,10 @@
   "goto": "Ir a",
   "filter": "Filtro",
   "edit": "Editar",
-  "createNew": "Crear Nuevo"
+  "createNew": "Crear Nuevo",
+  "Notification": "Notificación",
+  "editEvent": "Editar Evento",
+  "createEvent": "Crear Evento",
+  "yes": "Sí",
+  "no": "No"
 }

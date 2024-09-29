@@ -47,9 +47,9 @@ const Users = () => {
     name: "",
     email: "",
     phone: "",
-    userStatus: "Activo",
-    birthDate: "27/09/2024",
-    accountCreationDate: "27/09/2024",
+    userStatus: "Active",
+    birthDate: "2024-01-01",
+    accountCreationDate: "2024-01-01",
   });
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
@@ -97,9 +97,9 @@ const Users = () => {
       name: "",
       email: "",
       phone: "",
-      userStatus: "Activo",
-      birthDate: "27/09/2024",
-      accountCreationDate: "27/09/2024",
+      userStatus: "Active",
+      birthDate: "2024-01-01",
+      accountCreationDate: "2024-01-01",
     });
   };
 
@@ -206,15 +206,23 @@ const Users = () => {
           </DialogContentText>
           <form onSubmit={handleSubmit}>
             <TextField
+              select
               margin="dense"
               name="documentType"
               label={t("documentType")}
-              type="text"
               fullWidth
               value={newUser.documentType}
               onChange={handleInputChange}
               InputLabelProps={{ style: { fontWeight: "bold" } }}
-            />
+              SelectProps={{
+                native: true,
+              }}
+            >
+              <option value="CC">CC</option>
+              <option value="CE">CE</option>
+              <option value="NIT">NIT</option>
+              <option value="PP">PP</option>
+            </TextField>
             <TextField
               margin="dense"
               name="identityDocument"
@@ -257,15 +265,21 @@ const Users = () => {
               InputLabelProps={{ style: { fontWeight: "bold" } }}
             />
             <TextField
+              select
               margin="dense"
               name="userStatus"
               label={t("userStatus")}
-              type="text"
               fullWidth
               value={newUser.userStatus}
               onChange={handleInputChange}
               InputLabelProps={{ style: { fontWeight: "bold" } }}
-            />
+              SelectProps={{
+                native: true,
+              }}
+            >
+              <option value="Activo">{t("active")}</option>
+              <option value="Inactivo">{t("inactive")}</option>
+            </TextField>
             <TextField
               margin="dense"
               name="birthDate"
