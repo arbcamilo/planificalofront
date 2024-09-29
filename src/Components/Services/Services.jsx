@@ -117,7 +117,7 @@ const Services = () => {
             prov.id === selectedService.id ? updatedService : prov
           )
         );
-        setSnackbarMessage("Service actualizado exitosamente");
+        setSnackbarMessage(t("text4"));
         setSnackbarOpen(true);
         handleClose();
       }
@@ -125,7 +125,7 @@ const Services = () => {
       const createdService = await createService(newService);
       if (createdService) {
         setDataServices([...dataServices, createdService]);
-        setSnackbarMessage("Service creado exitosamente");
+        setSnackbarMessage(t("text5"));
         setSnackbarOpen(true);
         handleClose();
       }
@@ -143,7 +143,7 @@ const Services = () => {
     const success = await deleteService(id);
     if (success) {
       setDataServices(dataServices.filter((prov) => prov.id !== id));
-      setSnackbarMessage("Service eliminado exitosamente");
+      setSnackbarMessage(t("text3"));
       setSnackbarOpen(true);
     }
     setDeleteDialogOpen(false);
@@ -181,7 +181,7 @@ const Services = () => {
           {t("services")}
         </Typography>
         <TextField
-          label="Filtrar por nombre"
+          label={t("filter")}
           variant="outlined"
           value={filter}
           onChange={handleFilterChange}
@@ -194,23 +194,20 @@ const Services = () => {
           }}
         />
         <Button variant="contained" color="primary" onClick={handleClickOpen}>
-          Crear Service
+          {t("create")} {t("service")}
         </Button>
       </div>
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>
-          {editMode ? "Editar Service" : "Crear Nuevo Service"}
-        </DialogTitle>
+        <DialogTitle>{editMode ? t("edit") : t("createNew")}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Por favor, complete el siguiente formulario para{" "}
-            {editMode ? "editar" : "crear"} un servicio.
+            {t("text1")} {t(editMode ? "edit" : "create")}
           </DialogContentText>
           <form onSubmit={handleSubmit}>
             <TextField
               margin="dense"
               name="serviceType"
-              label="Tipo de Service"
+              label={t("serviceType")}
               type="text"
               fullWidth
               value={newService.serviceType}
@@ -220,7 +217,7 @@ const Services = () => {
             <TextField
               margin="dense"
               name="price"
-              label="Precio"
+              label={t("price")}
               type="number"
               fullWidth
               value={newService.price}
@@ -231,7 +228,7 @@ const Services = () => {
               autoFocus
               margin="dense"
               name="quantity"
-              label="Cantidad"
+              label={t("quantity")}
               type="text"
               fullWidth
               value={newService.quantity}
@@ -241,7 +238,7 @@ const Services = () => {
             <TextField
               margin="dense"
               name="description"
-              label="Descripción"
+              label={t("description")}
               type="text"
               fullWidth
               value={newService.description}
@@ -261,32 +258,32 @@ const Services = () => {
                 color="secondary"
                 variant="outlined"
               >
-                Cancelar
+                {t("cancel")}
               </Button>
               <Button type="submit" color="primary" variant="contained">
-                {editMode ? "Actualizar" : "Crear"}
+                {t(editMode ? "edit" : "create")}
               </Button>
             </div>
           </form>
         </DialogContent>
       </Dialog>
       <Dialog open={deleteDialogOpen} onClose={handleDeleteDialogClose}>
-        <DialogTitle>Confirmar Eliminación</DialogTitle>
+        <DialogTitle>{t("confirmDelete")}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            ¿Estás seguro de que deseas eliminar este servicio?
+            {t("text2")} {t("service")}?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleDeleteDialogClose} color="secondary">
-            Cancelar
+            {t("cancel")}
           </Button>
           <Button
             onClick={() => handleDelete(deleteServiceId)}
             color="primary"
             variant="contained"
           >
-            Eliminar
+            {t("delete")}
           </Button>
         </DialogActions>
       </Dialog>
@@ -296,16 +293,16 @@ const Services = () => {
             <TableRow>
               <TableCell></TableCell>
               <TableCell>
-                <strong>Tipo de Service</strong>
+                <strong>{t("serviceType")}</strong>
               </TableCell>
               <TableCell>
-                <strong>Precio</strong>
+                <strong>{t("price")}</strong>
               </TableCell>
               <TableCell>
-                <strong>Cantidad</strong>
+                <strong>{t("amount")}</strong>
               </TableCell>
               <TableCell>
-                <strong>Descripción</strong>
+                <strong>{t("description")}</strong>
               </TableCell>
             </TableRow>
           </TableHead>
