@@ -10,6 +10,8 @@ import Users from "./Components/Users/Users";
 import Services from "./Components/Services/Services";
 import CreateEvents from "./Components/Events/CreateEvents";
 import EventsList from "./Components/Events/EventsList";
+import Products from "./Components/Products/Products";
+import Guests from "./Components/Guests/Guests";
 
 function App() {
   const [mode, setMode] = useState("light");
@@ -39,6 +41,8 @@ function App() {
             <Route path="/create-events" element={<CreateEvents />} />
             <Route path="/events-list" element={<EventsList />} />
             <Route path="/create-events/:id" element={<CreateEvents />} />
+            <Route path="/products" element={<Products />} />
+            <Route path="/guest" element={<Guests />} />
           </Routes>
         </main>
       </ThemeProvider>
