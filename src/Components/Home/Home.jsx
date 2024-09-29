@@ -1,16 +1,18 @@
 import React from "react";
 import { Button, Typography, Container, Grid, Paper } from "@mui/material";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const Inicio = () => {
+  const { t } = useTranslation();
   return (
     <Container>
       <Paper elevation={3} style={{ padding: "20px", marginTop: "20px" }}>
         <Typography variant="h4" gutterBottom>
-          Bienvenido a Planifícalo
+          {t("text6")}
         </Typography>
         <Typography variant="body1" gutterBottom>
-          Aquí puedes gestionar tus eventos de manera eficiente.
+          {t("text7")}
         </Typography>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6}>
@@ -20,7 +22,7 @@ const Inicio = () => {
               component={Link}
               to="/create-events"
             >
-              Crear Evento
+              {t("create")} {t("events")}
             </Button>
           </Grid>
           {/* <Grid item xs={12} sm={6}>
@@ -30,7 +32,7 @@ const Inicio = () => {
               component={Link}
               to="/events"
             >
-              Ver Eventos
+              View events
             </Button>
           </Grid> */}
         </Grid>

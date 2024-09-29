@@ -94,7 +94,7 @@ const NavBar = ({ toggleTheme, mode }) => {
           </Button> */}
           <Button color="inherit" onClick={handleUsersMenu}>
             <PeopleIcon sx={{ marginRight: 1 }} />
-            Usuarios
+            {t("users")}
           </Button>
           <Menu
             anchorEl={usersAnchorEl}
@@ -113,7 +113,7 @@ const NavBar = ({ toggleTheme, mode }) => {
           </Menu>
           <Button color="inherit" onClick={handleProvidersMenu}>
             <LocalShippingIcon sx={{ marginRight: 1 }} />
-            Proveedores
+            {t("providers")}
           </Button>
           <Menu
             anchorEl={providersAnchorEl}

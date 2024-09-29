@@ -2,11 +2,13 @@ import React, { useState, useEffect } from "react";
 import { Container, TextField, Button, Snackbar, Alert } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { createEvent, updateEvent } from "./EventsServices";
-import { useParams } from "react-router-dom"; // Para obtener el parámetro 'id'
-import { fetchEventsId } from "./EventsServices"; // Asume que tienes una función para obtener un evento por ID
+import { useParams } from "react-router-dom";
+import { fetchEventsId } from "./EventsServices";
+import { useTranslation } from "react-i18next";
 
 const CreateEvents = () => {
-  const { id } = useParams(); // Obtener el ID del evento de la URL
+  const { id } = useParams();
+  const { t } = useTranslation();
   const [eventData, setEventData] = useState({
     title: "",
     date: "",
@@ -24,9 +26,9 @@ const CreateEvents = () => {
   useEffect(() => {
     if (id) {
       const getEvent = async () => {
-        const event = await fetchEventsId(id); // Obtén los datos del evento desde el backend
+        const event = await fetchEventsId(id);
         setEventData(event);
-        setEditMode(true); // Cambiamos a modo de edición
+        setEditMode(true);
       };
       getEvent();
     }
@@ -42,13 +44,13 @@ const CreateEvents = () => {
     if (editMode) {
       const updatedEvent = await updateEvent(eventData.id, eventData);
       if (updatedEvent) {
-        setSnackbarMessage("Evento actualizado exitosamente");
+        setSnackbarMessage(t("text4"));
         setSnackbarOpen(true);
       }
     } else {
       const createdEvent = await createEvent(eventData);
       if (createdEvent) {
-        setSnackbarMessage("Evento creado exitosamente");
+        setSnackbarMessage(t("text5"));
         setSnackbarOpen(true);
       }
     }
@@ -68,12 +70,14 @@ const CreateEvents = () => {
 
   return (
     <Container>
-      <h1>Crear Evento</h1>
+      <h1>
+        {t("create")} {t("event")}
+      </h1>
       <form onSubmit={handleSubmit}>
         <TextField
           margin="dense"
           name="title"
-          label="Nombre del Evento"
+          label={t("name")}
           type="text"
           fullWidth
           value={eventData.title}
@@ -82,7 +86,7 @@ const CreateEvents = () => {
         <TextField
           margin="dense"
           name="date"
-          label="Fecha del Evento"
+          label={`${t("date")} ${t("event")}`}
           type="date"
           fullWidth
           value={eventData.date}
@@ -92,7 +96,7 @@ const CreateEvents = () => {
         <TextField
           margin="dense"
           name="location"
-          label="Ubicación del Evento"
+          label={`${t("location")} ${t("event")}`}
           type="text"
           fullWidth
           value={eventData.location}
@@ -101,14 +105,14 @@ const CreateEvents = () => {
         <TextField
           margin="dense"
           name="isPrivate"
-          label="Es Privado"
+          label={t("isPrivate")}
           type="text"
           fullWidth
           value={eventData.isPrivate}
           onChange={handleInputChange}
         />
         <Button type="submit" color="primary" variant="contained">
-          {editMode ? "Actualizar Evento" : "Crear Evento"}
+          {t(editMode ? "edit" : "create")}
         </Button>
       </form>
       <Snackbar
@@ -122,10 +126,10 @@ const CreateEvents = () => {
           action={
             <>
               <Button color="inherit" size="small" onClick={handleGoToEvents}>
-                Ir a Mis Eventos
+                {t("goto")} {t("events")}
               </Button>
               <Button color="inherit" size="small" onClick={handleGoToHome}>
-                Ir a Home
+                {t("goto")} {t("home")}
               </Button>
             </>
           }
