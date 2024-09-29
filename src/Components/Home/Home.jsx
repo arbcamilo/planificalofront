@@ -23,7 +23,7 @@ const Inicio = () => {
               Crear Evento
             </Button>
           </Grid>
-          <Grid item xs={12} sm={6}>
+          {/* <Grid item xs={12} sm={6}>
             <Button
               variant="contained"
               color="secondary"
@@ -32,7 +32,7 @@ const Inicio = () => {
             >
               Ver Eventos
             </Button>
-          </Grid>
+          </Grid> */}
         </Grid>
       </Paper>
     </Container>

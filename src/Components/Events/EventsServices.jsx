@@ -15,6 +15,21 @@ export const fetchEvents = async () => {
   }
 };
 
+export const fetchEventsId = async (id) => {
+  try {
+    const response = await axios.get(`/admin/Events/${id}`);
+    if (response.data.success) {
+      return response.data.entity;
+    } else {
+      console.error("Error fetching events:", response.data.message);
+      return [];
+    }
+  } catch (error) {
+    console.error("Error fetching events:", error);
+    return [];
+  }
+};
+
 export const createEvent = async (newEvent) => {
   try {
     const response = await axios.post("/admin/Events", newEvent);

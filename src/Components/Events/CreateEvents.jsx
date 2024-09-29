@@ -1,30 +1,36 @@
 import React, { useState, useEffect } from "react";
 import { Container, TextField, Button, Snackbar, Alert } from "@mui/material";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { createEvent, updateEvent } from "./EventsServices";
+import { useParams } from "react-router-dom"; // Para obtener el parámetro 'id'
+import { fetchEventsId } from "./EventsServices"; // Asume que tienes una función para obtener un evento por ID
 
 const CreateEvents = () => {
+  const { id } = useParams(); // Obtener el ID del evento de la URL
   const [eventData, setEventData] = useState({
     title: "",
     date: "",
-    userId: 0,
+    userId: 1,
     location: "",
     eventTypeId: 0,
-    isPrivate: true,
+    isPrivate: "",
     quotes: [],
   });
   const [editMode, setEditMode] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
-  const history = useNavigate();
-  const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    if (location.state && location.state.event) {
-      setEventData(location.state.event);
-      setEditMode(true);
+    if (id) {
+      const getEvent = async () => {
+        const event = await fetchEventsId(id); // Obtén los datos del evento desde el backend
+        setEventData(event);
+        setEditMode(true); // Cambiamos a modo de edición
+      };
+      getEvent();
     }
-  }, [location.state]);
+  }, [id]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -53,15 +59,16 @@ const CreateEvents = () => {
   };
 
   const handleGoToEvents = () => {
-    history.push("/events");
+    navigate("/events-list");
   };
 
   const handleGoToHome = () => {
-    history.push("/");
+    navigate("/");
   };
 
   return (
     <Container>
+      <h1>Crear Evento</h1>
       <form onSubmit={handleSubmit}>
         <TextField
           margin="dense"
@@ -89,6 +96,15 @@ const CreateEvents = () => {
           type="text"
           fullWidth
           value={eventData.location}
+          onChange={handleInputChange}
+        />
+        <TextField
+          margin="dense"
+          name="isPrivate"
+          label="Es Privado"
+          type="text"
+          fullWidth
+          value={eventData.isPrivate}
           onChange={handleInputChange}
         />
         <Button type="submit" color="primary" variant="contained">

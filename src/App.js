@@ -38,6 +38,7 @@ function App() {
             <Route path="/services" element={<Services />} />
             <Route path="/create-events" element={<CreateEvents />} />
             <Route path="/events-list" element={<EventsList />} />
+            <Route path="/create-events/:id" element={<CreateEvents />} />
           </Routes>
         </main>
       </ThemeProvider>

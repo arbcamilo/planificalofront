@@ -26,8 +26,9 @@ import { Edit, Delete, FilterList } from "@mui/icons-material";
 import { fetchEvents, deleteEvent } from "./EventsServices";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-const Events = () => {
+const Events = (events) => {
   const [page, setPage] = useState(0);
   const { t } = useTranslation();
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -38,6 +39,10 @@ const Events = () => {
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deleteEventId, setDeleteEventId] = useState(null);
+  const navigate = useNavigate();
+  const handleEdit = (event) => {
+    navigate(`/create-events/${event.id}`);
+  };
 
   useEffect(() => {
     const getEvents = async () => {
@@ -120,7 +125,12 @@ const Events = () => {
             ),
           }}
         />
-        <Button variant="contained" color="primary" component={Link} to="/">
+        <Button
+          variant="contained"
+          color="primary"
+          component={Link}
+          to="/create-events"
+        >
           Crear Event
         </Button>
       </div>
@@ -170,7 +180,7 @@ const Events = () => {
                 <TableRow key={event.id}>
                   <TableCell>
                     <div style={{ display: "flex", gap: "2px" }}>
-                      <IconButton component={Link} to="/">
+                      <IconButton onClick={() => handleEdit(event)}>
                         <Edit color="primary" />
                       </IconButton>
                       <IconButton
@@ -183,7 +193,7 @@ const Events = () => {
                   <TableCell>{event.title}</TableCell>
                   <TableCell>{event.date}</TableCell>
                   <TableCell>{event.location}</TableCell>
-                  <TableCell>{event.isPrivate}</TableCell>
+                  <TableCell>{event.isPrivate ? "Sí" : "No"}</TableCell>
                 </TableRow>
               ))}
           </TableBody>
