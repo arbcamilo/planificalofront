@@ -323,7 +323,7 @@ const Providers = () => {
               }}
               InputLabelProps={{ style: { fontWeight: "bold" } }}
             >
-              <option value="Active">{t("active")}</option>
+              <option value="Active">{t("active1")}</option>
               <option value="Inactive">{t("inactive")}</option>
             </TextField>
             <div
