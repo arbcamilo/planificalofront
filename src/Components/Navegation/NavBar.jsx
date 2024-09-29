@@ -105,10 +105,10 @@ const NavBar = ({ toggleTheme, mode }) => {
             }}
           >
             <MenuItem component={Link} to="/events-list">
-              <ListItemText primary="Eventos" />
+              <ListItemText primary={t("events")} />
             </MenuItem>
             <MenuItem component={Link} to="/guests">
-              <ListItemText primary="Guests" />
+              <ListItemText primary={t("guests")} />
             </MenuItem>
           </Menu>
           <Button color="inherit" onClick={handleProvidersMenu}>
@@ -127,10 +127,10 @@ const NavBar = ({ toggleTheme, mode }) => {
               <ListItemText primary="Solicitudes" />
             </MenuItem> */}
             <MenuItem component={Link} to="/products">
-              <ListItemText primary="Productos" />
+              <ListItemText primary={t("products")} />
             </MenuItem>
             <MenuItem component={Link} to="/services">
-              <ListItemText primary="Servicios" />
+              <ListItemText primary={t("services")} />
             </MenuItem>
           </Menu>
           <Button color="inherit" onClick={handleMenu}>
@@ -146,10 +146,10 @@ const NavBar = ({ toggleTheme, mode }) => {
             }}
           >
             <MenuItem component={Link} to="/providers">
-              <ListItemText primary="Providers" />
+              <ListItemText primary={t("providers")} />
             </MenuItem>
             <MenuItem component={Link} to="/users">
-              <ListItemText primary="Users" />
+              <ListItemText primary={t("users")} />
             </MenuItem>
           </Menu>
         </Box>
