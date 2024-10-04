@@ -61,5 +61,7 @@
   "editEvent": "Editar Evento",
   "createEvent": "Crear Evento",
   "yes": "Sí",
-  "no": "No"
+  "no": "No",
+  "active1": "Activo",
+  "inactive": "Inactivo"
 }
