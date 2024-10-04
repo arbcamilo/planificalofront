@@ -12,6 +12,8 @@ import CreateEvents from "./Components/Events/CreateEvents";
 import EventsList from "./Components/Events/EventsList";
 import Products from "./Components/Products/Products";
 import Guests from "./Components/Guests/Guests";
+import Login from "./Components/Security/Login";
+import Registro from "./Components/Security/Registro";
 
 function App() {
   const [mode, setMode] = useState("light");
@@ -34,6 +36,8 @@ function App() {
           }}
         >
           <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/registro" element={<Registro />} />
             <Route path="/" element={<Inicio />} />
             <Route path="/providers" element={<Providers />} />
             <Route path="/users" element={<Users />} />

@@ -154,12 +154,12 @@ const NavBar = ({ toggleTheme, mode }) => {
           </Menu>
         </Box>
         <Box sx={{ display: "flex", alignItems: "center" }}>
-          {/* <Button color="inherit" component={Link} to="/login">
+          <Button color="inherit" component={Link} to="/login">
             {t("login")}
           </Button>
           <Button color="inherit" component={Link} to="/registro">
             {t("createAccount")}
-          </Button> */}
+          </Button>
           <IconButton color="inherit" onClick={toggleTheme}>
             {mode === "dark" ? <Brightness7Icon /> : <Brightness4Icon />}
           </IconButton>

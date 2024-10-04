@@ -277,7 +277,7 @@ const Users = () => {
                 native: true,
               }}
             >
-              <option value="Activo">{t("active")}</option>
+              <option value="Activo">{t("active1")}</option>
               <option value="Inactivo">{t("inactive")}</option>
             </TextField>
             <TextField
