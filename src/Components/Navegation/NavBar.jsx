@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   AppBar,
   Toolbar,
@@ -10,7 +10,6 @@ import {
   Box,
 } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
-// import EventIcon from "@mui/icons-material/Event";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
@@ -19,9 +18,11 @@ import PeopleIcon from "@mui/icons-material/People";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { AuthContext } from "../Security/context/AuthContext";
 
 const NavBar = ({ toggleTheme, mode }) => {
   const { t, i18n } = useTranslation();
+  const { user, logout } = useContext(AuthContext);
   const [anchorEl, setAnchorEl] = useState(null);
   const [languageAnchorEl, setLanguageAnchorEl] = useState(null);
   const [usersAnchorEl, setUsersAnchorEl] = useState(null);
@@ -64,6 +65,85 @@ const NavBar = ({ toggleTheme, mode }) => {
     handleLanguageClose();
   };
 
+  const renderMenuItems = () => {
+    switch (user?.role) {
+      case "Admin":
+        return (
+          <>
+            <Button color="inherit" onClick={handleMenu}>
+              <AdminPanelSettingsIcon sx={{ marginRight: 1 }} />
+              ADMIN
+            </Button>
+            <Menu
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleClose}
+              MenuListProps={{
+                onMouseLeave: handleClose,
+              }}
+            >
+              <MenuItem component={Link} to="/providers">
+                <ListItemText primary={t("providers")} />
+              </MenuItem>
+              <MenuItem component={Link} to="/users">
+                <ListItemText primary={t("users")} />
+              </MenuItem>
+            </Menu>
+          </>
+        );
+      case "provider":
+        return (
+          <>
+            <Button color="inherit" onClick={handleProvidersMenu}>
+              <LocalShippingIcon sx={{ marginRight: 1 }} />
+              {t("providers")}
+            </Button>
+            <Menu
+              anchorEl={providersAnchorEl}
+              open={Boolean(providersAnchorEl)}
+              onClose={handleProvidersClose}
+              MenuListProps={{
+                onMouseLeave: handleProvidersClose,
+              }}
+            >
+              <MenuItem component={Link} to="/products">
+                <ListItemText primary={t("products")} />
+              </MenuItem>
+              <MenuItem component={Link} to="/services">
+                <ListItemText primary={t("services")} />
+              </MenuItem>
+            </Menu>
+          </>
+        );
+      case "User":
+        return (
+          <>
+            <Button color="inherit" onClick={handleUsersMenu}>
+              <PeopleIcon sx={{ marginRight: 1 }} />
+              {t("users")}
+            </Button>
+            <Menu
+              anchorEl={usersAnchorEl}
+              open={Boolean(usersAnchorEl)}
+              onClose={handleUsersClose}
+              MenuListProps={{
+                onMouseLeave: handleUsersClose,
+              }}
+            >
+              <MenuItem component={Link} to="/events-list">
+                <ListItemText primary={t("events")} />
+              </MenuItem>
+              <MenuItem component={Link} to="/guests">
+                <ListItemText primary={t("guests")} />
+              </MenuItem>
+            </Menu>
+          </>
+        );
+      default:
+        return null;
+    }
+  };
+
   return (
     <AppBar position="fixed">
       <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
@@ -88,78 +168,26 @@ const NavBar = ({ toggleTheme, mode }) => {
             <HomeIcon sx={{ marginRight: 1 }} />
             {t("home")}
           </Button>
-          {/* <Button color="inherit" component={Link} to="/">
-            <EventIcon sx={{ marginRight: 1 }} />
-            {t("events")}
-          </Button> */}
-          <Button color="inherit" onClick={handleUsersMenu}>
-            <PeopleIcon sx={{ marginRight: 1 }} />
-            {t("users")}
-          </Button>
-          <Menu
-            anchorEl={usersAnchorEl}
-            open={Boolean(usersAnchorEl)}
-            onClose={handleUsersClose}
-            MenuListProps={{
-              onMouseLeave: handleUsersClose,
-            }}
-          >
-            <MenuItem component={Link} to="/events-list">
-              <ListItemText primary={t("events")} />
-            </MenuItem>
-            <MenuItem component={Link} to="/guests">
-              <ListItemText primary={t("guests")} />
-            </MenuItem>
-          </Menu>
-          <Button color="inherit" onClick={handleProvidersMenu}>
-            <LocalShippingIcon sx={{ marginRight: 1 }} />
-            {t("providers")}
-          </Button>
-          <Menu
-            anchorEl={providersAnchorEl}
-            open={Boolean(providersAnchorEl)}
-            onClose={handleProvidersClose}
-            MenuListProps={{
-              onMouseLeave: handleProvidersClose,
-            }}
-          >
-            {/* <MenuItem component={Link} to="/requests">
-              <ListItemText primary="Solicitudes" />
-            </MenuItem> */}
-            <MenuItem component={Link} to="/products">
-              <ListItemText primary={t("products")} />
-            </MenuItem>
-            <MenuItem component={Link} to="/services">
-              <ListItemText primary={t("services")} />
-            </MenuItem>
-          </Menu>
-          <Button color="inherit" onClick={handleMenu}>
-            <AdminPanelSettingsIcon sx={{ marginRight: 1 }} />
-            ADMIN
-          </Button>
-          <Menu
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={handleClose}
-            MenuListProps={{
-              onMouseLeave: handleClose,
-            }}
-          >
-            <MenuItem component={Link} to="/providers">
-              <ListItemText primary={t("providers")} />
-            </MenuItem>
-            <MenuItem component={Link} to="/users">
-              <ListItemText primary={t("users")} />
-            </MenuItem>
-          </Menu>
+          {renderMenuItems()}
         </Box>
         <Box sx={{ display: "flex", alignItems: "center" }}>
-          {/* <Button color="inherit" component={Link} to="/login">
-            {t("login")}
-          </Button>
-          <Button color="inherit" component={Link} to="/registro">
-            {t("createAccount")}
-          </Button> */}
+          {user ? (
+            <>
+              <Button color="inherit">{user.name}</Button>
+              <Button color="inherit" onClick={logout}>
+                {t("logout")}
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button color="inherit" component={Link} to="/login">
+                {t("login")}
+              </Button>
+              <Button color="inherit" component={Link} to="/registro">
+                {t("createAccount")}
+              </Button>
+            </>
+          )}
           <IconButton color="inherit" onClick={toggleTheme}>
             {mode === "dark" ? <Brightness7Icon /> : <Brightness4Icon />}
           </IconButton>
