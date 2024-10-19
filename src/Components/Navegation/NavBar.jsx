@@ -8,6 +8,8 @@ import {
   MenuItem,
   ListItemText,
   Box,
+  Avatar,
+  Typography,
 } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
@@ -16,6 +18,7 @@ import Brightness7Icon from "@mui/icons-material/Brightness7";
 import LanguageIcon from "@mui/icons-material/Language";
 import PeopleIcon from "@mui/icons-material/People";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { AuthContext } from "../Security/context/AuthContext";
@@ -27,6 +30,7 @@ const NavBar = ({ toggleTheme, mode }) => {
   const [languageAnchorEl, setLanguageAnchorEl] = useState(null);
   const [usersAnchorEl, setUsersAnchorEl] = useState(null);
   const [providersAnchorEl, setProvidersAnchorEl] = useState(null);
+  const [userMenuAnchorEl, setUserMenuAnchorEl] = useState(null);
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -58,6 +62,14 @@ const NavBar = ({ toggleTheme, mode }) => {
 
   const handleProvidersClose = () => {
     setProvidersAnchorEl(null);
+  };
+
+  const handleUserMenu = (event) => {
+    setUserMenuAnchorEl(event.currentTarget);
+  };
+
+  const handleUserMenuClose = () => {
+    setUserMenuAnchorEl(null);
   };
 
   const changeLanguage = (lng) => {
@@ -173,10 +185,31 @@ const NavBar = ({ toggleTheme, mode }) => {
         <Box sx={{ display: "flex", alignItems: "center" }}>
           {user ? (
             <>
-              <Button color="inherit">{user.name}</Button>
-              <Button color="inherit" onClick={logout}>
-                {t("logout")}
-              </Button>
+              <IconButton color="inherit" onClick={handleUserMenu}>
+                <AccountCircleIcon />
+              </IconButton>
+              <Menu
+                anchorEl={userMenuAnchorEl}
+                open={Boolean(userMenuAnchorEl)}
+                onClose={handleUserMenuClose}
+                MenuListProps={{
+                  onMouseLeave: handleUserMenuClose,
+                }}
+              >
+                <MenuItem>
+                  <Box sx={{ display: "flex", alignItems: "center" }}>
+                    <Avatar
+                      alt={user.name}
+                      src={user.profilePicture}
+                      sx={{ marginRight: 2 }}
+                    />
+                    <Typography>{user.name}</Typography>
+                  </Box>
+                </MenuItem>
+                <MenuItem onClick={logout}>
+                  <ListItemText primary={t("logout")} />
+                </MenuItem>
+              </Menu>
             </>
           ) : (
             <>
