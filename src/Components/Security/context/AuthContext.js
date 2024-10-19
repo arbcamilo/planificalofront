@@ -1,6 +1,7 @@
 // src/Components/Security/context/AuthContext.js
 import React, { createContext, useState, useEffect } from "react";
 import axios from "../../../axiosConfig"; // Importa la instancia de Axios configurada
+import { jwtDecode } from "jwt-decode"; // Importa jwtDecode como una exportación nombrada
 
 const AuthContext = createContext();
 
@@ -13,8 +14,20 @@ const AuthProvider = ({ children }) => {
         const token = localStorage.getItem("token");
         if (token) {
           axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-          const response = await axios.get("/admin/Users/me");
-          setUser(response.data);
+          const decodedToken = jwtDecode(token);
+          const userData = {
+            email:
+              decodedToken[
+                "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"
+              ],
+            role: decodedToken[
+              "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+            ],
+            firstName: decodedToken.FirstName,
+            lastName: decodedToken.LastName,
+            photo: decodedToken.Photo,
+          };
+          setUser(userData);
         }
       } catch (error) {
         setUser(null);
@@ -26,11 +39,23 @@ const AuthProvider = ({ children }) => {
   const login = async (credentials) => {
     try {
       const response = await axios.post("/admin/Users/Login", credentials);
-      setUser(response.data);
-      localStorage.setItem("token", response.data.token);
-      axios.defaults.headers.common[
-        "Authorization"
-      ] = `Bearer ${response.data.token}`;
+      const token = response.data.token;
+      localStorage.setItem("token", token);
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      const decodedToken = jwtDecode(token);
+      const userData = {
+        email:
+          decodedToken[
+            "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"
+          ],
+        role: decodedToken[
+          "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+        ],
+        firstName: decodedToken.FirstName,
+        lastName: decodedToken.LastName,
+        photo: decodedToken.Photo,
+      };
+      setUser(userData);
       return { success: true };
     } catch (error) {
       console.error("Login failed:", error);
