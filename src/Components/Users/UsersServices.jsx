@@ -2,7 +2,7 @@ import axios from "../../axiosConfig";
 
 export const fetchUsers = async () => {
   try {
-    const response = await axios.get("/admin/Users");
+    const response = await axios.get("/admin/Users/GetAll");
     if (response.data.success) {
       return response.data.entity;
     } else {

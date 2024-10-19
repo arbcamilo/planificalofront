@@ -42,13 +42,11 @@ const Users = () => {
   const [editMode, setEditMode] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [newUser, setNewUser] = useState({
+    firstName: "",
+    lastName: "",
     documentType: "CC",
-    identityDocument: "",
-    name: "",
     email: "",
-    phone: "",
     userStatus: "Activo",
-    birthDate: "27/09/2024",
     accountCreationDate: "27/09/2024",
   });
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -69,7 +67,7 @@ const Users = () => {
   useEffect(() => {
     setFilteredUsers(
       dataUsers.filter((prov) =>
-        prov.name.toLowerCase().includes(filter.toLowerCase())
+        prov.firstName.toLowerCase().includes(filter.toLowerCase())
       )
     );
   }, [filter, dataUsers]);
@@ -92,13 +90,11 @@ const Users = () => {
     setEditMode(false);
     setSelectedUser(null);
     setNewUser({
+      firstName: "",
+      lastName: "",
       documentType: "CC",
-      identityDocument: "",
-      name: "",
       email: "",
-      phone: "",
       userStatus: "Activo",
-      birthDate: "27/09/2024",
       accountCreationDate: "27/09/2024",
     });
   };
@@ -206,33 +202,34 @@ const Users = () => {
           </DialogContentText>
           <form onSubmit={handleSubmit}>
             <TextField
+              autoFocus
               margin="dense"
-              name="documentType"
-              label={t("documentType")}
+              name="firstName"
+              label={t("firstName")}
               type="text"
               fullWidth
-              value={newUser.documentType}
-              onChange={handleInputChange}
-              InputLabelProps={{ style: { fontWeight: "bold" } }}
-            />
-            <TextField
-              margin="dense"
-              name="identityDocument"
-              label={t("number")}
-              type="text"
-              fullWidth
-              value={newUser.identityDocument}
+              value={newUser.firstName}
               onChange={handleInputChange}
               InputLabelProps={{ style: { fontWeight: "bold" } }}
             />
             <TextField
               autoFocus
               margin="dense"
-              name="name"
-              label={t("name")}
+              name="lastName"
+              label={t("lastName")}
               type="text"
               fullWidth
-              value={newUser.name}
+              value={newUser.lastName}
+              onChange={handleInputChange}
+              InputLabelProps={{ style: { fontWeight: "bold" } }}
+            />
+            <TextField
+              margin="dense"
+              name="documentType"
+              label={t("documentType")}
+              type="text"
+              fullWidth
+              value={newUser.documentType}
               onChange={handleInputChange}
               InputLabelProps={{ style: { fontWeight: "bold" } }}
             />
@@ -248,31 +245,11 @@ const Users = () => {
             />
             <TextField
               margin="dense"
-              name="phone"
-              label={t("telephone")}
-              type="text"
-              fullWidth
-              value={newUser.phone}
-              onChange={handleInputChange}
-              InputLabelProps={{ style: { fontWeight: "bold" } }}
-            />
-            <TextField
-              margin="dense"
               name="userStatus"
               label={t("userStatus")}
               type="text"
               fullWidth
               value={newUser.userStatus}
-              onChange={handleInputChange}
-              InputLabelProps={{ style: { fontWeight: "bold" } }}
-            />
-            <TextField
-              margin="dense"
-              name="birthDate"
-              label={t("birthDate")}
-              type="date"
-              fullWidth
-              value={newUser.birthDate}
               onChange={handleInputChange}
               InputLabelProps={{ style: { fontWeight: "bold" } }}
             />
@@ -334,19 +311,16 @@ const Users = () => {
             <TableRow>
               <TableCell></TableCell>
               <TableCell>
-                <strong>{t("name")}</strong>
+                <strong>{t("firstName")}</strong>
+              </TableCell>
+              <TableCell>
+                <strong>{t("lastName")}</strong>
               </TableCell>
               <TableCell>
                 <strong>{t("documentType")}</strong>
               </TableCell>
               <TableCell>
-                <strong>{t("number")}</strong>
-              </TableCell>
-              <TableCell>
                 <strong>{t("email")}</strong>
-              </TableCell>
-              <TableCell>
-                <strong>{t("Telephone")}</strong>
               </TableCell>
               <TableCell>
                 <strong>{t("userStatus")}</strong>
@@ -370,11 +344,10 @@ const Users = () => {
                       </IconButton>
                     </div>
                   </TableCell>
-                  <TableCell>{user.name}</TableCell>
+                  <TableCell>{user.firstName}</TableCell>
+                  <TableCell>{user.lastName}</TableCell>
                   <TableCell>{user.documentType}</TableCell>
-                  <TableCell>{user.identityDocument}</TableCell>
                   <TableCell>{user.email}</TableCell>
-                  <TableCell>{user.phone}</TableCell>
                   <TableCell>{user.userStatus}</TableCell>
                 </TableRow>
               ))}
