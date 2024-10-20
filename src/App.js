@@ -24,6 +24,7 @@ import ResendConfirmation from "./Components/Security/ResendConfirmation";
 import EditUser from "./Components/Security/EditUser";
 import ForgotPassword from "./Components/Security/ForgotPassword";
 import ResetPassword from "./Components/Security/ResetPassword";
+import ConfirmationEmail from "./Components/Security/ConfirmationEmail";
 
 function App() {
   const [mode, setMode] = useState("light");
@@ -50,7 +51,11 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route
-                path="/resend-confirmation"
+                path="/confirmation-email"
+                element={<ConfirmationEmail />}
+              />
+              <Route
+                path="/resend-confirmatioclsn"
                 element={<ResendConfirmation />}
               />
               <Route path="/forgot-password" element={<ForgotPassword />} />

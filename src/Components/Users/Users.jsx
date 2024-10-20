@@ -90,12 +90,21 @@ const Users = () => {
     setEditMode(false);
     setSelectedUser(null);
     setNewUser({
-      firstName: "",
-      lastName: "",
+      userName: "jhon@hotmail.com",
+      email: "jhon@hotmail.com",
+      emailConfirmed: false,
+      phoneNumber: "31245465421",
+      phoneNumberConfirmed: true,
+      firstName: "Alejandro",
+      lastName: "Diaz",
       documentType: "CC",
-      email: "",
-      userStatus: "Activo",
-      accountCreationDate: "27/09/2024",
+      userType: 2,
+      userStatus: "Active",
+      birthDate: "1999-10-19",
+      accountCreationDate: "2024-10-19",
+      password: "123456",
+      confirmPassword: "123456",
+      language: "es",
     });
   };
 
@@ -213,7 +222,6 @@ const Users = () => {
               InputLabelProps={{ style: { fontWeight: "bold" } }}
             />
             <TextField
-              autoFocus
               margin="dense"
               name="lastName"
               label={t("lastName")}
@@ -225,11 +233,11 @@ const Users = () => {
             />
             <TextField
               margin="dense"
-              name="documentType"
-              label={t("documentType")}
+              name="userName"
+              label={t("userName")}
               type="text"
               fullWidth
-              value={newUser.documentType}
+              value={newUser.userName}
               onChange={handleInputChange}
               InputLabelProps={{ style: { fontWeight: "bold" } }}
             />
@@ -245,6 +253,36 @@ const Users = () => {
             />
             <TextField
               margin="dense"
+              name="phoneNumber"
+              label={t("phoneNumber")}
+              type="text"
+              fullWidth
+              value={newUser.phoneNumber}
+              onChange={handleInputChange}
+              InputLabelProps={{ style: { fontWeight: "bold" } }}
+            />
+            <TextField
+              margin="dense"
+              name="documentType"
+              label={t("documentType")}
+              type="text"
+              fullWidth
+              value={newUser.documentType}
+              onChange={handleInputChange}
+              InputLabelProps={{ style: { fontWeight: "bold" } }}
+            />
+            <TextField
+              margin="dense"
+              name="userType"
+              label={t("userType")}
+              type="number"
+              fullWidth
+              value={newUser.userType}
+              onChange={handleInputChange}
+              InputLabelProps={{ style: { fontWeight: "bold" } }}
+            />
+            <TextField
+              margin="dense"
               name="userStatus"
               label={t("userStatus")}
               type="text"
@@ -255,11 +293,53 @@ const Users = () => {
             />
             <TextField
               margin="dense"
+              name="birthDate"
+              label={t("birthDate")}
+              type="date"
+              fullWidth
+              value={newUser.birthDate}
+              onChange={handleInputChange}
+              InputLabelProps={{ style: { fontWeight: "bold" } }}
+              InputProps={{ inputProps: { max: "9999-12-31" } }}
+            />
+            <TextField
+              margin="dense"
               name="accountCreationDate"
               label={t("accountCreationDate")}
               type="date"
               fullWidth
               value={newUser.accountCreationDate}
+              onChange={handleInputChange}
+              InputLabelProps={{ style: { fontWeight: "bold" } }}
+              InputProps={{ inputProps: { max: "9999-12-31" } }}
+            />
+            <TextField
+              margin="dense"
+              name="password"
+              label={t("password")}
+              type="password"
+              fullWidth
+              value={newUser.password}
+              onChange={handleInputChange}
+              InputLabelProps={{ style: { fontWeight: "bold" } }}
+            />
+            <TextField
+              margin="dense"
+              name="confirmPassword"
+              label={t("confirmPassword")}
+              type="password"
+              fullWidth
+              value={newUser.confirmPassword}
+              onChange={handleInputChange}
+              InputLabelProps={{ style: { fontWeight: "bold" } }}
+            />
+            <TextField
+              margin="dense"
+              name="language"
+              label={t("language")}
+              type="text"
+              fullWidth
+              value={newUser.language}
               onChange={handleInputChange}
               InputLabelProps={{ style: { fontWeight: "bold" } }}
             />
