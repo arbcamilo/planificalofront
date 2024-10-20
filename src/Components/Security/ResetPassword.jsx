@@ -1,42 +1,61 @@
-import React, { useState } from "react";
-import axios from "axios";
-import { useParams } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 import {
   Container,
   TextField,
   Button,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  DialogActions,
   Snackbar,
   Typography,
 } from "@mui/material";
+import axios from "axios";
+import { useLocation } from "react-router-dom";
 
 const ResetPassword = () => {
-  const { token } = useParams();
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [error, setError] = useState("");
-  const [open, setOpen] = useState(false);
+  const [email, setEmail] = useState("");
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmNewPassword, setConfirmNewPassword] = useState("");
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [token, setToken] = useState("");
+
+  const location = useLocation();
+
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const token = queryParams.get("token");
+    setToken(token);
+  }, [location]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (password !== confirmPassword) {
-      setError("Passwords do not match");
+    if (newPassword !== confirmNewPassword) {
+      setSnackbarMessage("New passwords do not match");
+      setSnackbarOpen(true);
       return;
     }
+
+    const data = {
+      email: email,
+      currentPassword: currentPassword,
+      newPassword: newPassword,
+      confirmNewPassword: confirmNewPassword,
+    };
+
     try {
-      await axios.post(`/api/auth/reset-password/${token}`, { password });
-      setError(""); // Clear any previous errors
-      setSnackbarMessage("Password reset successfully");
+      await axios.put(
+        "https://localhost:7003/api/admin/Users/ChangePassword",
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setSnackbarMessage("Password changed successfully");
+    } catch (error) {
+      setSnackbarMessage("Error changing password");
+    } finally {
       setSnackbarOpen(true);
-      setOpen(false);
-    } catch (err) {
-      setError("Failed to reset password");
     }
   };
 
@@ -51,45 +70,44 @@ const ResetPassword = () => {
       </Typography>
       <form onSubmit={handleSubmit}>
         <TextField
-          type="password"
-          label="New Password"
+          label="Email"
           variant="outlined"
           fullWidth
           margin="normal"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
         />
         <TextField
+          label="Current Password"
           type="password"
-          label="Confirm Password"
           variant="outlined"
           fullWidth
           margin="normal"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
+          value={currentPassword}
+          onChange={(e) => setCurrentPassword(e.target.value)}
         />
-        {error && (
-          <Typography color="error" variant="body2">
-            {error}
-          </Typography>
-        )}
+        <TextField
+          label="New Password"
+          type="password"
+          variant="outlined"
+          fullWidth
+          margin="normal"
+          value={newPassword}
+          onChange={(e) => setNewPassword(e.target.value)}
+        />
+        <TextField
+          label="Confirm New Password"
+          type="password"
+          variant="outlined"
+          fullWidth
+          margin="normal"
+          value={confirmNewPassword}
+          onChange={(e) => setConfirmNewPassword(e.target.value)}
+        />
         <Button type="submit" variant="contained" color="primary" fullWidth>
-          Reset Password
+          Change Password
         </Button>
       </form>
-      <Dialog open={open} onClose={() => setOpen(false)}>
-        <DialogTitle>Password Reset</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Your password has been reset successfully.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpen(false)} color="primary">
-            Close
-          </Button>
-        </DialogActions>
-      </Dialog>
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={6000}

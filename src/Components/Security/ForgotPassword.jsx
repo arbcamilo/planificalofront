@@ -1,32 +1,55 @@
 import React, { useState } from "react";
-import axios from "axios";
 import {
   Container,
-  TextField,
   Button,
+  TextField,
   Snackbar,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
   Typography,
 } from "@mui/material";
+import axios from "axios";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
+  const [lenguage, setLenguage] = useState("es");
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("/api/auth/forgot-password", { email });
+      await axios.get(
+        `https://localhost:7003/api/admin/Users/RecoveryPassword`,
+        {
+          params: {
+            email: email,
+            lenguage: lenguage,
+          },
+        }
+      );
       setSnackbarMessage("Reset link sent successfully");
-      setSnackbarOpen(true);
+      setDialogOpen(true); // Abrir el diálogo
     } catch (error) {
-      setSnackbarMessage("Failed to send reset link");
+      setSnackbarMessage("Error sending reset link");
       setSnackbarOpen(true);
     }
   };
 
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
+  };
+
+  const handleDialogClose = () => {
+    setDialogOpen(false);
   };
 
   return (
@@ -36,7 +59,6 @@ const ForgotPassword = () => {
       </Typography>
       <form onSubmit={handleSubmit}>
         <TextField
-          type="email"
           label="Email"
           variant="outlined"
           fullWidth
@@ -44,6 +66,17 @@ const ForgotPassword = () => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
+        <FormControl variant="outlined" fullWidth margin="normal">
+          <InputLabel>Language</InputLabel>
+          <Select
+            value={lenguage}
+            onChange={(e) => setLenguage(e.target.value)}
+            label="Language"
+          >
+            <MenuItem value="es">Español</MenuItem>
+            <MenuItem value="en">English</MenuItem>
+          </Select>
+        </FormControl>
         <Button type="submit" variant="contained" color="primary" fullWidth>
           Send Reset Link
         </Button>
@@ -59,6 +92,25 @@ const ForgotPassword = () => {
           </Button>
         }
       />
+      <Dialog
+        open={dialogOpen}
+        onClose={handleDialogClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Check Your Email"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            The reset link has been sent successfully. Please close this tab and
+            check your email inbox.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDialogClose} color="primary" autoFocus>
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Container>
   );
 };
