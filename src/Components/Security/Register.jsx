@@ -49,6 +49,7 @@ const Register = () => {
     try {
       const response = await axios.post("/admin/Users/CreateUser", formData);
       console.log("User created successfully:", response.data.entity);
+      setOpen(true); // Open the dialog on successful response
     } catch (error) {
       console.error("Error creating user:", error);
     }
@@ -225,10 +226,10 @@ const Register = () => {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary">
+          <Button component={Link} to="/login" color="primary">
             Inicio de sesión
           </Button>
-          <Button onClick={handleClose} color="primary">
+          <Button component={Link} to="/" color="primary">
             Ir al home
           </Button>
         </DialogActions>
