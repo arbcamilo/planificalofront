@@ -8,7 +8,7 @@ import {
   MenuItem,
   ListItemText,
   Box,
-  Avatar,
+  // Avatar,
   Typography,
 } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
@@ -19,6 +19,7 @@ import LanguageIcon from "@mui/icons-material/Language";
 import PeopleIcon from "@mui/icons-material/People";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { AuthContext } from "../Security/context/AuthContext";
@@ -196,17 +197,17 @@ const NavBar = ({ toggleTheme, mode }) => {
                   onMouseLeave: handleUserMenuClose,
                 }}
               >
-                <MenuItem>
-                  <Box sx={{ display: "flex", alignItems: "center" }}>
-                    <Avatar
-                      alt={user.name}
-                      src={user.profilePicture}
-                      sx={{ marginRight: 2 }}
-                    />
-                    <Typography>{user.name}</Typography>
-                  </Box>
+                <MenuItem component={Link} to="/profile">
+                  <Typography sx={{ marginRight: 2, fontWeight: "bold" }}>
+                    {user.firstName}
+                  </Typography>
+                </MenuItem>
+                <MenuItem component={Link} to="/profile">
+                  <AccountCircleIcon sx={{ marginRight: 2 }} />
+                  <ListItemText primary={t("myProfile")} />
                 </MenuItem>
                 <MenuItem onClick={logout}>
+                  <ExitToAppIcon sx={{ marginRight: 2 }} />
                   <ListItemText primary={t("logout")} />
                 </MenuItem>
               </Menu>
@@ -216,7 +217,7 @@ const NavBar = ({ toggleTheme, mode }) => {
               <Button color="inherit" component={Link} to="/login">
                 {t("login")}
               </Button>
-              <Button color="inherit" component={Link} to="/registro">
+              <Button color="inherit" component={Link} to="/register">
                 {t("createAccount")}
               </Button>
             </>

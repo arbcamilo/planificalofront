@@ -25,6 +25,7 @@ import EditUser from "./Components/Security/EditUser";
 import ForgotPassword from "./Components/Security/ForgotPassword";
 import ResetPassword from "./Components/Security/ResetPassword";
 import ConfirmationEmail from "./Components/Security/ConfirmationEmail";
+import Profile from "./Components/Profile/profile";
 
 function App() {
   const [mode, setMode] = useState("light");
@@ -113,6 +114,10 @@ function App() {
               <Route
                 path="/guests"
                 element={<PrivateRoute component={Guests} />}
+              />
+              <Route
+                path="/profile"
+                element={<PrivateRoute component={Profile} />}
               />
             </Routes>
           </main>
