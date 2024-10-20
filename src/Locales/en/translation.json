@@ -1,6 +1,9 @@
 {
   "welcome": "Welcome",
   "login": "Login",
+  "signIn": "Sign In",
+  "forgotPassword": "Forgot Password?",
+  "dontHaveAccount": "Don't have an account? Sign Up",
   "createAccount": "Create Account",
   "home": "Home",
   "events": "Events",
