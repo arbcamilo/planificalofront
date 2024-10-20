@@ -18,7 +18,7 @@ const events = [
     id: 1,
     title: "Event 1",
     description: "Description for event 1",
-    image: "https://via.placeholder.com/150",
+    image: "/Images/Evento1.png",
     date: "2023-10-01",
     time: "10:00 AM",
     location: "Location 1",
@@ -28,7 +28,7 @@ const events = [
     id: 2,
     title: "Event 2",
     description: "Description for event 2",
-    image: "https://via.placeholder.com/150",
+    image: "/Images/Evento2.png",
     date: "2023-10-02",
     time: "11:00 AM",
     location: "Location 2",
@@ -38,7 +38,7 @@ const events = [
     id: 3,
     title: "Event 3",
     description: "Description for event 3",
-    image: "https://via.placeholder.com/150",
+    image: "/Images/Evento3.png",
     date: "2023-10-03",
     time: "12:00 PM",
     location: "Location 3",
@@ -48,7 +48,7 @@ const events = [
     id: 4,
     title: "Event 4",
     description: "Description for event 4",
-    image: "https://via.placeholder.com/150",
+    image: "/Images/Evento4.png",
     date: "2023-10-04",
     time: "01:00 PM",
     location: "Location 4",
@@ -58,7 +58,7 @@ const events = [
     id: 5,
     title: "Event 5",
     description: "Description for event 5",
-    image: "https://via.placeholder.com/150",
+    image: "/Images/Evento5.png",
     date: "2023-10-05",
     time: "02:00 PM",
     location: "Location 5",
@@ -68,7 +68,7 @@ const events = [
     id: 6,
     title: "Event 6",
     description: "Description for event 6",
-    image: "https://via.placeholder.com/150",
+    image: "/Images/Evento2.png",
     date: "2023-10-06",
     time: "03:00 PM",
     location: "Location 6",
@@ -139,9 +139,10 @@ const Inicio = () => {
                   <Grid item xs={3}>
                     <CardMedia
                       component="img"
-                      height="140"
+                      height="200"
                       image={event.image}
                       alt={event.title}
+                      style={{ objectFit: "fill" }}
                     />
                   </Grid>
                 </Grid>
@@ -164,23 +165,23 @@ const Inicio = () => {
       <Grid container spacing={3}>
         <Grid item xs={12} sm={4}>
           <img
-            src="https://via.placeholder.com/150"
+            src="/Images/empresa1.webp"
             alt="Client 1"
-            style={{ width: "100%" }}
+            style={{ width: "100%", objectFit: "fill" }}
           />
         </Grid>
         <Grid item xs={12} sm={4}>
           <img
-            src="https://via.placeholder.com/150"
+            src="/Images/empresa2.jpg"
             alt="Client 2"
-            style={{ width: "100%" }}
+            style={{ width: "100%", objectFit: "fill" }}
           />
         </Grid>
         <Grid item xs={12} sm={4}>
           <img
-            src="https://via.placeholder.com/150"
+            src="/Images/empresa3.jpg"
             alt="Client 3"
-            style={{ width: "100%" }}
+            style={{ width: "100%", objectFit: "fill" }}
           />
         </Grid>
       </Grid>
