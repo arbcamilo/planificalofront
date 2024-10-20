@@ -82,7 +82,7 @@ const Login = () => {
           </Button>
           <Grid container>
             <Grid item>
-              <Link to="/" variant="body2">
+              <Link to="/forgot-password" variant="body2">
                 {"¿Olvidaste tu contraseña?"}
               </Link>
             </Grid>
