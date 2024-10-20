@@ -42,12 +42,21 @@ const Users = () => {
   const [editMode, setEditMode] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [newUser, setNewUser] = useState({
+    userName: "",
+    email: "",
+    emailConfirmed: false,
+    phoneNumber: "",
+    phoneNumberConfirmed: true,
     firstName: "",
     lastName: "",
     documentType: "CC",
-    email: "",
-    userStatus: "Activo",
-    accountCreationDate: "27/09/2024",
+    userType: 2,
+    userStatus: "Active",
+    birthDate: "1999-10-19",
+    accountCreationDate: "2024-10-19",
+    password: "123456",
+    confirmPassword: "123456",
+    language: "es",
   });
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
@@ -90,13 +99,13 @@ const Users = () => {
     setEditMode(false);
     setSelectedUser(null);
     setNewUser({
-      userName: "jhon@hotmail.com",
-      email: "jhon@hotmail.com",
+      userName: "",
+      email: "",
       emailConfirmed: false,
-      phoneNumber: "31245465421",
+      phoneNumber: "",
       phoneNumberConfirmed: true,
-      firstName: "Alejandro",
-      lastName: "Diaz",
+      firstName: "",
+      lastName: "",
       documentType: "CC",
       userType: 2,
       userStatus: "Active",
