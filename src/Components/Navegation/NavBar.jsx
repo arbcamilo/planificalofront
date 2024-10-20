@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
   AppBar,
   Toolbar,
@@ -8,7 +8,6 @@ import {
   MenuItem,
   ListItemText,
   Box,
-  // Avatar,
   Typography,
 } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
@@ -23,6 +22,7 @@ import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { AuthContext } from "../Security/context/AuthContext";
+import { jwtDecode } from "jwt-decode";
 
 const NavBar = ({ toggleTheme, mode }) => {
   const { t, i18n } = useTranslation();
@@ -32,6 +32,19 @@ const NavBar = ({ toggleTheme, mode }) => {
   const [usersAnchorEl, setUsersAnchorEl] = useState(null);
   const [providersAnchorEl, setProvidersAnchorEl] = useState(null);
   const [userMenuAnchorEl, setUserMenuAnchorEl] = useState(null);
+  const [role, setRole] = useState(null);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      setRole(
+        decodedToken[
+          "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+        ]
+      );
+    }
+  }, []);
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -79,7 +92,7 @@ const NavBar = ({ toggleTheme, mode }) => {
   };
 
   const renderMenuItems = () => {
-    switch (user?.role) {
+    switch (role) {
       case "Admin":
         return (
           <>
@@ -104,7 +117,7 @@ const NavBar = ({ toggleTheme, mode }) => {
             </Menu>
           </>
         );
-      case "provider":
+      case "Provider":
         return (
           <>
             <Button color="inherit" onClick={handleProvidersMenu}>
