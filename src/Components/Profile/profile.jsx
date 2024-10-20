@@ -1,4 +1,6 @@
-import React from "react";
+// src/Components/Profile/Profile.jsx
+import React, { useState, useEffect } from "react";
+import axios from "../../axiosConfig"; // Asegúrate de que la ruta sea correcta
 import {
   Container,
   Grid,
@@ -10,6 +12,53 @@ import {
 } from "@mui/material";
 
 const Profile = () => {
+  const [profileData, setProfileData] = useState(null);
+
+  useEffect(() => {
+    const fetchProfileData = async () => {
+      try {
+        const response = await axios.get("admin/Users/GetAll"); // Ajusta la URL según tu backend
+        const token = localStorage.getItem("token"); // Obtén el token del almacenamiento local
+        const decodedToken = parseJwt(token); // Decodifica el token para obtener el ID del usuario
+        const loggedInUserEmail =
+          decodedToken[
+            "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"
+          ];
+        const userProfile = response.data.entity.find(
+          (user) => user.email === loggedInUserEmail
+        );
+        setProfileData(userProfile);
+      } catch (error) {
+        console.error("Error fetching profile data:", error);
+      }
+    };
+
+    fetchProfileData();
+  }, []);
+
+  // Función para decodificar el token JWT
+  const parseJwt = (token) => {
+    try {
+      const base64Url = token.split(".")[1];
+      const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+      const jsonPayload = decodeURIComponent(
+        atob(base64)
+          .split("")
+          .map(function (c) {
+            return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+          })
+          .join("")
+      );
+      return JSON.parse(jsonPayload);
+    } catch (e) {
+      return null;
+    }
+  };
+
+  if (!profileData) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <Container>
       <Typography variant="h4" gutterBottom>
@@ -24,25 +73,38 @@ const Profile = () => {
               style={{ width: "100px", height: "100px", margin: "0 auto" }}
             />
             <Typography variant="h6" style={{ marginTop: "10px" }}>
-              Nombre del Usuario
+              {profileData.fullName}
             </Typography>
           </Grid>
           <Grid item xs={12} md={8}>
             <Typography variant="h6" gutterBottom>
-              Información de perfil
+              <strong>Información de perfil</strong>
             </Typography>
             <Box>
               <Typography variant="body1">
-                <strong>Tipo de documento:</strong> Cédula
+                <strong>Tipo de usuario:</strong>
+                {profileData.userType === 0
+                  ? " Administrador"
+                  : profileData.userType === 1
+                  ? " Usuario"
+                  : profileData.userType === 2
+                  ? " Proveedor"
+                  : " Desconocido"}
+              </Typography>
+              <Typography variant="body1">
+                <strong>Tipo de documento:</strong> {profileData.documentType}
               </Typography>
               <Typography variant="body1">
                 <strong>Número de documento:</strong> 123456789
               </Typography>
               <Typography variant="body1">
-                <strong>Email:</strong> usuario@example.com
+                <strong>Email:</strong> {profileData.email}
               </Typography>
               <Typography variant="body1">
-                <strong>Teléfono:</strong> +1234567890
+                <strong>Teléfono:</strong> {profileData.phoneNumber}
+              </Typography>
+              <Typography variant="body1">
+                <strong>Fecha Nacimiento:</strong> {profileData.birthDate}
               </Typography>
             </Box>
             <Box style={{ marginTop: "20px" }}>
