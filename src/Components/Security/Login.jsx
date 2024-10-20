@@ -82,7 +82,7 @@ const Login = () => {
           </Button>
           <Grid container>
             <Grid item>
-              <Link to="/" variant="body2">
+              <Link to="/forgot-password" variant="body2">
                 {"¿Olvidaste tu contraseña?"}
               </Link>
             </Grid>
@@ -90,7 +90,7 @@ const Login = () => {
           <Button
             color="primary"
             component={Link}
-            to="/registro"
+            to="/register"
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}

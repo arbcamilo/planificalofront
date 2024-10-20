@@ -1,133 +1,328 @@
 import React, { useState } from "react";
-import axios from "axios";
+import axios from "../../axiosConfig";
+import {
+  TextField,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Grid,
+  Container,
+  Typography,
+  Box,
+} from "@mui/material";
+import { Link } from "react-router-dom";
 
 const Register = () => {
   const [formData, setFormData] = useState({
+    userName: "",
+    email: "",
+    emailConfirmed: false,
+    phoneNumber: "",
+    phoneNumberConfirmed: true,
     firstName: "",
     lastName: "",
-    documentType: "",
-    userType: 0,
-    photo: null,
+    documentType: "CC",
+    documentNumber: "",
+    userType: 2,
     userStatus: "Active",
     birthDate: "",
-    accountCreationDate: "",
-    fullName: "",
-    userName: "",
-    normalizedUserName: "",
-    email: "",
-    normalizedEmail: "",
-    emailConfirmed: false,
-    passwordHash: "",
-    securityStamp: "",
-    concurrencyStamp: "",
-    phoneNumber: null,
-    phoneNumberConfirmed: false,
-    twoFactorEnabled: false,
-    lockoutEnd: null,
-    lockoutEnabled: true,
-    accessFailedCount: 0,
+    accountCreationDate: "2024-10-19",
+    password: "",
+    confirmPassword: "",
+    language: "es",
+    photo: "", // Add photo field
   });
 
+  const [open, setOpen] = useState(false);
+
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
   };
 
   const handleFileChange = (e) => {
-    setFormData({ ...formData, photo: e.target.files[0] });
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setFormData({
+        ...formData,
+        photo: reader.result,
+      });
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const data = new FormData();
-    for (const key in formData) {
-      data.append(key, formData[key]);
+    try {
+      const response = await axios.post("/admin/Users/CreateUser", formData);
+      console.log("User created successfully:", response.data.entity);
+      setOpen(true); // Open the dialog on successful response
+    } catch (error) {
+      console.error("Error creating user:", error);
     }
+  };
 
-    await axios.post("/api/admin/Users/CreateUser", data);
+  const handleClose = () => {
+    setOpen(false);
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input
-        type="text"
-        name="firstName"
-        value={formData.firstName}
-        onChange={handleChange}
-        placeholder="First Name"
-      />
-      <input
-        type="text"
-        name="lastName"
-        value={formData.lastName}
-        onChange={handleChange}
-        placeholder="Last Name"
-      />
-      <input
-        type="text"
-        name="documentType"
-        value={formData.documentType}
-        onChange={handleChange}
-        placeholder="Document Type"
-      />
-      <input
-        type="number"
-        name="userType"
-        value={formData.userType}
-        onChange={handleChange}
-        placeholder="User Type"
-      />
-      <input type="file" name="photo" onChange={handleFileChange} />
-      <input
-        type="text"
-        name="userStatus"
-        value={formData.userStatus}
-        onChange={handleChange}
-        placeholder="User Status"
-      />
-      <input
-        type="date"
-        name="birthDate"
-        value={formData.birthDate}
-        onChange={handleChange}
-        placeholder="Birth Date"
-      />
-      <input
-        type="date"
-        name="accountCreationDate"
-        value={formData.accountCreationDate}
-        onChange={handleChange}
-        placeholder="Account Creation Date"
-      />
-      <input
-        type="text"
-        name="fullName"
-        value={formData.fullName}
-        onChange={handleChange}
-        placeholder="Full Name"
-      />
-      <input
-        type="email"
-        name="userName"
-        value={formData.userName}
-        onChange={handleChange}
-        placeholder="User Name"
-      />
-      <input
-        type="email"
-        name="email"
-        value={formData.email}
-        onChange={handleChange}
-        placeholder="Email"
-      />
-      <input
-        type="password"
-        name="passwordHash"
-        value={formData.passwordHash}
-        onChange={handleChange}
-        placeholder="Password"
-      />
-      <button type="submit">Register</button>
-    </form>
+    <div>
+      <Container component="main" maxWidth="sm">
+        <Box textAlign="center" mt={5}>
+          <Typography variant="h4" gutterBottom>
+            Crea tu cuenta
+          </Typography>
+          <Typography variant="subtitle1" gutterBottom>
+            ¿Ya tienes cuenta? <Link to="/login">Inicia sesión aquí</Link>
+          </Typography>
+          <Typography variant="subtitle1" gutterBottom>
+            Completa los siguientes campos
+          </Typography>
+          <form onSubmit={handleSubmit}>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <TextField
+                  select
+                  variant="outlined"
+                  required
+                  fullWidth
+                  id="userType"
+                  label="User Type"
+                  name="userType"
+                  value={formData.userType}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      userType: parseInt(e.target.value, 10),
+                    })
+                  }
+                  SelectProps={{
+                    native: true,
+                  }}
+                >
+                  <option value={1}>Usuario</option>
+                  <option value={2}>Proveedor</option>
+                </TextField>
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  select
+                  variant="outlined"
+                  required
+                  fullWidth
+                  id="documentType"
+                  label="Document Type"
+                  name="documentType"
+                  value={formData.documentType}
+                  onChange={handleChange}
+                  SelectProps={{
+                    native: true,
+                  }}
+                >
+                  <option value="NIT">NIT</option>
+                  <option value="CC">CC</option>
+                  <option value="CE">CE</option>
+                  <option value="PA">PA</option>
+                </TextField>
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  variant="outlined"
+                  required
+                  fullWidth
+                  id="documentNumber"
+                  label="Document Number"
+                  name="documentNumber"
+                  autoComplete="documentNumber"
+                  value={formData.documentNumber}
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  variant="outlined"
+                  required
+                  fullWidth
+                  id="userName"
+                  label="Username"
+                  name="userName"
+                  autoComplete="username"
+                  value={formData.userName}
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  variant="outlined"
+                  required
+                  fullWidth
+                  id="email"
+                  label="Email Address"
+                  name="email"
+                  autoComplete="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  variant="outlined"
+                  required
+                  fullWidth
+                  id="phoneNumber"
+                  label="Phone Number"
+                  name="phoneNumber"
+                  autoComplete="phone"
+                  value={formData.phoneNumber}
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  variant="outlined"
+                  required
+                  fullWidth
+                  id="firstName"
+                  label="First Name"
+                  name="firstName"
+                  autoComplete="fname"
+                  value={formData.firstName}
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  variant="outlined"
+                  required
+                  fullWidth
+                  id="lastName"
+                  label="Last Name"
+                  name="lastName"
+                  autoComplete="lname"
+                  value={formData.lastName}
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  variant="outlined"
+                  required
+                  fullWidth
+                  id="birthDate"
+                  label="Birth Date"
+                  name="birthDate"
+                  type="date"
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  value={formData.birthDate}
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  variant="outlined"
+                  required
+                  fullWidth
+                  id="password"
+                  label="Password"
+                  name="password"
+                  type="password"
+                  autoComplete="current-password"
+                  value={formData.password}
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  variant="outlined"
+                  required
+                  fullWidth
+                  id="confirmPassword"
+                  label="Confirm Password"
+                  name="confirmPassword"
+                  type="password"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                />
+                {formData.password && formData.confirmPassword && (
+                  <Typography
+                    variant="body2"
+                    color={
+                      formData.password === formData.confirmPassword
+                        ? "green"
+                        : "red"
+                    }
+                  >
+                    {formData.password === formData.confirmPassword
+                      ? "Las contraseñas coinciden"
+                      : "Las contraseñas no coinciden"}
+                  </Typography>
+                )}
+              </Grid>
+              <Grid item xs={12}>
+                <input
+                  accept="image/*"
+                  style={{ display: "none" }}
+                  id="photo"
+                  type="file"
+                  onChange={handleFileChange}
+                />
+                <label htmlFor="photo">
+                  <Button variant="contained" color="primary" component="span">
+                    Upload Profile Picture
+                  </Button>
+                </label>
+                {formData.photo && (
+                  <Box mt={2} textAlign="center">
+                    <img
+                      src={formData.photo}
+                      alt="Profile Preview"
+                      style={{
+                        width: "100px",
+                        height: "100px",
+                        objectFit: "cover",
+                      }}
+                    />
+                  </Box>
+                )}
+              </Grid>
+              <Grid item xs={12}>
+                <Button type="submit" variant="contained" color="primary">
+                  Create User
+                </Button>
+              </Grid>
+            </Grid>
+          </form>
+        </Box>
+      </Container>
+
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle>Usuario creado exitosamente</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            A tu correo debió llegar un email de confirmación para completar el
+            registro. Una vez lo confirmes podrás iniciar sesión.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button component={Link} to="/login" color="primary">
+            Inicio de sesión
+          </Button>
+          <Button component={Link} to="/" color="primary">
+            Ir al home
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </div>
   );
 };
 

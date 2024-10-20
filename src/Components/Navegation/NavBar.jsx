@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
   AppBar,
   Toolbar,
@@ -8,7 +8,6 @@ import {
   MenuItem,
   ListItemText,
   Box,
-  Avatar,
   Typography,
 } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
@@ -19,9 +18,11 @@ import LanguageIcon from "@mui/icons-material/Language";
 import PeopleIcon from "@mui/icons-material/People";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { AuthContext } from "../Security/context/AuthContext";
+import { jwtDecode } from "jwt-decode";
 
 const NavBar = ({ toggleTheme, mode }) => {
   const { t, i18n } = useTranslation();
@@ -31,6 +32,19 @@ const NavBar = ({ toggleTheme, mode }) => {
   const [usersAnchorEl, setUsersAnchorEl] = useState(null);
   const [providersAnchorEl, setProvidersAnchorEl] = useState(null);
   const [userMenuAnchorEl, setUserMenuAnchorEl] = useState(null);
+  const [role, setRole] = useState(null);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      setRole(
+        decodedToken[
+          "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+        ]
+      );
+    }
+  }, []);
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -78,7 +92,7 @@ const NavBar = ({ toggleTheme, mode }) => {
   };
 
   const renderMenuItems = () => {
-    switch (user?.role) {
+    switch (role) {
       case "Admin":
         return (
           <>
@@ -103,7 +117,7 @@ const NavBar = ({ toggleTheme, mode }) => {
             </Menu>
           </>
         );
-      case "provider":
+      case "Provider":
         return (
           <>
             <Button color="inherit" onClick={handleProvidersMenu}>
@@ -196,17 +210,17 @@ const NavBar = ({ toggleTheme, mode }) => {
                   onMouseLeave: handleUserMenuClose,
                 }}
               >
-                <MenuItem>
-                  <Box sx={{ display: "flex", alignItems: "center" }}>
-                    <Avatar
-                      alt={user.name}
-                      src={user.profilePicture}
-                      sx={{ marginRight: 2 }}
-                    />
-                    <Typography>{user.name}</Typography>
-                  </Box>
+                <MenuItem component={Link} to="/profile">
+                  <Typography sx={{ marginRight: 2, fontWeight: "bold" }}>
+                    {user.firstName}
+                  </Typography>
+                </MenuItem>
+                <MenuItem component={Link} to="/profile">
+                  <AccountCircleIcon sx={{ marginRight: 2 }} />
+                  <ListItemText primary={t("myProfile")} />
                 </MenuItem>
                 <MenuItem onClick={logout}>
+                  <ExitToAppIcon sx={{ marginRight: 2 }} />
                   <ListItemText primary={t("logout")} />
                 </MenuItem>
               </Menu>
@@ -216,7 +230,7 @@ const NavBar = ({ toggleTheme, mode }) => {
               <Button color="inherit" component={Link} to="/login">
                 {t("login")}
               </Button>
-              <Button color="inherit" component={Link} to="/registro">
+              <Button color="inherit" component={Link} to="/register">
                 {t("createAccount")}
               </Button>
             </>
