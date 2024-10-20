@@ -24,7 +24,8 @@ const Register = () => {
     phoneNumberConfirmed: true,
     firstName: "",
     lastName: "",
-    documentType: "",
+    documentType: "CC",
+    documentNumber: "",
     userType: 2,
     userStatus: "Active",
     birthDate: "",
@@ -32,6 +33,7 @@ const Register = () => {
     password: "",
     confirmPassword: "",
     language: "es",
+    photo: "", // Add photo field
   });
 
   const [open, setOpen] = useState(false);
@@ -42,6 +44,18 @@ const Register = () => {
       ...formData,
       [name]: value,
     });
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setFormData({
+        ...formData,
+        photo: reader.result,
+      });
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleSubmit = async (e) => {
@@ -74,6 +88,64 @@ const Register = () => {
           </Typography>
           <form onSubmit={handleSubmit}>
             <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <TextField
+                  select
+                  variant="outlined"
+                  required
+                  fullWidth
+                  id="userType"
+                  label="User Type"
+                  name="userType"
+                  value={formData.userType}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      userType: parseInt(e.target.value, 10),
+                    })
+                  }
+                  SelectProps={{
+                    native: true,
+                  }}
+                >
+                  <option value={1}>Usuario</option>
+                  <option value={2}>Proveedor</option>
+                </TextField>
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  select
+                  variant="outlined"
+                  required
+                  fullWidth
+                  id="documentType"
+                  label="Document Type"
+                  name="documentType"
+                  value={formData.documentType}
+                  onChange={handleChange}
+                  SelectProps={{
+                    native: true,
+                  }}
+                >
+                  <option value="NIT">NIT</option>
+                  <option value="CC">CC</option>
+                  <option value="CE">CE</option>
+                  <option value="PA">PA</option>
+                </TextField>
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  variant="outlined"
+                  required
+                  fullWidth
+                  id="documentNumber"
+                  label="Document Number"
+                  name="documentNumber"
+                  autoComplete="documentNumber"
+                  value={formData.documentNumber}
+                  onChange={handleChange}
+                />
+              </Grid>
               <Grid item xs={12}>
                 <TextField
                   variant="outlined"
@@ -144,31 +216,6 @@ const Register = () => {
                   variant="outlined"
                   required
                   fullWidth
-                  id="documentType"
-                  label="Document Type"
-                  name="documentType"
-                  value={formData.documentType}
-                  onChange={handleChange}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  variant="outlined"
-                  required
-                  fullWidth
-                  id="userType"
-                  label="User Type"
-                  name="userType"
-                  type="text"
-                  value={formData.userType}
-                  onChange={handleChange}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  variant="outlined"
-                  required
-                  fullWidth
                   id="birthDate"
                   label="Birth Date"
                   name="birthDate"
@@ -206,6 +253,47 @@ const Register = () => {
                   value={formData.confirmPassword}
                   onChange={handleChange}
                 />
+                {formData.password && formData.confirmPassword && (
+                  <Typography
+                    variant="body2"
+                    color={
+                      formData.password === formData.confirmPassword
+                        ? "green"
+                        : "red"
+                    }
+                  >
+                    {formData.password === formData.confirmPassword
+                      ? "Las contraseñas coinciden"
+                      : "Las contraseñas no coinciden"}
+                  </Typography>
+                )}
+              </Grid>
+              <Grid item xs={12}>
+                <input
+                  accept="image/*"
+                  style={{ display: "none" }}
+                  id="photo"
+                  type="file"
+                  onChange={handleFileChange}
+                />
+                <label htmlFor="photo">
+                  <Button variant="contained" color="primary" component="span">
+                    Upload Profile Picture
+                  </Button>
+                </label>
+                {formData.photo && (
+                  <Box mt={2} textAlign="center">
+                    <img
+                      src={formData.photo}
+                      alt="Profile Preview"
+                      style={{
+                        width: "100px",
+                        height: "100px",
+                        objectFit: "cover",
+                      }}
+                    />
+                  </Box>
+                )}
               </Grid>
               <Grid item xs={12}>
                 <Button type="submit" variant="contained" color="primary">

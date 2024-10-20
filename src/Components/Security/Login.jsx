@@ -15,21 +15,22 @@ import {
 import { Link } from "react-router-dom";
 import PersonIcon from "@mui/icons-material/Person";
 import useStyles from "./LoginStyles";
+import { useTranslation } from "react-i18next";
 
 const Login = () => {
   const [credentials, setCredentials] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const { login } = useContext(AuthContext);
-  const navigate = useNavigate(); // Hook para la navegación
+  const navigate = useNavigate();
   const classes = useStyles();
-
+  const { t } = useTranslation();
   const handleSubmit = async (e) => {
     e.preventDefault();
     const result = await login(credentials);
     if (result.success) {
-      navigate("/"); // Redirigir al home después de un inicio de sesión exitoso
+      navigate("/");
     } else {
-      setError(result.message); // Mostrar mensaje de error
+      setError(result.message);
     }
   };
 
@@ -41,7 +42,7 @@ const Login = () => {
           <PersonIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Iniciar Sesión
+          {t("login")}
         </Typography>
         <Box component="form" noValidate sx={{ mt: 1 }} onSubmit={handleSubmit}>
           <TextField
@@ -53,7 +54,7 @@ const Login = () => {
             }
             fullWidth
             id="email"
-            label="Correo"
+            label={t("email")}
             name="email"
             autoComplete="email"
             autoFocus
@@ -67,7 +68,7 @@ const Login = () => {
             }
             fullWidth
             name="password"
-            label="Contraseña"
+            label={t("password")}
             type="password"
             id="password"
             autoComplete="current-password"
@@ -78,12 +79,12 @@ const Login = () => {
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
           >
-            Iniciar Sesión
+            {t("signIn")}
           </Button>
           <Grid container>
             <Grid item>
-              <Link to="/" variant="body2">
-                {"¿Olvidaste tu contraseña?"}
+              <Link to="/forgot-password" variant="body2">
+                {t("forgotPassword")}
               </Link>
             </Grid>
           </Grid>
@@ -95,7 +96,7 @@ const Login = () => {
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
           >
-            Registrarse
+            {t("signUp")}
           </Button>
           {error && <p style={{ color: "red" }}>{error}</p>}{" "}
         </Box>
