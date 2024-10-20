@@ -20,12 +20,9 @@ const Profile = () => {
         const response = await axios.get("admin/Users/GetAll"); // Ajusta la URL según tu backend
         const token = localStorage.getItem("token"); // Obtén el token del almacenamiento local
         const decodedToken = parseJwt(token); // Decodifica el token para obtener el ID del usuario
-        const loggedInUserEmail =
-          decodedToken[
-            "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"
-          ];
+        const userId = decodedToken["id"];
         const userProfile = response.data.entity.find(
-          (user) => user.email === loggedInUserEmail
+          (user) => user.id === userId
         );
         setProfileData(userProfile);
       } catch (error) {
