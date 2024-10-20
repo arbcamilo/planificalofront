@@ -4,10 +4,6 @@ import {
   Button,
   TextField,
   Snackbar,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
   Dialog,
   DialogTitle,
   DialogContent,
@@ -19,7 +15,6 @@ import axios from "axios";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
-  const [lenguage, setLenguage] = useState("es");
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -32,7 +27,7 @@ const ForgotPassword = () => {
         {
           params: {
             email: email,
-            lenguage: lenguage,
+            lenguage: "en", // Enviar siempre "en" como idioma
           },
         }
       );
@@ -66,17 +61,6 @@ const ForgotPassword = () => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
-        <FormControl variant="outlined" fullWidth margin="normal">
-          <InputLabel>Language</InputLabel>
-          <Select
-            value={lenguage}
-            onChange={(e) => setLenguage(e.target.value)}
-            label="Language"
-          >
-            <MenuItem value="es">Español</MenuItem>
-            <MenuItem value="en">English</MenuItem>
-          </Select>
-        </FormControl>
         <Button type="submit" variant="contained" color="primary" fullWidth>
           Send Reset Link
         </Button>

@@ -25,6 +25,7 @@ const Register = () => {
     firstName: "",
     lastName: "",
     documentType: "CC",
+    documentNumber: "",
     userType: 2,
     userStatus: "Active",
     birthDate: "",
@@ -137,11 +138,11 @@ const Register = () => {
                   variant="outlined"
                   required
                   fullWidth
-                  id="documet"
-                  label="Document"
-                  name="document"
-                  autoComplete="document"
-                  value={formData.document}
+                  id="documentNumber"
+                  label="Document Number"
+                  name="documentNumber"
+                  autoComplete="documentNumber"
+                  value={formData.documentNumber}
                   onChange={handleChange}
                 />
               </Grid>

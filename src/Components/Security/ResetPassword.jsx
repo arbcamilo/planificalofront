@@ -7,7 +7,7 @@ import {
   Typography,
 } from "@mui/material";
 import axios from "axios";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const ResetPassword = () => {
   const [email, setEmail] = useState("");
@@ -19,6 +19,7 @@ const ResetPassword = () => {
   const [token, setToken] = useState("");
 
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
@@ -52,9 +53,12 @@ const ResetPassword = () => {
         }
       );
       setSnackbarMessage("Password changed successfully");
+      setSnackbarOpen(true);
+      setTimeout(() => {
+        navigate("/login"); // Redireccionar al login después de 3 segundos
+      }, 3000);
     } catch (error) {
       setSnackbarMessage("Error changing password");
-    } finally {
       setSnackbarOpen(true);
     }
   };
