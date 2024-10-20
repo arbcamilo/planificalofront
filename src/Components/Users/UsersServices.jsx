@@ -2,7 +2,7 @@ import axios from "../../axiosConfig";
 
 export const fetchUsers = async () => {
   try {
-    const response = await axios.get("/admin/Users");
+    const response = await axios.get("/admin/Users/GetAll");
     if (response.data.success) {
       return response.data.entity;
     } else {
@@ -17,7 +17,7 @@ export const fetchUsers = async () => {
 
 export const createUser = async (newUser) => {
   try {
-    const response = await axios.post("/admin/Users", newUser);
+    const response = await axios.post("/admin/Users/CreateUser", newUser);
     if (response.data.success) {
       return response.data.entity;
     } else {
