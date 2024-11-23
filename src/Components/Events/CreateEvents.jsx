@@ -1,153 +1,193 @@
-import React, { useState, useEffect } from "react";
-import {
-  Container,
-  TextField,
-  Button,
-  Dialog,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  DialogActions,
-} from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import { createEvent, updateEvent } from "./EventsServices";
-import { useParams } from "react-router-dom";
-import { fetchEventsId } from "./EventsServices";
-import { useTranslation } from "react-i18next";
+import React, { useState } from 'react';
+import { TextField, Button, MenuItem, Typography, Grid, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, IconButton, Paper, Box, Divider } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const CreateEvents = () => {
-  const { id } = useParams();
-  const { t } = useTranslation();
-  const [eventData, setEventData] = useState({
-    title: "",
-    date: "",
-    userId: 1,
-    location: "",
-    eventTypeId: 0,
-    isPrivate: "",
-    quotes: [],
-  });
-  const [editMode, setEditMode] = useState(false);
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState(""); // Corregido aquí
-  const navigate = useNavigate();
+  const [services, setServices] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [service, setService] = useState({ type: '', provider: '', price: '', quantity: '' });
+  const [product, setProduct] = useState({ type: '', provider: '', price: '', quantity: '' });
 
-  useEffect(() => {
-    if (id) {
-      const getEvent = async () => {
-        const event = await fetchEventsId(id);
-        setEventData(event);
-        setEditMode(true);
-      };
-      getEvent();
-    }
-  }, [id]);
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setEventData({ ...eventData, [name]: value });
+  const handleAddService = () => {
+    setServices([...services, service]);
+    setService({ type: '', provider: '', price: '', quantity: '' });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (editMode) {
-      const updatedEvent = await updateEvent(eventData.id, eventData);
-      if (updatedEvent) {
-        setSnackbarMessage(t("text4"));
-        setSnackbarOpen(true);
-      }
-    } else {
-      const createdEvent = await createEvent(eventData);
-      if (createdEvent) {
-        setSnackbarMessage(t("text5"));
-        setSnackbarOpen(true);
-      }
-    }
+  const handleAddProduct = () => {
+    setProducts([...products, product]);
+    setProduct({ type: '', provider: '', price: '', quantity: '' });
   };
 
-  const handleSnackbarClose = () => {
-    setSnackbarOpen(false);
+  const handleDeleteService = (index) => {
+    const newServices = services.filter((_, i) => i !== index);
+    setServices(newServices);
   };
 
-  const handleGoToEvents = () => {
-    navigate("/events-list");
-  };
-
-  const handleGoToHome = () => {
-    navigate("/");
+  const handleDeleteProduct = (index) => {
+    const newProducts = products.filter((_, i) => i !== index);
+    setProducts(newProducts);
   };
 
   return (
-    <Container>
-      <h1>{t(editMode ? "editEvent" : "createEvent")}</h1>
-      <form onSubmit={handleSubmit}>
-        <TextField
-          margin="dense"
-          name="title"
-          label={t("name")}
-          type="text"
-          fullWidth
-          value={eventData.title}
-          onChange={handleInputChange}
-        />
-        <TextField
-          margin="dense"
-          name="date"
-          label={`${t("date")} ${t("event")}`}
-          type="date"
-          fullWidth
-          value={eventData.date}
-          onChange={handleInputChange}
-          InputLabelProps={{ shrink: true }}
-        />
-        <TextField
-          margin="dense"
-          name="location"
-          label={`${t("location")} ${t("event")}`}
-          type="text"
-          fullWidth
-          value={eventData.location}
-          onChange={handleInputChange}
-        />
-        <TextField
-          margin="dense"
-          name="isPrivate"
-          label={t("isPrivate")}
-          select
-          fullWidth
-          value={eventData.isPrivate}
-          onChange={handleInputChange}
-          SelectProps={{
-            native: true,
-          }}
-        >
-          <option value=""></option>
-          <option value="true">{t("yes")}</option>
-          <option value="false">{t("no")}</option>
-        </TextField>
-        <Button type="submit" color="primary" variant="contained">
-          {t(editMode ? "edit" : "create")}
-        </Button>
-      </form>
-      <Dialog open={snackbarOpen} onClose={handleSnackbarClose}>
-        <DialogTitle>{t("Notification")}</DialogTitle>
-        <DialogContent>
-          <DialogContentText>{snackbarMessage}</DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button
-            onClick={handleGoToEvents}
-            color="primary"
-            variant="contained"
-          >
-            {t("goto")} {t("events")}
-          </Button>
-          <Button onClick={handleGoToHome} color="primary" variant="contained">
-            {t("goto")} {t("home")}
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </Container>
+    <Box display="flex" flexDirection="column" alignItems="center" minHeight="100vh" p={2}>
+      <Typography variant="h3" align="center" gutterBottom>Creación de evento</Typography>
+      <Paper elevation={3} style={{ padding: '20px', maxWidth: '800px', width: '100%' }}>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <TextField fullWidth label="Nombre del evento" variant="outlined" />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField select fullWidth label="Tipo de evento" variant="outlined">
+              <MenuItem value="Conferencia">Conferencia</MenuItem>
+              <MenuItem value="Seminario">Seminario</MenuItem>
+              <MenuItem value="Taller">Taller</MenuItem>
+            </TextField>
+          </Grid>
+          <Grid item xs={12}>
+            <TextField fullWidth type="date" label="Fecha del evento" InputLabelProps={{ shrink: true }} variant="outlined" />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField fullWidth label="Ubicación" variant="outlined" />
+          </Grid>
+          <Grid item xs={12}>
+            <Button variant="contained" component="label">
+              Cargar Fotografía
+              <input type="file" hidden />
+            </Button>
+          </Grid>
+        </Grid>
+
+        <Divider style={{ margin: '20px 0', opacity: 0.5 }} />
+
+        <Typography variant="h5">Servicios para el evento</Typography>
+        <br />
+        <Grid container spacing={2}>
+          <Grid item xs={3}>
+            <TextField select fullWidth label="Tipo de servicio" variant="outlined" value={service.type} onChange={(e) => setService({ ...service, type: e.target.value })}>
+              <MenuItem value="Catering">Catering</MenuItem>
+              <MenuItem value="Audio">Audio</MenuItem>
+              <MenuItem value="Iluminación">Iluminación</MenuItem>
+            </TextField>
+          </Grid>
+          <Grid item xs={3}>
+            <TextField select fullWidth label="Proveedor" variant="outlined" value={service.provider} onChange={(e) => setService({ ...service, provider: e.target.value })}>
+              <MenuItem value="Proveedor 1">Proveedor 1</MenuItem>
+              <MenuItem value="Proveedor 2">Proveedor 2</MenuItem>
+            </TextField>
+          </Grid>
+          <Grid item xs={3}>
+            <TextField fullWidth label="Precio" variant="outlined" value={service.price} onChange={(e) => setService({ ...service, price: e.target.value })} />
+          </Grid>
+          <Grid item xs={3}>
+            <TextField fullWidth label="Cantidad" variant="outlined" value={service.quantity} onChange={(e) => setService({ ...service, quantity: e.target.value })} />
+          </Grid>
+          <Grid item xs={12} style={{ textAlign: 'right' }}>
+            <Button variant="contained" size="small" onClick={handleAddService}>Añadir Servicio</Button>
+          </Grid>
+        </Grid>
+
+        {services.length > 0 && (
+          <TableContainer component={Paper} style={{ marginTop: '20px' }}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell><strong>Tipo de servicio</strong></TableCell>
+                  <TableCell><strong>Proveedor</strong></TableCell>
+                  <TableCell><strong>Precio</strong></TableCell>
+                  <TableCell><strong>Cantidad</strong></TableCell>
+                  <TableCell><strong>Acciones</strong></TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {services.map((service, index) => (
+                  <TableRow key={index}>
+                    <TableCell>{service.type}</TableCell>
+                    <TableCell>{service.provider}</TableCell>
+                    <TableCell>{service.price}</TableCell>
+                    <TableCell>{service.quantity}</TableCell>
+                    <TableCell>
+                      <IconButton onClick={() => handleDeleteService(index)}>
+                        <DeleteIcon />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        )}
+
+        <Divider style={{ margin: '20px 0', opacity: 0.5 }} />
+
+        <Typography variant="h5">Productos para el evento</Typography>
+        <br />
+        <Grid container spacing={2}>
+          <Grid item xs={3}>
+            <TextField select fullWidth label="Tipo de producto" variant="outlined" value={product.type} onChange={(e) => setProduct({ ...product, type: e.target.value })}>
+              <MenuItem value="Producto 1">Producto 1</MenuItem>
+              <MenuItem value="Producto 2">Producto 2</MenuItem>
+            </TextField>
+          </Grid>
+          <Grid item xs={3}>
+            <TextField select fullWidth label="Proveedor" variant="outlined" value={product.provider} onChange={(e) => setProduct({ ...product, provider: e.target.value })}>
+              <MenuItem value="Proveedor 1">Proveedor 1</MenuItem>
+              <MenuItem value="Proveedor 2">Proveedor 2</MenuItem>
+            </TextField>
+          </Grid>
+          <Grid item xs={3}>
+            <TextField fullWidth label="Precio" variant="outlined" value={product.price} onChange={(e) => setProduct({ ...product, price: e.target.value })} />
+          </Grid>
+          <Grid item xs={3}>
+            <TextField fullWidth label="Cantidad" variant="outlined" value={product.quantity} onChange={(e) => setProduct({ ...product, quantity: e.target.value })} />
+          </Grid>
+          <Grid item xs={12} style={{ textAlign: 'right' }}>
+            <Button variant="contained" size="small" onClick={handleAddProduct}>Añadir Producto</Button>
+          </Grid>
+        </Grid>
+
+        {products.length > 0 && (
+          <TableContainer component={Paper} style={{ marginTop: '20px' }}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell><strong>Tipo de producto</strong></TableCell>
+                  <TableCell><strong>Proveedor</strong></TableCell>
+                  <TableCell><strong>Precio</strong></TableCell>
+                  <TableCell><strong>Cantidad</strong></TableCell>
+                  <TableCell><strong>Acciones</strong></TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {products.map((product, index) => (
+                  <TableRow key={index}>
+                    <TableCell>{product.type}</TableCell>
+                    <TableCell>{product.provider}</TableCell>
+                    <TableCell>{product.price}</TableCell>
+                    <TableCell>{product.quantity}</TableCell>
+                    <TableCell>
+                      <IconButton onClick={() => handleDeleteProduct(index)}>
+                        <DeleteIcon />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        )}
+
+        <Divider style={{ margin: '20px 0', opacity: 0.5 }} />
+
+        <Grid container spacing={2} justifyContent="flex-end">
+          <Grid item>
+            <Button variant="contained">Regresar</Button>
+          </Grid>
+          <Grid item>
+            <Button variant="contained" color="primary">Crear Cotización</Button>
+          </Grid>
+        </Grid>
+      </Paper>
+    </Box>
   );
 };
 

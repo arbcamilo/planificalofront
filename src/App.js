@@ -12,9 +12,6 @@ import CreateEvents from "./Components/Events/CreateEvents";
 import EventsList from "./Components/Events/EventsList";
 import Products from "./Components/Products/Products";
 import Guests from "./Components/Guests/Guests";
-// import Login from "./Components/Security/Login";
-// import Registro from "./Components/Security/Registro";
-
 import { AuthProvider } from "./Components/Security/context/AuthContext";
 import PrivateRoute from "./Components/Security/PrivateRoute";
 import Login from "./Components/Security/Login";
@@ -76,8 +73,12 @@ function App() {
                   <PrivateRoute roles={["user", "admin"]} component={Logout} />
                 }
               />
-              {/* <Route path="/login" element={<Login />} />
-            <Route path="/registro" element={<Registro />} /> */}
+              <Route
+                path="/create-events"
+                element={<CreateEvents />}
+              />
+
+
               <Route path="/" element={<Inicio />} />
               {/* Rutas privadas */}
               <Route
@@ -91,10 +92,6 @@ function App() {
               <Route
                 path="/services"
                 element={<PrivateRoute component={Services} />}
-              />
-              <Route
-                path="/create-events"
-                element={<PrivateRoute component={CreateEvents} />}
               />
               <Route
                 path="/events-list"
