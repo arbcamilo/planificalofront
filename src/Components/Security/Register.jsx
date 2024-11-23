@@ -12,10 +12,13 @@ import {
   Container,
   Typography,
   Box,
+  Snackbar,
 } from "@mui/material";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const Register = () => {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState({
     userName: "",
     email: "",
@@ -37,6 +40,9 @@ const Register = () => {
   });
 
   const [open, setOpen] = useState(false);
+  const [errorDialogOpen, setErrorDialogOpen] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -62,10 +68,18 @@ const Register = () => {
     e.preventDefault();
     try {
       const response = await axios.post("/admin/Users/CreateUser", formData);
-      console.log("User created successfully:", response.data.entity);
+      console.log(t("userCreatedSuccessfully"), response.data.entity);
       setOpen(true); // Open the dialog on successful response
     } catch (error) {
-      console.error("Error creating user:", error);
+      if (error.response && error.response.status === 400) {
+        console.error("Bad Request:", error.response.data);
+        setSnackbarMessage(t("text8"));
+        setErrorDialogOpen(true); // Open the error dialog on 400 response
+      } else {
+        console.error("Error creating user:", error);
+        setSnackbarMessage(t("errorCreatingUser"));
+      }
+      setSnackbarOpen(true);
     }
   };
 
@@ -73,18 +87,26 @@ const Register = () => {
     setOpen(false);
   };
 
+  const handleErrorDialogClose = () => {
+    setErrorDialogOpen(false);
+  };
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
+
   return (
     <div>
       <Container component="main" maxWidth="sm">
         <Box textAlign="center" mt={5}>
           <Typography variant="h4" gutterBottom>
-            Crea tu cuenta
+            {t("createAccount")}
           </Typography>
           <Typography variant="subtitle1" gutterBottom>
-            ¿Ya tienes cuenta? <Link to="/login">Inicia sesión aquí</Link>
+            {t("alreadyHaveAccount")} <Link to="/login">{t("signInHere")}</Link>
           </Typography>
           <Typography variant="subtitle1" gutterBottom>
-            Completa los siguientes campos
+            {t("completeFields")}
           </Typography>
           <form onSubmit={handleSubmit}>
             <Grid container spacing={2}>
@@ -95,7 +117,7 @@ const Register = () => {
                   required
                   fullWidth
                   id="userType"
-                  label="User Type"
+                  label={t("userType")}
                   name="userType"
                   value={formData.userType}
                   onChange={(e) =>
@@ -108,8 +130,8 @@ const Register = () => {
                     native: true,
                   }}
                 >
-                  <option value={1}>Usuario</option>
-                  <option value={2}>Proveedor</option>
+                  <option value={1}>{t("user")}</option>
+                  <option value={2}>{t("provider")}</option>
                 </TextField>
               </Grid>
               <Grid item xs={12}>
@@ -119,7 +141,7 @@ const Register = () => {
                   required
                   fullWidth
                   id="documentType"
-                  label="Document Type"
+                  label={t("documentType")}
                   name="documentType"
                   value={formData.documentType}
                   onChange={handleChange}
@@ -127,10 +149,10 @@ const Register = () => {
                     native: true,
                   }}
                 >
-                  <option value="NIT">NIT</option>
-                  <option value="CC">CC</option>
-                  <option value="CE">CE</option>
-                  <option value="PA">PA</option>
+                  <option value="NIT">{t("NIT")}</option>
+                  <option value="CC">{t("CC")}</option>
+                  <option value="CE">{t("CE")}</option>
+                  <option value="PA">{t("PA")}</option>
                 </TextField>
               </Grid>
               <Grid item xs={12}>
@@ -139,7 +161,7 @@ const Register = () => {
                   required
                   fullWidth
                   id="documentNumber"
-                  label="Document Number"
+                  label={t("documentNumber")}
                   name="documentNumber"
                   autoComplete="documentNumber"
                   value={formData.documentNumber}
@@ -152,7 +174,7 @@ const Register = () => {
                   required
                   fullWidth
                   id="userName"
-                  label="Username"
+                  label={t("userName")}
                   name="userName"
                   autoComplete="username"
                   value={formData.userName}
@@ -165,7 +187,7 @@ const Register = () => {
                   required
                   fullWidth
                   id="email"
-                  label="Email Address"
+                  label={t("email")}
                   name="email"
                   autoComplete="email"
                   value={formData.email}
@@ -178,7 +200,7 @@ const Register = () => {
                   required
                   fullWidth
                   id="phoneNumber"
-                  label="Phone Number"
+                  label={t("phoneNumber")}
                   name="phoneNumber"
                   autoComplete="phone"
                   value={formData.phoneNumber}
@@ -191,7 +213,7 @@ const Register = () => {
                   required
                   fullWidth
                   id="firstName"
-                  label="First Name"
+                  label={t("firstName")}
                   name="firstName"
                   autoComplete="fname"
                   value={formData.firstName}
@@ -204,7 +226,7 @@ const Register = () => {
                   required
                   fullWidth
                   id="lastName"
-                  label="Last Name"
+                  label={t("lastName")}
                   name="lastName"
                   autoComplete="lname"
                   value={formData.lastName}
@@ -217,7 +239,7 @@ const Register = () => {
                   required
                   fullWidth
                   id="birthDate"
-                  label="Birth Date"
+                  label={t("birthDate")}
                   name="birthDate"
                   type="date"
                   InputLabelProps={{
@@ -233,7 +255,7 @@ const Register = () => {
                   required
                   fullWidth
                   id="password"
-                  label="Password"
+                  label={t("password")}
                   name="password"
                   type="password"
                   autoComplete="current-password"
@@ -247,7 +269,7 @@ const Register = () => {
                   required
                   fullWidth
                   id="confirmPassword"
-                  label="Confirm Password"
+                  label={t("confirmPassword")}
                   name="confirmPassword"
                   type="password"
                   value={formData.confirmPassword}
@@ -263,8 +285,8 @@ const Register = () => {
                     }
                   >
                     {formData.password === formData.confirmPassword
-                      ? "Las contraseñas coinciden"
-                      : "Las contraseñas no coinciden"}
+                      ? t("passwordsMatch")
+                      : t("passwordsDoNotMatch")}
                   </Typography>
                 )}
               </Grid>
@@ -278,7 +300,7 @@ const Register = () => {
                 />
                 <label htmlFor="photo">
                   <Button variant="contained" color="primary" component="span">
-                    Upload Profile Picture
+                    {t("uploadProfilePicture")}
                   </Button>
                 </label>
                 {formData.photo && (
@@ -297,7 +319,7 @@ const Register = () => {
               </Grid>
               <Grid item xs={12}>
                 <Button type="submit" variant="contained" color="primary">
-                  Create User
+                  {t("createUser")}
                 </Button>
               </Grid>
             </Grid>
@@ -306,22 +328,43 @@ const Register = () => {
       </Container>
 
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Usuario creado exitosamente</DialogTitle>
+        <DialogTitle>{t("userCreatedSuccessfully")}</DialogTitle>
         <DialogContent>
-          <DialogContentText>
-            A tu correo debió llegar un email de confirmación para completar el
-            registro. Una vez lo confirmes podrás iniciar sesión.
-          </DialogContentText>
+          <DialogContentText>{t("confirmationEmailSent")}</DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button component={Link} to="/login" color="primary">
-            Inicio de sesión
+            {t("signIn")}
           </Button>
           <Button component={Link} to="/" color="primary">
-            Ir al home
+            {t("goToHome")}
           </Button>
         </DialogActions>
       </Dialog>
+
+      <Dialog open={errorDialogOpen} onClose={handleErrorDialogClose}>
+        <DialogTitle>{t("text9")}</DialogTitle>
+        <DialogContent>
+          <DialogContentText>{t("text8")}</DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button component={Link} to="/" color="primary">
+            {t("close")}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+        message={snackbarMessage}
+        action={
+          <Button color="inherit" size="small" onClick={handleSnackbarClose}>
+            {t("close")}
+          </Button>
+        }
+      />
     </div>
   );
 };
