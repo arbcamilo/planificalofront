@@ -25,6 +25,7 @@ const CreateEvents = () => {
   const [productTypes, setProductTypes] = useState([]);
   const [filteredServiceProviders, setFilteredServiceProviders] = useState([]);
   const [filteredProductProviders, setFilteredProductProviders] = useState([]);
+  const [isQuotation, setIsQuotation] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -105,6 +106,7 @@ const CreateEvents = () => {
     try {
       await createEvent(formattedEvent);
       setIsReadOnly(true);
+      setIsQuotation(true);
     } catch (error) {
       console.error('Error creating event:', error);
     }
@@ -112,61 +114,85 @@ const CreateEvents = () => {
 
   return (
     <Box display="flex" flexDirection="column" alignItems="center" minHeight="100vh" p={2}>
-      <Typography variant="h3" align="center" gutterBottom>Creación de evento</Typography>
+      <Typography variant="h3" align="center" gutterBottom>{isQuotation ? 'Cotización' : 'Creación de evento'}</Typography>
       <Paper elevation={3} style={{ padding: '20px', maxWidth: '800px', width: '100%' }}>
         <Grid container spacing={2} direction="column">
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              label="Nombre del evento"
-              variant="outlined"
-              value={eventData.title}
-              onChange={(e) => setEventData({ ...eventData, title: e.target.value })}
-              slotProps={{ input: { readOnly: isReadOnly } }}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              select
-              fullWidth
-              label="Evento Privado?"
-              variant="outlined"
-              value={eventData.isPrivate}
-              onChange={(e) => setEventData({ ...eventData, isPrivate: e.target.value })}
-              slotProps={{ input: { readOnly: isReadOnly } }}
-            >
-              <MenuItem value="si">Si</MenuItem>
-              <MenuItem value="no">No</MenuItem>
-            </TextField>
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              type="date"
-              label="Fecha del evento"
-              slotProps={{ inputLabel: { shrink: true } }}
-              variant="outlined"
-              value={eventData.date}
-              onChange={(e) => setEventData({ ...eventData, date: e.target.value })}
-              InputProps={{ readOnly: isReadOnly }}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              label="Ubicación"
-              variant="outlined"
-              value={eventData.location}
-              onChange={(e) => setEventData({ ...eventData, location: e.target.value })}
-              InputProps={{ readOnly: isReadOnly }}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <Button variant="contained" component="label" disabled={isReadOnly}>
-              Cargar Fotografía
-              <input type="file" hidden onChange={(e) => setEventData({ ...eventData, imageEvent: e.target.files[0] })} />
-            </Button>
-          </Grid>
+          {isQuotation ? (
+            <>
+              <Grid item xs={12}>
+                <Typography variant="body1"><strong>Nombre del evento:</strong> {eventData.title}</Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <Typography variant="body1"><strong>Evento Privado:</strong> {eventData.isPrivate}</Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <Typography variant="body1"><strong>Fecha del evento:</strong> {eventData.date}</Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <Typography variant="body1"><strong>Ubicación:</strong> {eventData.location}</Typography>
+              </Grid>
+              <Grid item xs={12}>
+                {eventData.imageEvent && (
+                  <img src={URL.createObjectURL(eventData.imageEvent)} alt="Event" style={{ maxWidth: '100%', height: 'auto' }} />
+                )}
+              </Grid>
+            </>
+          ) : (
+            <>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Nombre del evento"
+                  variant="outlined"
+                  value={eventData.title}
+                  onChange={(e) => setEventData({ ...eventData, title: e.target.value })}
+                  slotProps={{ input: { readOnly: isReadOnly } }}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  select
+                  fullWidth
+                  label="Evento Privado?"
+                  variant="outlined"
+                  value={eventData.isPrivate}
+                  onChange={(e) => setEventData({ ...eventData, isPrivate: e.target.value })}
+                  slotProps={{ input: { readOnly: isReadOnly } }}
+                >
+                  <MenuItem value="si">Si</MenuItem>
+                  <MenuItem value="no">No</MenuItem>
+                </TextField>
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  type="date"
+                  label="Fecha del evento"
+                  slotProps={{ inputLabel: { shrink: true } }}
+                  variant="outlined"
+                  value={eventData.date}
+                  onChange={(e) => setEventData({ ...eventData, date: e.target.value })}
+                  InputProps={{ readOnly: isReadOnly }}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Ubicación"
+                  variant="outlined"
+                  value={eventData.location}
+                  onChange={(e) => setEventData({ ...eventData, location: e.target.value })}
+                  InputProps={{ readOnly: isReadOnly }}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Button variant="contained" component="label" disabled={isReadOnly}>
+                  Cargar Fotografía
+                  <input type="file" hidden onChange={(e) => setEventData({ ...eventData, imageEvent: e.target.files[0] })} />
+                </Button>
+              </Grid>
+            </>
+          )}
         </Grid>
 
         <Divider style={{ margin: '20px 0', opacity: 0.5 }} />
@@ -232,36 +258,39 @@ const CreateEvents = () => {
         )}
 
         {services.length > 0 && (
-          <TableContainer component={Paper} style={{ marginTop: '20px' }}>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell><strong>Tipo de servicio</strong></TableCell>
-                  <TableCell><strong>Proveedor</strong></TableCell>
-                  <TableCell><strong>Precio</strong></TableCell>
-                  <TableCell><strong>Cantidad</strong></TableCell>
-                  <TableCell><strong>Acciones</strong></TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {services.map((service, index) => (
-                  <TableRow key={index}>
-                    <TableCell>{serviceTypes.find(s => s.id === service.type)?.serviceType}</TableCell>
-                    <TableCell>{service.provider}</TableCell>
-                    <TableCell>{service.price}</TableCell>
-                    <TableCell>{service.quantity}</TableCell>
-                    <TableCell>
-                      {!isReadOnly && (
-                        <IconButton onClick={() => handleDeleteService(index)}>
-                          <DeleteIcon />
-                        </IconButton>
-                      )}
-                    </TableCell>
+          <>
+            {isQuotation && <Typography variant="h6" style={{ marginTop: '20px' }}>Servicios Solicitados</Typography>}
+            <TableContainer component={Paper} style={{ marginTop: '20px' }}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell><strong>Tipo de servicio</strong></TableCell>
+                    <TableCell><strong>Proveedor</strong></TableCell>
+                    <TableCell><strong>Precio</strong></TableCell>
+                    <TableCell><strong>Cantidad</strong></TableCell>
+                    <TableCell><strong>Acciones</strong></TableCell>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+                </TableHead>
+                <TableBody>
+                  {services.map((service, index) => (
+                    <TableRow key={index}>
+                      <TableCell>{serviceTypes.find(s => s.id === service.type)?.serviceType}</TableCell>
+                      <TableCell>{service.provider}</TableCell>
+                      <TableCell>{service.price}</TableCell>
+                      <TableCell>{service.quantity}</TableCell>
+                      <TableCell>
+                        {!isReadOnly && (
+                          <IconButton onClick={() => handleDeleteService(index)}>
+                            <DeleteIcon />
+                          </IconButton>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </>
         )}
 
         <Divider style={{ margin: '20px 0', opacity: 0.5 }} />
@@ -327,47 +356,63 @@ const CreateEvents = () => {
         )}
 
         {products.length > 0 && (
-          <TableContainer component={Paper} style={{ marginTop: '20px' }}>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell><strong>Tipo de producto</strong></TableCell>
-                  <TableCell><strong>Proveedor</strong></TableCell>
-                  <TableCell><strong>Precio</strong></TableCell>
-                  <TableCell><strong>Cantidad</strong></TableCell>
-                  <TableCell><strong>Acciones</strong></TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {products.map((product, index) => (
-                  <TableRow key={index}>
-                    <TableCell>{productTypes.find(p => p.id === product.type)?.productType}</TableCell>
-                    <TableCell>{product.provider}</TableCell>
-                    <TableCell>{product.price}</TableCell>
-                    <TableCell>{product.quantity}</TableCell>
-                    <TableCell>
-                      {!isReadOnly && (
-                        <IconButton onClick={() => handleDeleteProduct(index)}>
-                          <DeleteIcon />
-                        </IconButton>
-                      )}
-                    </TableCell>
+          <>
+            {isQuotation && <Typography variant="h6" style={{ marginTop: '20px' }}>Productos Solicitados</Typography>}
+            <TableContainer component={Paper} style={{ marginTop: '20px' }}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell><strong>Tipo de producto</strong></TableCell>
+                    <TableCell><strong>Proveedor</strong></TableCell>
+                    <TableCell><strong>Precio</strong></TableCell>
+                    <TableCell><strong>Cantidad</strong></TableCell>
+                    <TableCell><strong>Acciones</strong></TableCell>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+                </TableHead>
+                <TableBody>
+                  {products.map((product, index) => (
+                    <TableRow key={index}>
+                      <TableCell>{productTypes.find(p => p.id === product.type)?.productType}</TableCell>
+                      <TableCell>{product.provider}</TableCell>
+                      <TableCell>{product.price}</TableCell>
+                      <TableCell>{product.quantity}</TableCell>
+                      <TableCell>
+                        {!isReadOnly && (
+                          <IconButton onClick={() => handleDeleteProduct(index)}>
+                            <DeleteIcon />
+                          </IconButton>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </>
         )}
 
         <Divider style={{ margin: '20px 0', opacity: 0.5 }} />
 
         <Grid container spacing={2} justifyContent="flex-end">
-          <Grid item>
-            <Button variant="contained">Regresar</Button>
-          </Grid>
-          <Grid item>
-            <Button variant="contained" color="primary" onClick={handleCreateEvent} disabled={isReadOnly}>Crear Cotización</Button>
-          </Grid>
+          {isQuotation ? (
+            <>
+              <Grid item>
+                <Button variant="contained">Ir a Eventos</Button>
+              </Grid>
+              <Grid item>
+                <Button variant="contained" color="primary">Realizar Pago</Button>
+              </Grid>
+            </>
+          ) : (
+            <>
+              <Grid item>
+                <Button variant="contained">Regresar</Button>
+              </Grid>
+              <Grid item>
+                <Button variant="contained" color="primary" onClick={handleCreateEvent} disabled={isReadOnly}>Crear Cotización</Button>
+              </Grid>
+            </>
+          )}
         </Grid>
       </Paper>
     </Box>

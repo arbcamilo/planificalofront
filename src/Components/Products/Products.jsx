@@ -21,6 +21,10 @@ import {
   InputAdornment,
   Snackbar,
   Alert,
+  MenuItem,
+  Select,
+  FormControl,
+  InputLabel,
 } from "@mui/material";
 import { Edit, Delete, FilterList } from "@mui/icons-material";
 import {
@@ -28,10 +32,11 @@ import {
   createProduct,
   updateProduct,
   deleteProduct,
+  getProducts,
 } from "./ProductsServices";
 import { useTranslation } from "react-i18next";
 
-const Products = () => {
+const Products = ({ documentNumber }) => {
   const [page, setPage] = useState(0);
   const { t } = useTranslation();
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -42,37 +47,44 @@ const Products = () => {
   const [editMode, setEditMode] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [newProduct, setNewProduct] = useState({
-    productType: "",
+    productId: "",
     price: 0,
     amount: "",
-    description: "",
-    productProvider: [],
-    productQuote: [],
   });
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deleteProductId, setDeleteProductId] = useState(null);
+  const [productOptions, setProductOptions] = useState([]);
 
   useEffect(() => {
-    const getProducts = async () => {
+    const getProductsData = async () => {
       const products = await fetchProducts();
       setDataProducts(products);
       setFilteredProducts(products);
     };
 
-    getProducts();
+    getProductsData();
   }, []);
 
   useEffect(() => {
     setFilteredProducts(
       dataProducts.filter((prov) =>
-        prov.productType.toLowerCase().includes(filter.toLowerCase())
+        prov.productType?.toLowerCase().includes(filter.toLowerCase())
       )
     );
   }, [filter, dataProducts]);
 
-  const handleChangePage = (event, newPage) => {
+  useEffect(() => {
+    const fetchProductOptions = async () => {
+      const products = await getProducts();
+      setProductOptions(products);
+    };
+
+    fetchProductOptions();
+  }, []);
+
+  const handleChangePage = (newPage) => {
     setPage(newPage);
   };
 
@@ -90,12 +102,9 @@ const Products = () => {
     setEditMode(false);
     setSelectedProduct(null);
     setNewProduct({
-      productType: "",
+      productId: "",
       price: 0,
       amount: "",
-      description: "",
-      productProvider: [],
-      productQuote: [],
     });
   };
 
@@ -106,11 +115,13 @@ const Products = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const productData = {
+      ...newProduct,
+      providerId: documentNumber,
+    };
+
     if (editMode) {
-      const updatedProduct = await updateProduct(
-        selectedProduct.id,
-        newProduct
-      );
+      const updatedProduct = await updateProduct(selectedProduct.id, productData);
       if (updatedProduct) {
         setDataProducts(
           dataProducts.map((prov) =>
@@ -122,7 +133,7 @@ const Products = () => {
         handleClose();
       }
     } else {
-      const createdProduct = await createProduct(newProduct);
+      const createdProduct = await createProduct(productData);
       if (createdProduct) {
         setDataProducts([...dataProducts, createdProduct]);
         setSnackbarMessage(t("text5"));
@@ -204,16 +215,21 @@ const Products = () => {
             {t("text1")} {t(editMode ? "edit" : "create")}
           </DialogContentText>
           <form onSubmit={handleSubmit}>
-            <TextField
-              margin="dense"
-              name="productType"
-              label={t("productType")}
-              type="text"
-              fullWidth
-              value={newProduct.productType}
-              onChange={handleInputChange}
-              InputLabelProps={{ style: { fontWeight: "bold" } }}
-            />
+            <FormControl fullWidth margin="dense">
+              <InputLabel>{t("productType")}</InputLabel>
+              <Select
+                name="productId"
+                value={newProduct.productId}
+                onChange={handleInputChange}
+                label={t("productType")}
+              >
+                {productOptions.map((option) => (
+                  <MenuItem key={option.id} value={option.id}>
+                    {option.productType}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
             <TextField
               margin="dense"
               name="price"
@@ -222,7 +238,9 @@ const Products = () => {
               fullWidth
               value={newProduct.price}
               onChange={handleInputChange}
-              InputLabelProps={{ style: { fontWeight: "bold" } }}
+              slotProps={{
+                inputLabel: { style: { fontWeight: "bold" } }
+              }}
             />
             <TextField
               autoFocus
@@ -233,17 +251,9 @@ const Products = () => {
               fullWidth
               value={newProduct.amount}
               onChange={handleInputChange}
-              InputLabelProps={{ style: { fontWeight: "bold" } }}
-            />
-            <TextField
-              margin="dense"
-              name="description"
-              label={t("description")}
-              type="text"
-              fullWidth
-              value={newProduct.description}
-              onChange={handleInputChange}
-              InputLabelProps={{ style: { fontWeight: "bold" } }}
+              slotProps={{
+                inputLabel: { style: { fontWeight: "bold" } }
+              }}
             />
             <div
               style={{
@@ -301,9 +311,6 @@ const Products = () => {
               <TableCell>
                 <strong>{t("amount")}</strong>
               </TableCell>
-              <TableCell>
-                <strong>{t("description")}</strong>
-              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -326,7 +333,6 @@ const Products = () => {
                   <TableCell>{product.productType}</TableCell>
                   <TableCell>{product.price}</TableCell>
                   <TableCell>{product.amount}</TableCell>
-                  <TableCell>{product.description}</TableCell>
                 </TableRow>
               ))}
           </TableBody>
