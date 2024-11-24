@@ -56,7 +56,7 @@ function App() {
                 element={<ConfirmationEmail />}
               />
               <Route
-                path="/resend-confirmatioclsn"
+                path="/resend-confirmation"
                 element={<ResendConfirmation />}
               />
               <Route path="/forgot-password" element={<ForgotPassword />} />

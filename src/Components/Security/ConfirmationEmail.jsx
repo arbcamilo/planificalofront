@@ -33,7 +33,7 @@ const ConfirmationEmail = () => {
   const handleConfirmEmail = async () => {
     try {
       const response = await axios.get(
-        "https://localhost:7003/api/admin/Users/ConfirmEmail",
+        "https://planificalobackend.azurewebsites.net/api/admin/Users/ConfirmEmail",
         {
           params: {
             userId: formData.userId,
