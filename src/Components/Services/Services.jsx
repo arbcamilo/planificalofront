@@ -21,6 +21,10 @@ import {
   InputAdornment,
   Snackbar,
   Alert,
+  MenuItem,
+  Select,
+  FormControl,
+  InputLabel,
 } from "@mui/material";
 import { Edit, Delete, FilterList } from "@mui/icons-material";
 import {
@@ -28,10 +32,11 @@ import {
   createService,
   updateService,
   deleteService,
+  getServices,
 } from "./ServicesServices";
 import { useTranslation } from "react-i18next";
 
-const Services = () => {
+const Services = ({ documentNumber }) => {
   const [page, setPage] = useState(0);
   const { t } = useTranslation();
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -42,37 +47,44 @@ const Services = () => {
   const [editMode, setEditMode] = useState(false);
   const [selectedService, setSelectedService] = useState(null);
   const [newService, setNewService] = useState({
-    serviceType: "",
+    serviceId: "",
     price: 0,
-    quantity: "",
-    description: "",
-    serviceProviders: [],
-    serviceQuotes: [],
+    quantify: "",
   });
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deleteServiceId, setDeleteServiceId] = useState(null);
+  const [serviceOptions, setServiceOptions] = useState([]);
 
   useEffect(() => {
-    const getServices = async () => {
+    const getServicesData = async () => {
       const services = await fetchServices();
       setDataServices(services);
       setFilteredServices(services);
     };
 
-    getServices();
+    getServicesData();
   }, []);
 
   useEffect(() => {
     setFilteredServices(
       dataServices.filter((prov) =>
-        prov.serviceType.toLowerCase().includes(filter.toLowerCase())
+        prov.serviceType?.toLowerCase().includes(filter.toLowerCase())
       )
     );
   }, [filter, dataServices]);
 
-  const handleChangePage = (event, newPage) => {
+  useEffect(() => {
+    const fetchServiceOptions = async () => {
+      const services = await getServices();
+      setServiceOptions(services);
+    };
+
+    fetchServiceOptions();
+  }, []);
+
+  const handleChangePage = (newPage) => {
     setPage(newPage);
   };
 
@@ -90,12 +102,9 @@ const Services = () => {
     setEditMode(false);
     setSelectedService(null);
     setNewService({
-      serviceType: "",
+      serviceId: "",
       price: 0,
-      quantity: "",
-      description: "",
-      serviceProviders: [],
-      serviceQuotes: [],
+      quantify: "",
     });
   };
 
@@ -106,10 +115,15 @@ const Services = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const serviceData = {
+      ...newService,
+      providerId: documentNumber,
+    };
+
     if (editMode) {
       const updatedService = await updateService(
         selectedService.id,
-        newService
+        serviceData
       );
       if (updatedService) {
         setDataServices(
@@ -122,7 +136,7 @@ const Services = () => {
         handleClose();
       }
     } else {
-      const createdService = await createService(newService);
+      const createdService = await createService(serviceData);
       if (createdService) {
         setDataServices([...dataServices, createdService]);
         setSnackbarMessage(t("text5"));
@@ -132,9 +146,9 @@ const Services = () => {
     }
   };
 
-  const handleEdit = (servicio) => {
-    setSelectedService(servicio);
-    setNewService(servicio);
+  const handleEdit = (service) => {
+    setSelectedService(service);
+    setNewService(service);
     setEditMode(true);
     handleClickOpen();
   };
@@ -204,16 +218,21 @@ const Services = () => {
             {t("text1")} {t(editMode ? "edit" : "create")}
           </DialogContentText>
           <form onSubmit={handleSubmit}>
-            <TextField
-              margin="dense"
-              name="serviceType"
-              label={t("serviceType")}
-              type="text"
-              fullWidth
-              value={newService.serviceType}
-              onChange={handleInputChange}
-              InputLabelProps={{ style: { fontWeight: "bold" } }}
-            />
+            <FormControl fullWidth margin="dense">
+              <InputLabel>{t("serviceType")}</InputLabel>
+              <Select
+                name="serviceId"
+                value={newService.serviceId}
+                onChange={handleInputChange}
+                label={t("serviceType")}
+              >
+                {serviceOptions.map((option) => (
+                  <MenuItem key={option.id} value={option.id}>
+                    {option.serviceType}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
             <TextField
               margin="dense"
               name="price"
@@ -222,28 +241,22 @@ const Services = () => {
               fullWidth
               value={newService.price}
               onChange={handleInputChange}
-              InputLabelProps={{ style: { fontWeight: "bold" } }}
+              slotProps={{
+                inputLabel: { style: { fontWeight: "bold" } },
+              }}
             />
             <TextField
               autoFocus
               margin="dense"
-              name="quantity"
-              label={t("quantity")}
-              type="text"
+              name="quantify"
+              label={t("quantify")}
+              type="number"
               fullWidth
-              value={newService.quantity}
+              value={newService.quantify}
               onChange={handleInputChange}
-              InputLabelProps={{ style: { fontWeight: "bold" } }}
-            />
-            <TextField
-              margin="dense"
-              name="description"
-              label={t("description")}
-              type="text"
-              fullWidth
-              value={newService.description}
-              onChange={handleInputChange}
-              InputLabelProps={{ style: { fontWeight: "bold" } }}
+              slotProps={{
+                inputLabel: { style: { fontWeight: "bold" } },
+              }}
             />
             <div
               style={{
@@ -271,7 +284,7 @@ const Services = () => {
         <DialogTitle>{t("confirmDelete")}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            {t("text2")} {t("service")}?
+            {t("text2")} {t("user")}?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -299,34 +312,30 @@ const Services = () => {
                 <strong>{t("price")}</strong>
               </TableCell>
               <TableCell>
-                <strong>{t("amount")}</strong>
-              </TableCell>
-              <TableCell>
-                <strong>{t("description")}</strong>
+                <strong>{t("quantify")}</strong>
               </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {filteredServices
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((servicio) => (
-                <TableRow key={servicio.id}>
+              .map((service) => (
+                <TableRow key={service.id}>
                   <TableCell>
                     <div style={{ display: "flex", gap: "2px" }}>
-                      <IconButton onClick={() => handleEdit(servicio)}>
+                      <IconButton onClick={() => handleEdit(service)}>
                         <Edit color="primary" />
                       </IconButton>
                       <IconButton
-                        onClick={() => handleDeleteDialogOpen(servicio.id)}
+                        onClick={() => handleDeleteDialogOpen(service.id)}
                       >
                         <Delete color="error" />
                       </IconButton>
                     </div>
                   </TableCell>
-                  <TableCell>{servicio.serviceType}</TableCell>
-                  <TableCell>{servicio.price}</TableCell>
-                  <TableCell>{servicio.quantity}</TableCell>
-                  <TableCell>{servicio.description}</TableCell>
+                  <TableCell>{service.serviceType}</TableCell>
+                  <TableCell>{service.price}</TableCell>
+                  <TableCell>{service.amount}</TableCell>
                 </TableRow>
               ))}
           </TableBody>
