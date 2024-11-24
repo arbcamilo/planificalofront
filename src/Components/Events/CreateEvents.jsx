@@ -37,10 +37,9 @@ const CreateEvents = () => {
             <TextField fullWidth label="Nombre del evento" variant="outlined" />
           </Grid>
           <Grid item xs={12}>
-            <TextField select fullWidth label="Tipo de evento" variant="outlined">
-              <MenuItem value="Conferencia">Conferencia</MenuItem>
-              <MenuItem value="Seminario">Seminario</MenuItem>
-              <MenuItem value="Taller">Taller</MenuItem>
+            <TextField select fullWidth label="Evento Privado?" variant="outlined">
+              <MenuItem value="si">Si</MenuItem>
+              <MenuItem value="no">No</MenuItem>
             </TextField>
           </Grid>
           <Grid item xs={12}>
