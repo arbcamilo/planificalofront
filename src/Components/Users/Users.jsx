@@ -282,6 +282,16 @@ const Users = () => {
             />
             <TextField
               margin="dense"
+              name="documentNumber"
+              label={t("documentNumber")}
+              type="text"
+              fullWidth
+              value={newUser.documentNumber}
+              onChange={handleInputChange}
+              InputLabelProps={{ style: { fontWeight: "bold" } }}
+            />
+            <TextField
+              margin="dense"
               name="userType"
               label={t("userType")}
               type="number"

@@ -36,7 +36,7 @@ const Register = () => {
     password: "",
     confirmPassword: "",
     language: "es",
-    photo: "", // Add photo field
+    photo: "",
   });
 
   const [open, setOpen] = useState(false);
@@ -69,12 +69,12 @@ const Register = () => {
     try {
       const response = await axios.post("/admin/Users/CreateUser", formData);
       console.log(t("userCreatedSuccessfully"), response.data.entity);
-      setOpen(true); // Open the dialog on successful response
+      setOpen(true);
     } catch (error) {
       if (error.response && error.response.status === 400) {
         console.error("Bad Request:", error.response.data);
         setSnackbarMessage(t("text8"));
-        setErrorDialogOpen(true); // Open the error dialog on 400 response
+        setErrorDialogOpen(true);
       } else {
         console.error("Error creating user:", error);
         setSnackbarMessage(t("errorCreatingUser"));

@@ -44,7 +44,7 @@ const ResetPassword = () => {
 
     try {
       await axios.put(
-        "https://localhost:7003/api/admin/Users/ChangePassword",
+        "https://planificalobackend.azurewebsites.net/api/admin/Users/ChangePassword",
         data,
         {
           headers: {
@@ -55,7 +55,7 @@ const ResetPassword = () => {
       setSnackbarMessage("Password changed successfully");
       setSnackbarOpen(true);
       setTimeout(() => {
-        navigate("/login"); // Redireccionar al login después de 3 segundos
+        navigate("/login");
       }, 3000);
     } catch (error) {
       setSnackbarMessage("Error changing password");

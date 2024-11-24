@@ -23,16 +23,16 @@ const ForgotPassword = () => {
     e.preventDefault();
     try {
       await axios.get(
-        `https://localhost:7003/api/admin/Users/RecoveryPassword`,
+        `https://planificalobackend.azurewebsites.net/api/admin/Users/RecoveryPassword`,
         {
           params: {
             email: email,
-            lenguage: "en", // Enviar siempre "en" como idioma
+            lenguage: "en",
           },
         }
       );
       setSnackbarMessage("Reset link sent successfully");
-      setDialogOpen(true); // Abrir el diálogo
+      setDialogOpen(true);
     } catch (error) {
       setSnackbarMessage("Error sending reset link");
       setSnackbarOpen(true);
