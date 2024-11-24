@@ -2,7 +2,7 @@ import React from "react";
 import {
   Typography,
   Container,
-  Grid,
+  Grid2 as Grid,
   Paper,
   Card,
   CardContent,
@@ -107,49 +107,36 @@ const Inicio = () => {
       <Typography variant="h4" gutterBottom style={{ marginTop: "20px" }}>
         {t("publicEvents")}
       </Typography>
-      <Grid container spacing={3}>
-        {events
-          .slice((page - 1) * itemsPerPage, page * itemsPerPage)
-          .map((event) => (
-            <Grid item xs={12} key={event.id}>
-              <Card>
-                <Grid container>
-                  <Grid item xs={9}>
-                    <CardContent>
-                      <Typography variant="h5" component="div">
-                        {event.title}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        {event.description}
-                      </Typography>
-                      <Typography variant="subtitle1" color="text.secondary">
-                        {t("eventDate")}: {event.date}
-                      </Typography>
-                      <Typography variant="subtitle1" color="text.secondary">
-                        {t("eventTime")}: {event.time}
-                      </Typography>
-                      <Typography variant="subtitle1" color="text.secondary">
-                        {t("eventLocation")}: {event.location}
-                      </Typography>
-                      <Typography variant="subtitle1" color="text.secondary">
-                        {t("eventCost")}: {event.cost}
-                      </Typography>
-                    </CardContent>
-                  </Grid>
-                  <Grid item xs={3}>
-                    <CardMedia
-                      component="img"
-                      height="200"
-                      image={event.image}
-                      alt={event.title}
-                      style={{ objectFit: "fill" }}
-                    />
-                  </Grid>
-                </Grid>
-              </Card>
-            </Grid>
-          ))}
-      </Grid>
+      <Box display="flex" overflow="auto">
+        {events.map((event) => (
+          <Card key={event.id} style={{ width: "284px", height: "550px", marginRight: "20px" }}>
+            <CardMedia
+              component="img"
+              height="275"
+              image={event.image}
+              alt={event.title}
+              style={{ objectFit: "fill" }}
+            />
+            <CardContent>
+              <Typography variant="h6" component="div">
+                {t("eventType")}
+              </Typography>
+              <Typography variant="h5" component="div">
+                {event.title}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                {t("createdBy")}: {event.description}
+              </Typography>
+              <Typography variant="subtitle1" color="text.secondary">
+                {t("eventLocation")}: {event.location}
+              </Typography>
+              <Typography variant="h6" color="text.primary">
+                {t("eventDate")}: {event.date}
+              </Typography>
+            </CardContent>
+          </Card>
+        ))}
+      </Box>
       <Box display="flex" justifyContent="center" marginTop="20px">
         <Pagination
           count={Math.ceil(events.length / itemsPerPage)}
