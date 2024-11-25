@@ -108,11 +108,14 @@ const NavBar = ({ toggleTheme, mode }) => {
                 onMouseLeave: handleClose,
               }}
             >
-              <MenuItem component={Link} to="/providers">
-                <ListItemText primary={t("providers")} />
-              </MenuItem>
               <MenuItem component={Link} to="/users">
                 <ListItemText primary={t("users")} />
+              </MenuItem>
+              <MenuItem component={Link} to="/productsAd">
+                <ListItemText primary={t("products")} />
+              </MenuItem>
+              <MenuItem component={Link} to="/serviceAd">
+                <ListItemText primary={t("services")} />
               </MenuItem>
             </Menu>
           </>

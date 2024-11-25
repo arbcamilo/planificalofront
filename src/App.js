@@ -8,9 +8,11 @@ import Inicio from "./Components/Home/Home";
 import Providers from "./Components/Providers/Providers";
 import Users from "./Components/Users/Users";
 import Services from "./Components/Services/Services";
+import ServicesAd from "./Components/Services/ServicesAd";
 import CreateEvents from "./Components/Events/CreateEvents";
 import EventsList from "./Components/Events/EventsList";
 import Products from "./Components/Products/Products";
+import ProductsAd from "./Components/Products/ProductsAd";
 import Guests from "./Components/Guests/Guests";
 import { AuthProvider } from "./Components/Security/context/AuthContext";
 import PrivateRoute from "./Components/Security/PrivateRoute";
@@ -73,11 +75,7 @@ function App() {
                   <PrivateRoute roles={["user", "admin"]} component={Logout} />
                 }
               />
-              <Route
-                path="/create-events"
-                element={<CreateEvents />}
-              />
-
+              <Route path="/create-events" element={<CreateEvents />} />
 
               <Route path="/" element={<Inicio />} />
               {/* Rutas privadas */}
@@ -104,6 +102,14 @@ function App() {
               <Route
                 path="/products"
                 element={<PrivateRoute component={Products} />}
+              />
+              <Route
+                path="/productsAd"
+                element={<PrivateRoute component={ProductsAd} />}
+              />
+              <Route
+                path="/serviceAd"
+                element={<PrivateRoute component={ServicesAd} />}
               />
               <Route
                 path="/guests"
