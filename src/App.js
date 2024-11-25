@@ -23,6 +23,8 @@ import ForgotPassword from "./Components/Security/ForgotPassword";
 import ResetPassword from "./Components/Security/ResetPassword";
 import ConfirmationEmail from "./Components/Security/ConfirmationEmail";
 import Profile from "./Components/Profile/profile";
+import CreateEventForm from "./Components/Events/CreateEventForm";
+import EventQuotation from "./Components/Events/EventQuotation";
 
 function App() {
   const [mode, setMode] = useState("light");
@@ -73,10 +75,8 @@ function App() {
                   <PrivateRoute roles={["user", "admin"]} component={Logout} />
                 }
               />
-              <Route
-                path="/create-events"
-                element={<CreateEvents />}
-              />
+              <Route path="/create-events" element={<CreateEventForm />} />
+              <Route path="/create-events/:id" element={<EventQuotation />} />
 
 
               <Route path="/" element={<Inicio />} />
