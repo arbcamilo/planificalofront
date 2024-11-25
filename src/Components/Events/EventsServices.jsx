@@ -150,3 +150,18 @@ export const getProviders = async () => {
     return [];
   }
 };
+
+export const getEventById = async (id) => {
+  try {
+    const response = await axios.get(`/admin/Events/${id}`);
+    if (response.data.success) {
+      return response.data.entity;
+    } else {
+      console.error("Error fetching event by id:", response.data.message);
+      return null;
+    }
+  } catch (error) {
+    console.error("Error fetching event by id:", error);
+    return null;
+  }
+};
