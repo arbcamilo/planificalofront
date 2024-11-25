@@ -75,12 +75,13 @@ function App() {
                   <PrivateRoute roles={["user", "admin"]} component={Logout} />
                 }
               />
-              <Route path="/create-events" element={<CreateEventForm />} />
-              <Route path="/create-events/:id" element={<EventQuotation />} />
+              
 
 
               <Route path="/" element={<Inicio />} />
               {/* Rutas privadas */}
+              <Route path="/create-events" element={<PrivateRoute component={CreateEventForm} />} />
+              <Route path="/create-events/:id" element={<PrivateRoute component={EventQuotation} />} />
               <Route
                 path="/providers"
                 element={<PrivateRoute component={Providers} />}

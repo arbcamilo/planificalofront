@@ -199,6 +199,14 @@ const NavBar = ({ toggleTheme, mode }) => {
         <Box sx={{ display: "flex", alignItems: "center" }}>
           {user ? (
             <>
+              <Button
+                color="inherit"
+                component={Link}
+                to="/create-events"
+                sx={{ backgroundColor: "white", color: "black", marginRight: 2 }}
+              >
+                CREAR EVENTO
+              </Button>
               <IconButton color="inherit" onClick={handleUserMenu}>
                 <AccountCircleIcon />
               </IconButton>
