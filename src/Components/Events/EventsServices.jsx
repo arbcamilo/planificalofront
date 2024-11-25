@@ -74,3 +74,94 @@ export const deleteEvent = async (id) => {
     return false;
   }
 };
+
+export const getProductsProvider = async () => {
+  try {
+    const response = await axios.get("/admin/ProductProviders");
+    if (response.data.success) {
+      return response.data.entity;
+    } else {
+      console.error("Error fetching product providers:", response.data.message);
+      return [];
+    }
+  } catch (error) {
+    console.error("Error fetching product providers:", error);
+    return [];
+  }
+};
+
+export const getServicesProvider = async () => {
+  try {
+    const response = await axios.get("/admin/ServiceProviders");
+    if (response.data.success) {
+      return response.data.entity;
+    } else {
+      console.error("Error fetching service providers:", response.data.message);
+      return [];
+    }
+  } catch (error) {
+    console.error("Error fetching service providers:", error);
+    return [];
+  }
+};
+
+export const getServices = async () => {
+  try {
+    const response = await axios.get("/admin/Services");
+    if (response.data.success) {
+      return response.data.entity;
+    } else {
+      console.error("Error fetching services:", response.data.message);
+      return [];
+    }
+  } catch (error) {
+    console.error("Error fetching services:", error);
+    return [];
+  }
+};
+
+
+export const getProducts = async () => {
+  try {
+    const response = await axios.get("/admin/Products");
+    if (response.data.success) {
+      return response.data.entity;
+    } else {
+      console.error("Error fetching products:", response.data.message);
+      return [];
+    }
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    return [];
+  }
+};
+
+export const getProviders = async () => {
+  try {
+    const response = await axios.get("/admin/Users/GetAll");
+    if (response.data.success) {
+      return response.data.entity;
+    } else {
+      console.error("Error fetching providers:", response.data.message);
+      return [];
+    }
+  } catch (error) {
+    console.error("Error fetching providers:", error);
+    return [];
+  }
+};
+
+export const getEventById = async (id) => {
+  try {
+    const response = await axios.get(`/admin/Events/${id}`);
+    if (response.data.success) {
+      return response.data.entity;
+    } else {
+      console.error("Error fetching event by id:", response.data.message);
+      return null;
+    }
+  } catch (error) {
+    console.error("Error fetching event by id:", error);
+    return null;
+  }
+};

@@ -21,10 +21,6 @@ import {
   InputAdornment,
   Snackbar,
   Alert,
-  MenuItem,
-  Select,
-  FormControl,
-  InputLabel,
 } from "@mui/material";
 import { Edit, Delete, FilterList } from "@mui/icons-material";
 import {
@@ -32,11 +28,10 @@ import {
   createProduct,
   updateProduct,
   deleteProduct,
-  getProducts,
-} from "./ProductsServices";
+} from "./ProductsServicesAd";
 import { useTranslation } from "react-i18next";
 
-const Products = ({ documentNumber }) => {
+const Products = () => {
   const [page, setPage] = useState(0);
   const { t } = useTranslation();
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -47,44 +42,32 @@ const Products = ({ documentNumber }) => {
   const [editMode, setEditMode] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [newProduct, setNewProduct] = useState({
-    productId: "",
-    price: 0,
-    amount: "",
+    productType: "",
   });
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deleteProductId, setDeleteProductId] = useState(null);
-  const [productOptions, setProductOptions] = useState([]);
 
   useEffect(() => {
-    const getProductsData = async () => {
+    const getProducts = async () => {
       const products = await fetchProducts();
       setDataProducts(products);
       setFilteredProducts(products);
     };
 
-    getProductsData();
+    getProducts();
   }, []);
 
   useEffect(() => {
     setFilteredProducts(
       dataProducts.filter((prov) =>
-        prov.productType?.toLowerCase().includes(filter.toLowerCase())
+        prov.productType.toLowerCase().includes(filter.toLowerCase())
       )
     );
   }, [filter, dataProducts]);
 
-  useEffect(() => {
-    const fetchProductOptions = async () => {
-      const products = await getProducts();
-      setProductOptions(products);
-    };
-
-    fetchProductOptions();
-  }, []);
-
-  const handleChangePage = (newPage) => {
+  const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
 
@@ -102,9 +85,7 @@ const Products = ({ documentNumber }) => {
     setEditMode(false);
     setSelectedProduct(null);
     setNewProduct({
-      productId: "",
-      price: 0,
-      amount: "",
+      productType: "",
     });
   };
 
@@ -115,13 +96,11 @@ const Products = ({ documentNumber }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const productData = {
-      ...newProduct,
-      providerId: documentNumber,
-    };
-
     if (editMode) {
-      const updatedProduct = await updateProduct(selectedProduct.id, productData);
+      const updatedProduct = await updateProduct(
+        selectedProduct.id,
+        newProduct
+      );
       if (updatedProduct) {
         setDataProducts(
           dataProducts.map((prov) =>
@@ -133,7 +112,7 @@ const Products = ({ documentNumber }) => {
         handleClose();
       }
     } else {
-      const createdProduct = await createProduct(productData);
+      const createdProduct = await createProduct(newProduct);
       if (createdProduct) {
         setDataProducts([...dataProducts, createdProduct]);
         setSnackbarMessage(t("text5"));
@@ -143,9 +122,9 @@ const Products = ({ documentNumber }) => {
     }
   };
 
-  const handleEdit = (product) => {
-    setSelectedProduct(product);
-    setNewProduct(product);
+  const handleEdit = (servicio) => {
+    setSelectedProduct(servicio);
+    setNewProduct(servicio);
     setEditMode(true);
     handleClickOpen();
   };
@@ -215,45 +194,15 @@ const Products = ({ documentNumber }) => {
             {t("text1")} {t(editMode ? "edit" : "create")}
           </DialogContentText>
           <form onSubmit={handleSubmit}>
-            <FormControl fullWidth margin="dense">
-              <InputLabel>{t("productType")}</InputLabel>
-              <Select
-                name="productId"
-                value={newProduct.productId}
-                onChange={handleInputChange}
-                label={t("productType")}
-              >
-                {productOptions.map((option) => (
-                  <MenuItem key={option.id} value={option.id}>
-                    {option.productType}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
             <TextField
               margin="dense"
-              name="price"
-              label={t("price")}
-              type="number"
+              name="productType"
+              label={t("productType")}
+              type="text"
               fullWidth
-              value={newProduct.price}
+              value={newProduct.productType}
               onChange={handleInputChange}
-              slotProps={{
-                inputLabel: { style: { fontWeight: "bold" } }
-              }}
-            />
-            <TextField
-              autoFocus
-              margin="dense"
-              name="amount"
-              label={t("amount")}
-              type="number"
-              fullWidth
-              value={newProduct.amount}
-              onChange={handleInputChange}
-              slotProps={{
-                inputLabel: { style: { fontWeight: "bold" } }
-              }}
+              InputLabelProps={{ style: { fontWeight: "bold" } }}
             />
             <div
               style={{
@@ -281,7 +230,7 @@ const Products = ({ documentNumber }) => {
         <DialogTitle>{t("confirmDelete")}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            {t("text2")} {t("user")}?
+            {t("text2")} {t("product")}?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -305,34 +254,26 @@ const Products = ({ documentNumber }) => {
               <TableCell>
                 <strong>{t("productType")}</strong>
               </TableCell>
-              <TableCell>
-                <strong>{t("price")}</strong>
-              </TableCell>
-              <TableCell>
-                <strong>{t("amount")}</strong>
-              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {filteredProducts
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((product) => (
-                <TableRow key={product.id}>
+              .map((servicio) => (
+                <TableRow key={servicio.id}>
                   <TableCell>
                     <div style={{ display: "flex", gap: "2px" }}>
-                      <IconButton onClick={() => handleEdit(product)}>
+                      <IconButton onClick={() => handleEdit(servicio)}>
                         <Edit color="primary" />
                       </IconButton>
                       <IconButton
-                        onClick={() => handleDeleteDialogOpen(product.id)}
+                        onClick={() => handleDeleteDialogOpen(servicio.id)}
                       >
                         <Delete color="error" />
                       </IconButton>
                     </div>
                   </TableCell>
-                  <TableCell>{product.productType}</TableCell>
-                  <TableCell>{product.price}</TableCell>
-                  <TableCell>{product.amount}</TableCell>
+                  <TableCell>{servicio.productType}</TableCell>
                 </TableRow>
               ))}
           </TableBody>

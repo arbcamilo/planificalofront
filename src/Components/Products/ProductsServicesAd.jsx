@@ -2,21 +2,6 @@ import axios from "../../axiosConfig";
 
 export const fetchProducts = async () => {
   try {
-    const response = await axios.get("/admin/ProductProviders");
-    if (response.data.success) {
-      return response.data.entity;
-    } else {
-      console.error("Error fetching products:", response.data.message);
-      return [];
-    }
-  } catch (error) {
-    console.error("Error fetching products:", error);
-    return [];
-  }
-};
-
-export const getProducts = async () => {
-  try {
     const response = await axios.get("/admin/Products");
     if (response.data.success) {
       return response.data.entity;
@@ -32,7 +17,7 @@ export const getProducts = async () => {
 
 export const createProduct = async (newProduct) => {
   try {
-    const response = await axios.post("/admin/ProductProviders", newProduct);
+    const response = await axios.post("/admin/Products", newProduct);
     if (response.data.success) {
       return response.data.entity;
     } else {
@@ -47,7 +32,7 @@ export const createProduct = async (newProduct) => {
 
 export const updateProduct = async (id, updatedProduct) => {
   try {
-    const response = await axios.put(`/admin/ProductProviders/${id}`, updatedProduct);
+    const response = await axios.put(`/admin/Products/${id}`, updatedProduct);
     if (response.data.success) {
       return response.data.entity;
     } else {
@@ -62,7 +47,7 @@ export const updateProduct = async (id, updatedProduct) => {
 
 export const deleteProduct = async (id) => {
   try {
-    const response = await axios.delete(`/admin/ProductProviders/${id}`);
+    const response = await axios.delete(`/admin/Products/${id}`);
     if (response.data.success) {
       return true;
     } else {

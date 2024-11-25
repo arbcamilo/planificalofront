@@ -21,70 +21,53 @@ import {
   InputAdornment,
   Snackbar,
   Alert,
-  MenuItem,
-  Select,
-  FormControl,
-  InputLabel,
 } from "@mui/material";
 import { Edit, Delete, FilterList } from "@mui/icons-material";
 import {
-  fetchProducts,
-  createProduct,
-  updateProduct,
-  deleteProduct,
-  getProducts,
-} from "./ProductsServices";
+  fetchServices,
+  createService,
+  updateService,
+  deleteService,
+} from "./ServicesServicesAd";
 import { useTranslation } from "react-i18next";
 
-const Products = ({ documentNumber }) => {
+const Services = () => {
   const [page, setPage] = useState(0);
   const { t } = useTranslation();
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [dataProducts, setDataProducts] = useState([]);
-  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [dataServices, setDataServices] = useState([]);
+  const [filteredServices, setFilteredServices] = useState([]);
   const [filter, setFilter] = useState("");
   const [open, setOpen] = useState(false);
   const [editMode, setEditMode] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState(null);
-  const [newProduct, setNewProduct] = useState({
-    productId: "",
-    price: 0,
-    amount: "",
+  const [selectedService, setSelectedService] = useState(null);
+  const [newService, setNewService] = useState({
+    serviceType: "",
   });
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [deleteProductId, setDeleteProductId] = useState(null);
-  const [productOptions, setProductOptions] = useState([]);
+  const [deleteServiceId, setDeleteServiceId] = useState(null);
 
   useEffect(() => {
-    const getProductsData = async () => {
-      const products = await fetchProducts();
-      setDataProducts(products);
-      setFilteredProducts(products);
+    const getServices = async () => {
+      const services = await fetchServices();
+      setDataServices(services);
+      setFilteredServices(services);
     };
 
-    getProductsData();
+    getServices();
   }, []);
 
   useEffect(() => {
-    setFilteredProducts(
-      dataProducts.filter((prov) =>
-        prov.productType?.toLowerCase().includes(filter.toLowerCase())
+    setFilteredServices(
+      dataServices.filter((prov) =>
+        prov.serviceType.toLowerCase().includes(filter.toLowerCase())
       )
     );
-  }, [filter, dataProducts]);
+  }, [filter, dataServices]);
 
-  useEffect(() => {
-    const fetchProductOptions = async () => {
-      const products = await getProducts();
-      setProductOptions(products);
-    };
-
-    fetchProductOptions();
-  }, []);
-
-  const handleChangePage = (newPage) => {
+  const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
 
@@ -100,32 +83,28 @@ const Products = ({ documentNumber }) => {
   const handleClose = () => {
     setOpen(false);
     setEditMode(false);
-    setSelectedProduct(null);
-    setNewProduct({
-      productId: "",
-      price: 0,
-      amount: "",
+    setSelectedService(null);
+    setNewService({
+      serviceType: "",
     });
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setNewProduct({ ...newProduct, [name]: value });
+    setNewService({ ...newService, [name]: value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const productData = {
-      ...newProduct,
-      providerId: documentNumber,
-    };
-
     if (editMode) {
-      const updatedProduct = await updateProduct(selectedProduct.id, productData);
-      if (updatedProduct) {
-        setDataProducts(
-          dataProducts.map((prov) =>
-            prov.id === selectedProduct.id ? updatedProduct : prov
+      const updatedService = await updateService(
+        selectedService.id,
+        newService
+      );
+      if (updatedService) {
+        setDataServices(
+          dataServices.map((prov) =>
+            prov.id === selectedService.id ? updatedService : prov
           )
         );
         setSnackbarMessage(t("text4"));
@@ -133,9 +112,9 @@ const Products = ({ documentNumber }) => {
         handleClose();
       }
     } else {
-      const createdProduct = await createProduct(productData);
-      if (createdProduct) {
-        setDataProducts([...dataProducts, createdProduct]);
+      const createdService = await createService(newService);
+      if (createdService) {
+        setDataServices([...dataServices, createdService]);
         setSnackbarMessage(t("text5"));
         setSnackbarOpen(true);
         handleClose();
@@ -143,17 +122,17 @@ const Products = ({ documentNumber }) => {
     }
   };
 
-  const handleEdit = (product) => {
-    setSelectedProduct(product);
-    setNewProduct(product);
+  const handleEdit = (servicio) => {
+    setSelectedService(servicio);
+    setNewService(servicio);
     setEditMode(true);
     handleClickOpen();
   };
 
   const handleDelete = async (id) => {
-    const success = await deleteProduct(id);
+    const success = await deleteService(id);
     if (success) {
-      setDataProducts(dataProducts.filter((prov) => prov.id !== id));
+      setDataServices(dataServices.filter((prov) => prov.id !== id));
       setSnackbarMessage(t("text3"));
       setSnackbarOpen(true);
     }
@@ -169,13 +148,13 @@ const Products = ({ documentNumber }) => {
   };
 
   const handleDeleteDialogOpen = (id) => {
-    setDeleteProductId(id);
+    setDeleteServiceId(id);
     setDeleteDialogOpen(true);
   };
 
   const handleDeleteDialogClose = () => {
     setDeleteDialogOpen(false);
-    setDeleteProductId(null);
+    setDeleteServiceId(null);
   };
 
   return (
@@ -189,7 +168,7 @@ const Products = ({ documentNumber }) => {
         }}
       >
         <Typography variant="h4" gutterBottom>
-          {t("products")}
+          {t("services")}
         </Typography>
         <TextField
           label={t("filter")}
@@ -205,7 +184,7 @@ const Products = ({ documentNumber }) => {
           }}
         />
         <Button variant="contained" color="primary" onClick={handleClickOpen}>
-          {t("create")} {t("product")}
+          {t("create")} {t("service")}
         </Button>
       </div>
       <Dialog open={open} onClose={handleClose}>
@@ -215,45 +194,15 @@ const Products = ({ documentNumber }) => {
             {t("text1")} {t(editMode ? "edit" : "create")}
           </DialogContentText>
           <form onSubmit={handleSubmit}>
-            <FormControl fullWidth margin="dense">
-              <InputLabel>{t("productType")}</InputLabel>
-              <Select
-                name="productId"
-                value={newProduct.productId}
-                onChange={handleInputChange}
-                label={t("productType")}
-              >
-                {productOptions.map((option) => (
-                  <MenuItem key={option.id} value={option.id}>
-                    {option.productType}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
             <TextField
               margin="dense"
-              name="price"
-              label={t("price")}
-              type="number"
+              name="serviceType"
+              label={t("serviceType")}
+              type="text"
               fullWidth
-              value={newProduct.price}
+              value={newService.serviceType}
               onChange={handleInputChange}
-              slotProps={{
-                inputLabel: { style: { fontWeight: "bold" } }
-              }}
-            />
-            <TextField
-              autoFocus
-              margin="dense"
-              name="amount"
-              label={t("amount")}
-              type="number"
-              fullWidth
-              value={newProduct.amount}
-              onChange={handleInputChange}
-              slotProps={{
-                inputLabel: { style: { fontWeight: "bold" } }
-              }}
+              InputLabelProps={{ style: { fontWeight: "bold" } }}
             />
             <div
               style={{
@@ -281,7 +230,7 @@ const Products = ({ documentNumber }) => {
         <DialogTitle>{t("confirmDelete")}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            {t("text2")} {t("user")}?
+            {t("text2")} {t("service")}?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -289,7 +238,7 @@ const Products = ({ documentNumber }) => {
             {t("cancel")}
           </Button>
           <Button
-            onClick={() => handleDelete(deleteProductId)}
+            onClick={() => handleDelete(deleteServiceId)}
             color="primary"
             variant="contained"
           >
@@ -303,36 +252,28 @@ const Products = ({ documentNumber }) => {
             <TableRow>
               <TableCell></TableCell>
               <TableCell>
-                <strong>{t("productType")}</strong>
-              </TableCell>
-              <TableCell>
-                <strong>{t("price")}</strong>
-              </TableCell>
-              <TableCell>
-                <strong>{t("amount")}</strong>
+                <strong>{t("serviceType")}</strong>
               </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {filteredProducts
+            {filteredServices
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((product) => (
-                <TableRow key={product.id}>
+              .map((servicio) => (
+                <TableRow key={servicio.id}>
                   <TableCell>
                     <div style={{ display: "flex", gap: "2px" }}>
-                      <IconButton onClick={() => handleEdit(product)}>
+                      <IconButton onClick={() => handleEdit(servicio)}>
                         <Edit color="primary" />
                       </IconButton>
                       <IconButton
-                        onClick={() => handleDeleteDialogOpen(product.id)}
+                        onClick={() => handleDeleteDialogOpen(servicio.id)}
                       >
                         <Delete color="error" />
                       </IconButton>
                     </div>
                   </TableCell>
-                  <TableCell>{product.productType}</TableCell>
-                  <TableCell>{product.price}</TableCell>
-                  <TableCell>{product.amount}</TableCell>
+                  <TableCell>{servicio.serviceType}</TableCell>
                 </TableRow>
               ))}
           </TableBody>
@@ -341,7 +282,7 @@ const Products = ({ documentNumber }) => {
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
-        count={filteredProducts.length}
+        count={filteredServices.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}
@@ -364,4 +305,4 @@ const Products = ({ documentNumber }) => {
   );
 };
 
-export default Products;
+export default Services;

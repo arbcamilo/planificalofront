@@ -79,10 +79,12 @@ const events = [
 const Inicio = () => {
   const { t } = useTranslation();
   const [page, setPage] = React.useState(1);
-  const itemsPerPage = 5;
+  const itemsPerPage = 4;
   const handleChange = (event, value) => {
     setPage(value);
   };
+
+  const paginatedEvents = events.slice((page - 1) * itemsPerPage, page * itemsPerPage);
 
   return (
     <Container>
@@ -108,47 +110,36 @@ const Inicio = () => {
         {t("publicEvents")}
       </Typography>
       <Grid container spacing={3}>
-        {events
-          .slice((page - 1) * itemsPerPage, page * itemsPerPage)
-          .map((event) => (
-            <Grid item xs={12} key={event.id}>
-              <Card>
-                <Grid container>
-                  <Grid item xs={9}>
-                    <CardContent>
-                      <Typography variant="h5" component="div">
-                        {event.title}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        {event.description}
-                      </Typography>
-                      <Typography variant="subtitle1" color="text.secondary">
-                        {t("eventDate")}: {event.date}
-                      </Typography>
-                      <Typography variant="subtitle1" color="text.secondary">
-                        {t("eventTime")}: {event.time}
-                      </Typography>
-                      <Typography variant="subtitle1" color="text.secondary">
-                        {t("eventLocation")}: {event.location}
-                      </Typography>
-                      <Typography variant="subtitle1" color="text.secondary">
-                        {t("eventCost")}: {event.cost}
-                      </Typography>
-                    </CardContent>
-                  </Grid>
-                  <Grid item xs={3}>
-                    <CardMedia
-                      component="img"
-                      height="200"
-                      image={event.image}
-                      alt={event.title}
-                      style={{ objectFit: "fill" }}
-                    />
-                  </Grid>
-                </Grid>
-              </Card>
-            </Grid>
-          ))}
+        {paginatedEvents.map((event) => (
+          <Grid item xs={12} sm={6} md={3} key={event.id}>
+            <Card style={{ height: "100%" }}>
+              <CardMedia
+                component="img"
+                height="275"
+                image={event.image}
+                alt={event.title}
+                style={{ objectFit: "fill" }}
+              />
+              <CardContent>
+                <Typography variant="h6" component="div">
+                  {t("eventType")}
+                </Typography>
+                <Typography variant="h5" component="div">
+                  {event.title}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {t("createdBy")}: {event.description}
+                </Typography>
+                <Typography variant="subtitle1" color="text.secondary">
+                  {t("eventLocation")}: {event.location}
+                </Typography>
+                <Typography variant="h6" color="text.primary">
+                  {event.date}
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+        ))}
       </Grid>
       <Box display="flex" justifyContent="center" marginTop="20px">
         <Pagination

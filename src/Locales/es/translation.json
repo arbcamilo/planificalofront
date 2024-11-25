@@ -6,6 +6,7 @@
   "dontHaveAccount": "¿No tienes una cuenta? Regístrate",
   "createAccount": "Crear cuenta",
   "password": "Contraseña",
+  "signUp": "Registrarse",
   "home": "Inicio",
   "events": "Eventos",
   "knowUs": "Conócenos",
@@ -89,5 +90,6 @@
   "userCreatedSuccessfully": "Usuario creado exitosamente",
   "confirmationEmailSent": "A tu correo debió llegar un email de confirmación para completar el registro. Una vez lo confirmes podrás iniciar sesión.",
   "goToHome": "Ir al home",
-  "close": "Cerrar"
+  "close": "Cerrar",
+  "publicEvents": "Eventos Públicos"
 }

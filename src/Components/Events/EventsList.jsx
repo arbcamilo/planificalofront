@@ -25,8 +25,7 @@ import {
 import { Edit, Delete, FilterList } from "@mui/icons-material";
 import { fetchEvents, deleteEvent } from "./EventsServices";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Events = (events) => {
   const [page, setPage] = useState(0);
@@ -40,7 +39,12 @@ const Events = (events) => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deleteEventId, setDeleteEventId] = useState(null);
   const navigate = useNavigate();
+
   const handleEdit = (event) => {
+    navigate(`/create-events/${event.id}`);
+  };
+
+  const handleRowClick = (event) => {
     navigate(`/create-events/${event.id}`);
   };
 
@@ -177,14 +181,14 @@ const Events = (events) => {
             {filteredEvents
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((event) => (
-                <TableRow key={event.id}>
+                <TableRow key={event.id} onClick={() => handleRowClick(event)} style={{ cursor: "pointer" }}>
                   <TableCell>
                     <div style={{ display: "flex", gap: "2px" }}>
-                      <IconButton onClick={() => handleEdit(event)}>
+                      <IconButton onClick={(e) => { e.stopPropagation(); handleEdit(event); }}>
                         <Edit color="primary" />
                       </IconButton>
                       <IconButton
-                        onClick={() => handleDeleteDialogOpen(event.id)}
+                        onClick={(e) => { e.stopPropagation(); handleDeleteDialogOpen(event.id); }}
                       >
                         <Delete color="error" />
                       </IconButton>

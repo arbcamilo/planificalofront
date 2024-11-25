@@ -108,11 +108,14 @@ const NavBar = ({ toggleTheme, mode }) => {
                 onMouseLeave: handleClose,
               }}
             >
-              <MenuItem component={Link} to="/providers">
-                <ListItemText primary={t("providers")} />
-              </MenuItem>
               <MenuItem component={Link} to="/users">
                 <ListItemText primary={t("users")} />
+              </MenuItem>
+              <MenuItem component={Link} to="/productsAd">
+                <ListItemText primary={t("products")} />
+              </MenuItem>
+              <MenuItem component={Link} to="/serviceAd">
+                <ListItemText primary={t("services")} />
               </MenuItem>
             </Menu>
           </>
@@ -199,6 +202,14 @@ const NavBar = ({ toggleTheme, mode }) => {
         <Box sx={{ display: "flex", alignItems: "center" }}>
           {user ? (
             <>
+              <Button
+                color="inherit"
+                component={Link}
+                to="/create-events"
+                sx={{ backgroundColor: "white", color: "black", marginRight: 2 }}
+              >
+                CREAR EVENTO
+              </Button>
               <IconButton color="inherit" onClick={handleUserMenu}>
                 <AccountCircleIcon />
               </IconButton>

@@ -6,6 +6,7 @@
   "dontHaveAccount": "Don't have an account? Sign Up",
   "createAccount": "Create account",
   "password": "Password",
+  "signUp": "Sign Up",
   "home": "Home",
   "events": "Events",
   "knowUs": "Know Us",
@@ -89,5 +90,6 @@
   "userCreatedSuccessfully": "User created successfully",
   "confirmationEmailSent": "A confirmation email has been sent to your email address. Please confirm to complete the registration.",
   "goToHome": "Go to Home",
-  "close": "Close"
+  "close": "Close",
+  "publicEvents": "Public Events"
 }
