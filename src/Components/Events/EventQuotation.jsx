@@ -114,7 +114,7 @@ const EventQuotation = () => {
             <Button variant="contained" to="/events-list">Ir a Eventos</Button>
           </Grid>
           <Grid item>
-            <Button variant="contained" color="primary">Realizar Pago</Button>
+            <Button variant="contained" color="primary" to="https://w.app/5ZX0hK">Realizar Pago</Button>  
           </Grid>
         </Grid>
       </Paper>
