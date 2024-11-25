@@ -111,10 +111,10 @@ const EventQuotation = () => {
 
         <Grid container spacing={2} justifyContent="flex-end">
           <Grid item>
-            <Button variant="contained" to="/events-list">Ir a Eventos</Button>
+            <Button variant="contained" href="/events-list">Ir a Eventos</Button>
           </Grid>
           <Grid item>
-            <Button variant="contained" color="primary" to="https://w.app/5ZX0hK">Realizar Pago</Button>  
+            <Button variant="contained" color="primary" href="https://w.app/5ZX0hK">Realizar Pago</Button>  
           </Grid>
         </Grid>
       </Paper>
