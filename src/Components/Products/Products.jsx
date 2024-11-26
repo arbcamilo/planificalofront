@@ -73,7 +73,7 @@ const Products = () => {
   useEffect(() => {
     setFilteredProducts(
       dataProducts.filter((prov) =>
-        prov.productType?.toLowerCase().includes(filter.toLowerCase())
+        String(prov.productId).toLowerCase().includes(filter.toLowerCase())
       )
     );
   }, [filter, dataProducts]);
@@ -200,18 +200,19 @@ const Products = () => {
           variant="outlined"
           value={filter}
           onChange={handleFilterChange}
-          InputProps={{
+          slotProps={{
+            input: {
             endAdornment: (
               <InputAdornment position="end">
                 <FilterList />
               </InputAdornment>
             ),
-          }}
+          }}}
         />
         <Button variant="contained" color="primary" onClick={handleClickOpen}>
           {t("create")} {t("product")}
         </Button>
-      </div>
+          </div>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>{editMode ? t("edit") : t("createNew")}</DialogTitle>
         <DialogContent>
@@ -334,7 +335,7 @@ const Products = () => {
                       </IconButton>
                     </div>
                   </TableCell>
-                  <TableCell>{product.productType}</TableCell>
+                  <TableCell>{product.productId}</TableCell>
                   <TableCell>{product.price}</TableCell>
                   <TableCell>{product.amount}</TableCell>
                 </TableRow>
