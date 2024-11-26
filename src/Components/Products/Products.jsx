@@ -28,11 +28,11 @@ import {
 } from "@mui/material";
 import { Edit, Delete, FilterList } from "@mui/icons-material";
 import {
-  fetchProducts,
   createProduct,
   updateProduct,
   deleteProduct,
   getProducts,
+  getProductProvider,
 } from "./ProductsServices";
 import { useTranslation } from "react-i18next";
 import { AuthContext } from "../Security/context/AuthContext";
@@ -62,13 +62,13 @@ const Products = () => {
 
   useEffect(() => {
     const getProductsData = async () => {
-      const products = await fetchProducts();
+      const products = await getProductProvider(user.documentNumber);
       setDataProducts(products);
       setFilteredProducts(products);
     };
 
     getProductsData();
-  }, []);
+  }, [user.documentNumber]);
 
   useEffect(() => {
     setFilteredProducts(
