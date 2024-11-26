@@ -27,7 +27,7 @@ import { fetchEvents, deleteEvent } from "./EventsServices";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
 
-const Events = (events) => {
+const Events = () => {
   const [page, setPage] = useState(0);
   const { t } = useTranslation();
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -38,6 +38,7 @@ const Events = (events) => {
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deleteEventId, setDeleteEventId] = useState(null);
+  const [userId, setUserId] = useState(null);
   const navigate = useNavigate();
 
   const handleEdit = (event) => {
@@ -49,22 +50,36 @@ const Events = (events) => {
   };
 
   useEffect(() => {
+    const fetchUserId = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const decodedToken = parseJwt(token);
+        const userId = decodedToken["id"];
+        setUserId(userId);
+      } catch (error) {
+        console.error('Error fetching user ID:', error);
+      }
+    };
+
     const getEvents = async () => {
       const events = await fetchEvents();
       setDataEvents(events);
       setFilteredEvents(events);
     };
 
+    fetchUserId();
     getEvents();
   }, []);
 
   useEffect(() => {
-    setFilteredEvents(
-      dataEvents.filter((prov) =>
-        prov.title.toLowerCase().includes(filter.toLowerCase())
-      )
-    );
-  }, [filter, dataEvents]);
+    if (userId) {
+      setFilteredEvents(
+        dataEvents.filter((event) =>
+          event.userId === userId && event.title.toLowerCase().includes(filter.toLowerCase())
+        )
+      );
+    }
+  }, [filter, dataEvents, userId]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -78,7 +93,7 @@ const Events = (events) => {
   const handleDelete = async (id) => {
     const success = await deleteEvent(id);
     if (success) {
-      setDataEvents(dataEvents.filter((prov) => prov.id !== id));
+      setDataEvents(dataEvents.filter((event) => event.id !== id));
       setSnackbarMessage(t("text3"));
       setSnackbarOpen(true);
     }
@@ -101,6 +116,24 @@ const Events = (events) => {
   const handleDeleteDialogClose = () => {
     setDeleteDialogOpen(false);
     setDeleteEventId(null);
+  };
+
+  const parseJwt = (token) => {
+    try {
+      const base64Url = token.split(".")[1];
+      const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+      const jsonPayload = decodeURIComponent(
+        atob(base64)
+          .split("")
+          .map(function (c) {
+            return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+          })
+          .join("")
+      );
+      return JSON.parse(jsonPayload);
+    } catch (e) {
+      return null;
+    }
   };
 
   return (

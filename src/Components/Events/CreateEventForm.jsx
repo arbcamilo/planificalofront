@@ -13,7 +13,7 @@ const CreateEventForm = () => {
     const [eventData, setEventData] = useState({
         title: '',
         date: '',
-        userId: 2,
+        userId: 0,
         location: '',
         eventTypeId: 0,
         isPrivate: '',
@@ -35,8 +35,39 @@ const CreateEventForm = () => {
             setServiceTypes(servicesData);
             setProductTypes(productsData);
         };
+
+        const fetchUserId = async () => {
+            try {
+                const token = localStorage.getItem("token");
+                const decodedToken = parseJwt(token);
+                const userId = decodedToken["id"];
+                setEventData(prevData => ({ ...prevData, userId }));
+            } catch (error) {
+                console.error('Error fetching user ID:', error);
+            }
+        };
+
         fetchData();
+        fetchUserId();
     }, []);
+
+    const parseJwt = (token) => {
+        try {
+            const base64Url = token.split(".")[1];
+            const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+            const jsonPayload = decodeURIComponent(
+                atob(base64)
+                    .split("")
+                    .map(function (c) {
+                        return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+                    })
+                    .join("")
+            );
+            return JSON.parse(jsonPayload);
+        } catch (e) {
+            return null;
+        }
+    };
 
     const handleServiceTypeChange = async (e) => {
         const type = e.target.value;
