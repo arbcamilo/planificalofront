@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   Container,
   Table,
@@ -35,10 +35,12 @@ import {
   getProducts,
 } from "./ProductsServices";
 import { useTranslation } from "react-i18next";
+import { AuthContext } from "../Security/context/AuthContext";
 
-const Products = ({ documentNumber }) => {
-  const [page, setPage] = useState(0);
+const Products = () => {
   const { t } = useTranslation();
+  const { user } = useContext(AuthContext);
+  const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [dataProducts, setDataProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
@@ -47,6 +49,7 @@ const Products = ({ documentNumber }) => {
   const [editMode, setEditMode] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [newProduct, setNewProduct] = useState({
+    providerId: 0,
     productId: "",
     price: 0,
     amount: "",
@@ -102,6 +105,7 @@ const Products = ({ documentNumber }) => {
     setEditMode(false);
     setSelectedProduct(null);
     setNewProduct({
+      providerId: 0,
       productId: "",
       price: 0,
       amount: "",
@@ -117,7 +121,7 @@ const Products = ({ documentNumber }) => {
     e.preventDefault();
     const productData = {
       ...newProduct,
-      providerId: documentNumber,
+      providerId: user.documentNumber,
     };
 
     if (editMode) {

@@ -26,6 +26,7 @@ const AuthProvider = ({ children }) => {
             firstName: decodedToken.FirstName,
             lastName: decodedToken.LastName,
             photo: decodedToken.Photo,
+            documentNumber: decodedToken.DocumentNumber, // Add documentNumber
           };
           setUser(userData);
         }
@@ -54,6 +55,7 @@ const AuthProvider = ({ children }) => {
         firstName: decodedToken.FirstName,
         lastName: decodedToken.LastName,
         photo: decodedToken.Photo,
+        documentNumber: decodedToken.DocumentNumber, // Add documentNumber
       };
       setUser(userData);
       return { success: true };
