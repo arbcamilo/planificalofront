@@ -2,6 +2,21 @@ import axios from "../../axiosConfig";
 
 export const fetchServices = async () => {
   try {
+    const response = await axios.get("/admin/ServiceProviders");
+    if (response.data.success) {
+      return response.data.entity;
+    } else {
+      console.error("Error fetching services:", response.data.message);
+      return [];
+    }
+  } catch (error) {
+    console.error("Error fetching services:", error);
+    return [];
+  }
+};
+
+export const getServices = async () => {
+  try {
     const response = await axios.get("/admin/Services");
     if (response.data.success) {
       return response.data.entity;
@@ -17,7 +32,7 @@ export const fetchServices = async () => {
 
 export const createService = async (newService) => {
   try {
-    const response = await axios.post("/admin/Services", newService);
+    const response = await axios.post("/admin/ServiceProviders", newService);
     if (response.data.success) {
       return response.data.entity;
     } else {
@@ -32,7 +47,10 @@ export const createService = async (newService) => {
 
 export const updateService = async (id, updatedService) => {
   try {
-    const response = await axios.put(`/admin/Services/${id}`, updatedService);
+    const response = await axios.put(
+      `/admin/ServiceProviders/${id}`,
+      updatedService
+    );
     if (response.data.success) {
       return response.data.entity;
     } else {
@@ -47,7 +65,7 @@ export const updateService = async (id, updatedService) => {
 
 export const deleteService = async (id) => {
   try {
-    const response = await axios.delete(`/admin/Services/${id}`);
+    const response = await axios.delete(`/admin/ServiceProviders/${id}`);
     if (response.data.success) {
       return true;
     } else {
@@ -57,5 +75,22 @@ export const deleteService = async (id) => {
   } catch (error) {
     console.error("Error deleting service:", error);
     return false;
+  }
+};
+
+export const getServiceProvider = async (documentNumber) => {
+  try {
+    const response = await axios.get(
+      `/admin/ServiceProviders/ByDocumentNumber/${documentNumber}`
+    );
+    if (response.data.success) {
+      return response.data.entity;
+    } else {
+      console.error("Error fetching service provider:", response.data.message);
+      return null;
+    }
+  } catch (error) {
+    console.error("Error fetching service provider:", error);
+    return null;
   }
 };

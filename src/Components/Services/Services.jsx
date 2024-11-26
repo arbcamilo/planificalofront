@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   Container,
   Table,
@@ -35,10 +35,12 @@ import {
   getServices,
 } from "./ServicesServices";
 import { useTranslation } from "react-i18next";
+import { AuthContext } from "../Security/context/AuthContext";
 
-const Services = ({ documentNumber }) => {
-  const [page, setPage] = useState(0);
+const Services = () => {
   const { t } = useTranslation();
+  const { user } = useContext(AuthContext);
+  const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [dataServices, setDataServices] = useState([]);
   const [filteredServices, setFilteredServices] = useState([]);
@@ -47,9 +49,10 @@ const Services = ({ documentNumber }) => {
   const [editMode, setEditMode] = useState(false);
   const [selectedService, setSelectedService] = useState(null);
   const [newService, setNewService] = useState({
+    providerId: 0,
     serviceId: "",
     price: 0,
-    quantify: "",
+    amount: "",
   });
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
@@ -102,9 +105,10 @@ const Services = ({ documentNumber }) => {
     setEditMode(false);
     setSelectedService(null);
     setNewService({
+      providerId: 0,
       serviceId: "",
       price: 0,
-      quantify: "",
+      amount: "",
     });
   };
 
@@ -117,7 +121,7 @@ const Services = ({ documentNumber }) => {
     e.preventDefault();
     const serviceData = {
       ...newService,
-      providerId: documentNumber,
+      providerId: user.documentNumber,
     };
 
     if (editMode) {
@@ -248,11 +252,11 @@ const Services = ({ documentNumber }) => {
             <TextField
               autoFocus
               margin="dense"
-              name="quantify"
-              label={t("quantify")}
+              name="amount"
+              label={t("amount")}
               type="number"
               fullWidth
-              value={newService.quantify}
+              value={newService.amount}
               onChange={handleInputChange}
               slotProps={{
                 inputLabel: { style: { fontWeight: "bold" } },
@@ -312,7 +316,7 @@ const Services = ({ documentNumber }) => {
                 <strong>{t("price")}</strong>
               </TableCell>
               <TableCell>
-                <strong>{t("quantify")}</strong>
+                <strong>{t("amount")}</strong>
               </TableCell>
             </TableRow>
           </TableHead>
