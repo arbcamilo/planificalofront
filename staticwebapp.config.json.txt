@@ -1,0 +1,120 @@
+{
+  "routes": [
+    {
+      "route": "/",
+      "serve": "/index.html",
+      "statusCode": 200
+    },
+    {
+      "route": "/about",
+      "serve": "/about.html",
+      "statusCode": 200
+    },
+    {
+      "route": "/contact",
+      "serve": "/contact.html",
+      "statusCode": 200
+    },
+    {
+      "route": "/events-list",
+      "serve": "/events-list.html",
+      "statusCode": 200
+    },
+    {
+      "route": "/create-events",
+      "serve": "/create-events.html",
+      "statusCode": 200
+    },
+    {
+      "route": "/event-quotation/:id",
+      "serve": "/event-quotation.html",
+      "statusCode": 200
+    },
+    {
+      "route": "/profile",
+      "serve": "/profile.html",
+      "statusCode": 200
+    },
+    {
+      "route": "/login",
+      "serve": "/login.html",
+      "statusCode": 200
+    },
+    {
+      "route": "/register",
+      "serve": "/register.html",
+      "statusCode": 200
+    },
+    {
+      "route": "/forgot-password",
+      "serve": "/forgot-password.html",
+      "statusCode": 200
+    },
+    {
+      "route": "/reset-password",
+      "serve": "/reset-password.html",
+      "statusCode": 200
+    },
+    {
+      "route": "/confirmation-email",
+      "serve": "/confirmation-email.html",
+      "statusCode": 200
+    },
+    {
+      "route": "/resend-confirmation",
+      "serve": "/resend-confirmation.html",
+      "statusCode": 200
+    },
+    {
+      "route": "/edit-user",
+      "serve": "/edit-user.html",
+      "statusCode": 200
+    },
+    {
+      "route": "/services",
+      "serve": "/services.html",
+      "statusCode": 200
+    },
+    {
+      "route": "/services-ad",
+      "serve": "/services-ad.html",
+      "statusCode": 200
+    },
+    {
+      "route": "/products",
+      "serve": "/products.html",
+      "statusCode": 200
+    },
+    {
+      "route": "/products-ad",
+      "serve": "/products-ad.html",
+      "statusCode": 200
+    },
+    {
+      "route": "/providers",
+      "serve": "/providers.html",
+      "statusCode": 200
+    },
+    {
+      "route": "/images/*",
+      "serve": "/images/:path"
+    },
+    {
+      "route": "/css/*",
+      "serve": "/css/:path"
+    },
+    {
+      "route": "/js/*",
+      "serve": "/js/:path"
+    }
+  ],
+  "navigationFallback": {
+    "rewrite": "/index.html",
+    "exclude": ["/images/*", "/css/*", "/js/*"]
+  },
+  "responseOverrides": {
+    "404": {
+      "rewrite": "/404.html"
+    }
+  }
+}
