@@ -18,7 +18,7 @@ const events = [
     id: 1,
     title: "Event 1",
     description: "Description for event 1",
-    image: "/Images/Evento1.png",
+    image: "/Images/evento1.png",
     date: "2023-10-01",
     time: "10:00 AM",
     location: "Location 1",
@@ -28,7 +28,7 @@ const events = [
     id: 2,
     title: "Event 2",
     description: "Description for event 2",
-    image: "/Images/Evento2.png",
+    image: "/Images/evento2.png",
     date: "2023-10-02",
     time: "11:00 AM",
     location: "Location 2",
@@ -38,7 +38,7 @@ const events = [
     id: 3,
     title: "Event 3",
     description: "Description for event 3",
-    image: "/Images/Evento3.png",
+    image: "/Images/evento3.png",
     date: "2023-10-03",
     time: "12:00 PM",
     location: "Location 3",
@@ -48,7 +48,7 @@ const events = [
     id: 4,
     title: "Event 4",
     description: "Description for event 4",
-    image: "/Images/Evento4.png",
+    image: "/Images/evento4.png",
     date: "2023-10-04",
     time: "01:00 PM",
     location: "Location 4",
@@ -58,7 +58,7 @@ const events = [
     id: 5,
     title: "Event 5",
     description: "Description for event 5",
-    image: "/Images/Evento5.png",
+    image: "/Images/evento5.png",
     date: "2023-10-05",
     time: "02:00 PM",
     location: "Location 5",
@@ -68,7 +68,7 @@ const events = [
     id: 6,
     title: "Event 6",
     description: "Description for event 6",
-    image: "/Images/Evento2.png",
+    image: "/Images/evento2.png",
     date: "2023-10-06",
     time: "03:00 PM",
     location: "Location 6",
@@ -84,7 +84,10 @@ const Inicio = () => {
     setPage(value);
   };
 
-  const paginatedEvents = events.slice((page - 1) * itemsPerPage, page * itemsPerPage);
+  const paginatedEvents = events.slice(
+    (page - 1) * itemsPerPage,
+    page * itemsPerPage
+  );
 
   return (
     <Container>
