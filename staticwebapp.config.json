@@ -26,6 +26,11 @@
       "statusCode": 200
     },
     {
+      "route": "/create-events/:id",
+      "serve": "/create-events.html",
+      "statusCode": 200
+    },
+    {
       "route": "/event-quotation/:id",
       "serve": "/event-quotation.html",
       "statusCode": 200
@@ -93,6 +98,11 @@
     {
       "route": "/providers",
       "serve": "/providers.html",
+      "statusCode": 200
+    },
+    {
+      "route": "/create-event-form",
+      "serve": "/create-event-form.html",
       "statusCode": 200
     },
     {
