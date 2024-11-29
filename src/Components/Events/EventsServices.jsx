@@ -2,7 +2,7 @@ import axios from "../../axiosConfig";
 
 export const fetchEvents = async () => {
   try {
-    const response = await axios.get("/admin/Events");
+    const response = await axios.get("/admin/Events/GetAll");
     if (response.data.success) {
       return response.data.entity;
     } else {
@@ -153,7 +153,7 @@ export const getProviders = async () => {
 
 export const getEventById = async (id) => {
   try {
-    const response = await axios.get(`/admin/Events/${id}`);
+    const response = await axios.get(`/admin/Events/GetById/${id}`);
     if (response.data.success) {
       return response.data.entity;
     } else {

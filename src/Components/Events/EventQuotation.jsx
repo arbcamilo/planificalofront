@@ -71,8 +71,8 @@ const EventQuotation = () => {
             <TableBody>
               {(serviceEvent || []).map((service, index) => (
                 <TableRow key={index}>
-                  <TableCell>{service.serviceType}</TableCell>
-                  <TableCell>{service.provider}</TableCell>
+                  <TableCell>{service.serviceId}</TableCell>
+                  <TableCell>{service.providerId}</TableCell>
                   <TableCell>{service.price}</TableCell>
                   <TableCell>{service.quantity}</TableCell>
                 </TableRow>
@@ -97,8 +97,8 @@ const EventQuotation = () => {
             <TableBody>
               {(productEvent || []).map((product, index) => (
                 <TableRow key={index}>
-                  <TableCell>{product.productType}</TableCell>
-                  <TableCell>{product.provider}</TableCell>
+                  <TableCell>{product.productId}</TableCell>
+                  <TableCell>{product.providerId}</TableCell>
                   <TableCell>{product.price}</TableCell>
                   <TableCell>{product.quantity}</TableCell>
                 </TableRow>

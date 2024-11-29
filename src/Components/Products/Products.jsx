@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   Container,
   Table,
@@ -28,17 +28,19 @@ import {
 } from "@mui/material";
 import { Edit, Delete, FilterList } from "@mui/icons-material";
 import {
-  fetchProducts,
   createProduct,
   updateProduct,
   deleteProduct,
   getProducts,
+  getProductProvider,
 } from "./ProductsServices";
 import { useTranslation } from "react-i18next";
+import { AuthContext } from "../Security/context/AuthContext";
 
-const Products = ({ documentNumber }) => {
-  const [page, setPage] = useState(0);
+const Products = () => {
   const { t } = useTranslation();
+  const { user } = useContext(AuthContext);
+  const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [dataProducts, setDataProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
@@ -47,6 +49,7 @@ const Products = ({ documentNumber }) => {
   const [editMode, setEditMode] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [newProduct, setNewProduct] = useState({
+    providerId: 0,
     productId: "",
     price: 0,
     amount: "",
@@ -59,18 +62,18 @@ const Products = ({ documentNumber }) => {
 
   useEffect(() => {
     const getProductsData = async () => {
-      const products = await fetchProducts();
+      const products = await getProductProvider(user.documentNumber);
       setDataProducts(products);
       setFilteredProducts(products);
     };
 
     getProductsData();
-  }, []);
+  }, [user.documentNumber]);
 
   useEffect(() => {
     setFilteredProducts(
       dataProducts.filter((prov) =>
-        prov.productType?.toLowerCase().includes(filter.toLowerCase())
+        String(prov.productId).toLowerCase().includes(filter.toLowerCase())
       )
     );
   }, [filter, dataProducts]);
@@ -102,6 +105,7 @@ const Products = ({ documentNumber }) => {
     setEditMode(false);
     setSelectedProduct(null);
     setNewProduct({
+      providerId: 0,
       productId: "",
       price: 0,
       amount: "",
@@ -117,7 +121,7 @@ const Products = ({ documentNumber }) => {
     e.preventDefault();
     const productData = {
       ...newProduct,
-      providerId: documentNumber,
+      providerId: user.documentNumber,
     };
 
     if (editMode) {
@@ -196,18 +200,19 @@ const Products = ({ documentNumber }) => {
           variant="outlined"
           value={filter}
           onChange={handleFilterChange}
-          InputProps={{
+          slotProps={{
+            input: {
             endAdornment: (
               <InputAdornment position="end">
                 <FilterList />
               </InputAdornment>
             ),
-          }}
+          }}}
         />
         <Button variant="contained" color="primary" onClick={handleClickOpen}>
           {t("create")} {t("product")}
         </Button>
-      </div>
+          </div>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>{editMode ? t("edit") : t("createNew")}</DialogTitle>
         <DialogContent>
@@ -330,7 +335,7 @@ const Products = ({ documentNumber }) => {
                       </IconButton>
                     </div>
                   </TableCell>
-                  <TableCell>{product.productType}</TableCell>
+                  <TableCell>{product.productId}</TableCell>
                   <TableCell>{product.price}</TableCell>
                   <TableCell>{product.amount}</TableCell>
                 </TableRow>

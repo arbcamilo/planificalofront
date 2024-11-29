@@ -74,3 +74,18 @@ export const deleteProduct = async (id) => {
     return false;
   }
 };
+
+export const getProductProvider = async (documentNumber) => {
+  try {
+    const response = await axios.get(`/admin/ProductProviders/ByDocumentNumber/${documentNumber}`);
+    if (response.data.success) {
+      return response.data.entity;
+    } else {
+      console.error("Error fetching product provider:", response.data.message);
+      return null;
+    }
+  } catch (error) {
+    console.error("Error fetching product provider:", error);
+    return null;
+  }
+};

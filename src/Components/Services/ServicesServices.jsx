@@ -77,3 +77,20 @@ export const deleteService = async (id) => {
     return false;
   }
 };
+
+export const getServiceProvider = async (documentNumber) => {
+  try {
+    const response = await axios.get(
+      `/admin/ServiceProviders/ByDocumentNumber/${documentNumber}`
+    );
+    if (response.data.success) {
+      return response.data.entity;
+    } else {
+      console.error("Error fetching service provider:", response.data.message);
+      return null;
+    }
+  } catch (error) {
+    console.error("Error fetching service provider:", error);
+    return null;
+  }
+};
