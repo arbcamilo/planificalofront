@@ -43,8 +43,10 @@ const NavBar = ({ toggleTheme, mode }) => {
           "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
         ]
       );
+    } else {
+      setRole(null);
     }
-  }, []);
+  }, [user]); // Se agrega "user" como dependencia para actualizar el rol al iniciar sesión
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
