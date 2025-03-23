@@ -28,11 +28,11 @@ import {
 } from "@mui/material";
 import { Edit, Delete, FilterList } from "@mui/icons-material";
 import {
-  fetchServices,
   createService,
   updateService,
   deleteService,
   getServices,
+  getServiceProvider,
 } from "./ServicesServices";
 import { useTranslation } from "react-i18next";
 import { AuthContext } from "../Security/context/AuthContext";
@@ -52,7 +52,7 @@ const Services = () => {
     providerId: 0,
     serviceId: "",
     price: 0,
-    amount: "",
+    quantity: "",
   });
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
@@ -62,20 +62,35 @@ const Services = () => {
 
   useEffect(() => {
     const getServicesData = async () => {
-      const services = await fetchServices();
-      setDataServices(services);
-      setFilteredServices(services);
+      try {
+        const services = await getServiceProvider(user.documentNumber);
+        setDataServices(services || []);
+        setFilteredServices(services || []);
+      } catch (error) {
+        if (error.response && error.response.status === 404) {
+          setDataServices([]);
+          setFilteredServices([]);
+        } else {
+          console.error("Error fetching services:", error);
+        }
+      }
     };
-
-    getServicesData();
-  }, []);
+  
+    if (user && user.documentNumber) {
+      getServicesData();
+    }
+  }, [user, user?.documentNumber]);
 
   useEffect(() => {
-    setFilteredServices(
-      dataServices.filter((prov) =>
-        prov.serviceType?.toLowerCase().includes(filter.toLowerCase())
-      )
-    );
+    if (Array.isArray(dataServices)) {
+      setFilteredServices(
+        dataServices.filter((service) =>
+          String(service.serviceId).toLowerCase().includes(filter.toLowerCase())
+        )
+      );
+    } else {
+      setFilteredServices([]);
+    }
   }, [filter, dataServices]);
 
   useEffect(() => {
@@ -87,7 +102,7 @@ const Services = () => {
     fetchServiceOptions();
   }, []);
 
-  const handleChangePage = (newPage) => {
+  const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
 
@@ -108,7 +123,7 @@ const Services = () => {
       providerId: 0,
       serviceId: "",
       price: 0,
-      amount: "",
+      quantity: "",
     });
   };
 
@@ -125,10 +140,7 @@ const Services = () => {
     };
 
     if (editMode) {
-      const updatedService = await updateService(
-        selectedService.id,
-        serviceData
-      );
+      const updatedService = await updateService(selectedService.id, serviceData);
       if (updatedService) {
         setDataServices(
           dataServices.map((prov) =>
@@ -142,7 +154,12 @@ const Services = () => {
     } else {
       const createdService = await createService(serviceData);
       if (createdService) {
-        setDataServices([...dataServices, createdService]);
+        // Si el id retornado es 0 (o falsy), asignamos un id único
+        const newServiceWithId = {
+          ...createdService,
+          id: createdService.id || Date.now(),
+        };
+        setDataServices([...dataServices, newServiceWithId]);
         setSnackbarMessage(t("text5"));
         setSnackbarOpen(true);
         handleClose();
@@ -252,11 +269,11 @@ const Services = () => {
             <TextField
               autoFocus
               margin="dense"
-              name="amount"
-              label={t("amount")}
+              name="quantity"
+              label={t("quantity")}
               type="number"
               fullWidth
-              value={newService.amount}
+              value={newService.quantity}
               onChange={handleInputChange}
               slotProps={{
                 inputLabel: { style: { fontWeight: "bold" } },
@@ -270,11 +287,7 @@ const Services = () => {
                 marginTop: "20px",
               }}
             >
-              <Button
-                onClick={handleClose}
-                color="secondary"
-                variant="outlined"
-              >
+              <Button onClick={handleClose} color="secondary" variant="outlined">
                 {t("cancel")}
               </Button>
               <Button type="submit" color="primary" variant="contained">
@@ -316,7 +329,7 @@ const Services = () => {
                 <strong>{t("price")}</strong>
               </TableCell>
               <TableCell>
-                <strong>{t("amount")}</strong>
+                <strong>{t("quantity")}</strong>
               </TableCell>
             </TableRow>
           </TableHead>
@@ -330,16 +343,14 @@ const Services = () => {
                       <IconButton onClick={() => handleEdit(service)}>
                         <Edit color="primary" />
                       </IconButton>
-                      <IconButton
-                        onClick={() => handleDeleteDialogOpen(service.id)}
-                      >
+                      <IconButton onClick={() => handleDeleteDialogOpen(service.id)}>
                         <Delete color="error" />
                       </IconButton>
                     </div>
                   </TableCell>
-                  <TableCell>{service.serviceType}</TableCell>
+                  <TableCell>{service.serviceId}</TableCell>
                   <TableCell>{service.price}</TableCell>
-                  <TableCell>{service.amount}</TableCell>
+                  <TableCell>{service.quantity}</TableCell>
                 </TableRow>
               ))}
           </TableBody>
@@ -359,11 +370,7 @@ const Services = () => {
         autoHideDuration={6000}
         onClose={handleSnackbarClose}
       >
-        <Alert
-          onClose={handleSnackbarClose}
-          severity="success"
-          sx={{ width: "100%" }}
-        >
+        <Alert onClose={handleSnackbarClose} severity="success" sx={{ width: "100%" }}>
           {snackbarMessage}
         </Alert>
       </Snackbar>
