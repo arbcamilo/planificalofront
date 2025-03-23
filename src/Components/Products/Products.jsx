@@ -62,32 +62,48 @@ const Products = () => {
 
   useEffect(() => {
     const getProductsData = async () => {
-      const products = await getProductProvider(user.documentNumber);
-      setDataProducts(products);
-      setFilteredProducts(products);
+      try {
+        const products = await getProductProvider(user.documentNumber);
+        // Si la respuesta es null, forzamos que sea un arreglo vacío
+        setDataProducts(products || []);
+        setFilteredProducts(products || []);
+      } catch (error) {
+        if (error.response && error.response.status === 404) {
+          setDataProducts([]);
+          setFilteredProducts([]);
+        } else {
+          console.error("Error fetching products:", error);
+        }
+      }
     };
 
-    getProductsData();
-  }, [user.documentNumber]);
+    if (user && user.documentNumber) {
+      getProductsData();
+    }
+  }, [user, user?.documentNumber]);
 
   useEffect(() => {
-    setFilteredProducts(
-      dataProducts.filter((prov) =>
-        String(prov.productId).toLowerCase().includes(filter.toLowerCase())
-      )
-    );
+    if (Array.isArray(dataProducts)) {
+      setFilteredProducts(
+        dataProducts.filter((prov) =>
+          String(prov.productId).toLowerCase().includes(filter.toLowerCase())
+        )
+      );
+    } else {
+      setFilteredProducts([]);
+    }
   }, [filter, dataProducts]);
 
   useEffect(() => {
     const fetchProductOptions = async () => {
       const products = await getProducts();
-      setProductOptions(products);
+      setProductOptions(products || []);
     };
 
     fetchProductOptions();
   }, []);
 
-  const handleChangePage = (newPage) => {
+  const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
 
@@ -202,17 +218,18 @@ const Products = () => {
           onChange={handleFilterChange}
           slotProps={{
             input: {
-            endAdornment: (
-              <InputAdornment position="end">
-                <FilterList />
-              </InputAdornment>
-            ),
-          }}}
+              endAdornment: (
+                <InputAdornment position="end">
+                  <FilterList />
+                </InputAdornment>
+              ),
+            },
+          }}
         />
         <Button variant="contained" color="primary" onClick={handleClickOpen}>
           {t("create")} {t("product")}
         </Button>
-          </div>
+      </div>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>{editMode ? t("edit") : t("createNew")}</DialogTitle>
         <DialogContent>
@@ -244,7 +261,7 @@ const Products = () => {
               value={newProduct.price}
               onChange={handleInputChange}
               slotProps={{
-                inputLabel: { style: { fontWeight: "bold" } }
+                inputLabel: { style: { fontWeight: "bold" } },
               }}
             />
             <TextField
@@ -257,7 +274,7 @@ const Products = () => {
               value={newProduct.amount}
               onChange={handleInputChange}
               slotProps={{
-                inputLabel: { style: { fontWeight: "bold" } }
+                inputLabel: { style: { fontWeight: "bold" } },
               }}
             />
             <div
@@ -268,11 +285,7 @@ const Products = () => {
                 marginTop: "20px",
               }}
             >
-              <Button
-                onClick={handleClose}
-                color="secondary"
-                variant="outlined"
-              >
+              <Button onClick={handleClose} color="secondary" variant="outlined">
                 {t("cancel")}
               </Button>
               <Button type="submit" color="primary" variant="contained">
@@ -319,7 +332,7 @@ const Products = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {filteredProducts
+            {(filteredProducts || [])
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((product) => (
                 <TableRow key={product.id}>
@@ -328,9 +341,7 @@ const Products = () => {
                       <IconButton onClick={() => handleEdit(product)}>
                         <Edit color="primary" />
                       </IconButton>
-                      <IconButton
-                        onClick={() => handleDeleteDialogOpen(product.id)}
-                      >
+                      <IconButton onClick={() => handleDeleteDialogOpen(product.id)}>
                         <Delete color="error" />
                       </IconButton>
                     </div>
@@ -346,7 +357,7 @@ const Products = () => {
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
-        count={filteredProducts.length}
+        count={(filteredProducts || []).length}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}
@@ -357,11 +368,7 @@ const Products = () => {
         autoHideDuration={6000}
         onClose={handleSnackbarClose}
       >
-        <Alert
-          onClose={handleSnackbarClose}
-          severity="success"
-          sx={{ width: "100%" }}
-        >
+        <Alert onClose={handleSnackbarClose} severity="success" sx={{ width: "100%" }}>
           {snackbarMessage}
         </Alert>
       </Snackbar>

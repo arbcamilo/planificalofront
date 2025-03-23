@@ -210,7 +210,7 @@ const NavBar = ({ toggleTheme, mode }) => {
                 to="/create-events"
                 sx={{ backgroundColor: "white", color: "black", marginRight: 2 }}
               >
-                CREAR EVENTO
+                {t("createEvent")}
               </Button>
               <IconButton color="inherit" onClick={handleUserMenu}>
                 <AccountCircleIcon />
