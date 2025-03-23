@@ -22,19 +22,29 @@ import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { AuthContext } from "../Security/context/AuthContext";
+import { jwtDecode } from "jwt-decode";
 
 const NavBar = ({ toggleTheme, mode }) => {
   const { t, i18n } = useTranslation();
-  const { user, logout,role } = useContext(AuthContext);
+  const { user, logout } = useContext(AuthContext);
   const [anchorEl, setAnchorEl] = useState(null);
   const [languageAnchorEl, setLanguageAnchorEl] = useState(null);
   const [usersAnchorEl, setUsersAnchorEl] = useState(null);
   const [providersAnchorEl, setProvidersAnchorEl] = useState(null);
   const [userMenuAnchorEl, setUserMenuAnchorEl] = useState(null);
+  const [role, setRole] = useState(null);
 
   useEffect(() => {
-    // Aquí puedes agregar lógica adicional si es necesario
-  }, [user]);
+    const token = localStorage.getItem("token");
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      setRole(
+        decodedToken[
+          "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+        ]
+      );
+    }
+  }, []);
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
