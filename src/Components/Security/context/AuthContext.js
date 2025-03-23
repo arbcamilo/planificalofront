@@ -1,39 +1,41 @@
 // src/Components/Security/context/AuthContext.js
 import React, { createContext, useState, useEffect } from "react";
-import axios from "../../../axiosConfig"; // Importa la instancia de Axios configurada
-import { jwtDecode } from "jwt-decode"; // Importa jwtDecode como una exportación nombrada
+import axios from "../../../axiosConfig"; // Instancia de Axios configurada
+import { jwtDecode } from "jwt-decode"; // Usamos la importación por defecto
 
 const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const token = localStorage.getItem("token");
         if (token) {
+          // Configuramos el header de autorización
           axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
           const decodedToken = jwtDecode(token);
           const userData = {
-            email:
-              decodedToken[
-                "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"
-              ],
-            role: decodedToken[
-              "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
-            ],
+            email: decodedToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"],
+            role: decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"],
             firstName: decodedToken.FirstName,
             lastName: decodedToken.LastName,
             photo: decodedToken.Photo,
-            documentNumber: decodedToken.DocumentNumber, // Add documentNumber
+            documentNumber: decodedToken.DocumentNumber,
           };
           setUser(userData);
         }
       } catch (error) {
+        // Si hay algún error (token inválido, por ejemplo), se limpia el estado del usuario
         setUser(null);
+      } finally {
+        // Se finaliza la carga, ya sea que se haya podido obtener el usuario o no
+        setLoading(false);
       }
     };
+
     fetchUser();
   }, []);
 
@@ -45,17 +47,12 @@ const AuthProvider = ({ children }) => {
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
       const decodedToken = jwtDecode(token);
       const userData = {
-        email:
-          decodedToken[
-            "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"
-          ],
-        role: decodedToken[
-          "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
-        ],
+        email: decodedToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"],
+        role: decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"],
         firstName: decodedToken.FirstName,
         lastName: decodedToken.LastName,
         photo: decodedToken.Photo,
-        documentNumber: decodedToken.DocumentNumber, // Add documentNumber
+        documentNumber: decodedToken.DocumentNumber,
       };
       setUser(userData);
       return { success: true };
@@ -63,7 +60,7 @@ const AuthProvider = ({ children }) => {
       console.error("Login failed:", error);
       return {
         success: false,
-        message: error.response.data.message || "Login failed",
+        message: error.response?.data?.message || "Login failed",
       };
     }
   };
@@ -75,7 +72,7 @@ const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, login, logout, loading }}>
       {children}
     </AuthContext.Provider>
   );
