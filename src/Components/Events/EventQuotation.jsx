@@ -50,7 +50,7 @@ const EventQuotation = () => {
           </Grid>
           <Grid item xs={12}>
             {eventData.imageEvent && (
-              <img src={URL.createObjectURL(eventData.imageEvent)} alt="Event" style={{ maxWidth: '100%', height: 'auto' }} />
+              <img src={eventData.imageEvent} alt="Event" style={{ maxWidth: '100%', height: 'auto', maxHeight: '250px' }} />
             )}
           </Grid>
         </Grid>

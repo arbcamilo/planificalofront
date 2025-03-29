@@ -42,7 +42,7 @@ const Events = () => {
   const navigate = useNavigate();
 
   const handleEdit = (event) => {
-    navigate(`/create-events/${event.id}`);
+    navigate(`/edit-events/${event.id}`);
   };
 
   const handleRowClick = (event) => {

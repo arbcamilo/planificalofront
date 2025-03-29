@@ -1,19 +1,17 @@
-// CreateEventForm.jsx
+// updateEventForm.jsx
 import React, { useState, useEffect } from 'react';
 import { TextField, Button, MenuItem, Typography, Grid, Paper, Box, Divider, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, IconButton } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { createEvent, getServices, getProducts, getProductsProvider, getServicesProvider } from './EventsServices';
-import { useNavigate } from 'react-router-dom';
+import { updateEvent, getServices, getProducts, getProductsProvider, getServicesProvider } from './EventsServices';
+import { useNavigate, useParams } from 'react-router-dom';
+import { getEventById } from './EventsServices';
 
-const CreateEventForm = () => {
-    const [services, setServices] = useState([]);
-    const [products, setProducts] = useState([]);
-    const [service, setService] = useState({ type: '', typeName: '', provider: '', providerName: '', price: '', quantity: '' });
-    const [product, setProduct] = useState({ type: '', typeName: '', provider: '', providerName: '', price: '', quantity: '' });
+const EditEventForm = () => {
+    const { id } = useParams();
     const [eventData, setEventData] = useState({
         title: '',
         date: '',
-        userId: 0,
+        userId: 2, // Assuming userId is 2 for this example
         location: '',
         eventTypeId: 0,
         isPrivate: '',
@@ -21,12 +19,65 @@ const CreateEventForm = () => {
         imageEvent: '',
         productEvent: [],
         serviceEvent: []
-    });
+      });
+    const [services, setServices] = useState([]);
+    const [products, setProducts] = useState([]);
+    const [service, setService] = useState({ type: '', typeName: '', provider: '', providerName: '', price: '', quantity: '' });
+    const [product, setProduct] = useState({ type: '', typeName: '', provider: '', providerName: '', price: '', quantity: '' });
     const [serviceTypes, setServiceTypes] = useState([]);
     const [productTypes, setProductTypes] = useState([]);
     const [filteredServiceProviders, setFilteredServiceProviders] = useState([]);
     const [filteredProductProviders, setFilteredProductProviders] = useState([]);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const fetchEvent = async () => {
+        try {
+            const event = await getEventById(id);
+            if (event && typeof event === 'object') {
+            setEventData(event);
+            setServices((event.serviceEvent || []).map(service => {
+                const serviceType = serviceTypes.find(type => type.id === service.serviceId);
+                return ({ type: service.serviceId, typeName: serviceType.serviceType, provider: service.providerId, providerName: service.providerId, price: service.price, quantity: service.quantity });
+            }));
+            setProducts((event.productEvent || []).map(product => {
+                const productType = productTypes.find(type => type.id === product.productId);
+                return ({ type: product.productId, typeName: productType.productType, provider: product.providerId, providerName: product.providerId, price: product.price, quantity: product.amount });
+            }));
+            } else {
+            setEventData({
+        title: '',
+        date: '',
+        userId: 2, // Assuming userId is 2 for this example
+        location: '',
+        eventTypeId: 0,
+        isPrivate: '',
+        eventStatus: 'Creado',
+        imageEvent: '',
+        productEvent: [],
+        serviceEvent: []
+      });
+            }
+        } catch (error) {
+            console.error('Error fetching event data:', error);
+            setEventData({
+        title: '',
+        date: '',
+        userId: 2, // Assuming userId is 2 for this example
+        location: '',
+        eventTypeId: 0,
+        isPrivate: '',
+        eventStatus: 'Creado',
+        imageEvent: '',
+        productEvent: [],
+        serviceEvent: []
+      });
+        }
+        };
+        if(serviceTypes&& productTypes){
+            fetchEvent();
+        }
+    }, [id, serviceTypes, productTypes]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -129,7 +180,7 @@ const CreateEventForm = () => {
         setProducts(newProducts);
     };
 
-    const handleCreateEvent = async () => {
+    const handleEditEvent = async () => {
         const formattedEvent = {
             ...eventData,
             productEvent: products.map(p => ({
@@ -137,21 +188,21 @@ const CreateEventForm = () => {
                 productId: p.type,
                 price: p.price,
                 amount: p.quantity,
-                eventId: 0
+                eventId: parseInt(id)
             })),
             serviceEvent: services.map(s => ({
                 providerId: s.provider,
                 serviceId: s.type,
                 price: s.price,
                 quantity: s.quantity,
-                eventId: 0,
-                event: ''
+                eventId: parseInt(id),
+                event: parseInt(id)
             }))
         };
 
         try {
-            const createdEvent = await createEvent(formattedEvent);
-            navigate(`/create-events/${createdEvent.id}`);
+            const editedEvent = await updateEvent(id, formattedEvent);
+            navigate(`/create-events/${editedEvent.id}`);
         } catch (error) {
             console.error('Error creating event:', error);
         }
@@ -416,7 +467,7 @@ const CreateEventForm = () => {
                         <Button variant="contained">Regresar</Button>
                     </Grid>
                     <Grid item>
-                        <Button variant="contained" color="primary" onClick={handleCreateEvent}>Crear Cotización</Button>
+                        <Button variant="contained" color="primary" onClick={handleEditEvent}>Editar Cotización</Button>
                     </Grid>
                 </Grid>
             </Paper>
@@ -424,4 +475,4 @@ const CreateEventForm = () => {
     );
 };
 
-export default CreateEventForm;
+export default EditEventForm;

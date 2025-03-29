@@ -26,6 +26,7 @@ import ResetPassword from "./Components/Security/ResetPassword";
 import ConfirmationEmail from "./Components/Security/ConfirmationEmail";
 import Profile from "./Components/Profile/profile";
 import CreateEventForm from "./Components/Events/CreateEventForm";
+import EditEventForm from "./Components/Events/EditEventForm";
 import EventQuotation from "./Components/Events/EventQuotation";
 
 function App() {
@@ -87,6 +88,10 @@ function App() {
               <Route
                 path="/create-events/:id"
                 element={<PrivateRoute component={EventQuotation} />}
+              />
+              <Route
+                path="/edit-events/:id"
+                element={<PrivateRoute component={EditEventForm} />}
               />
               <Route
                 path="/providers"
