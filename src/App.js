@@ -28,6 +28,7 @@ import Profile from "./Components/Profile/profile";
 import CreateEventForm from "./Components/Events/CreateEventForm";
 import EditEventForm from "./Components/Events/EditEventForm";
 import EventQuotation from "./Components/Events/EventQuotation";
+import EventsDetails from "./Components/Home/EventsDetails";
 
 function App() {
   const [mode, setMode] = useState("light");
@@ -132,6 +133,10 @@ function App() {
               <Route
                 path="/profile"
                 element={<PrivateRoute component={Profile} />}
+              />
+              <Route
+                path="/event/:id"
+                element={<PrivateRoute component={EventsDetails} />}
               />
             </Routes>
           </main>

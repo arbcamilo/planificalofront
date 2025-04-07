@@ -230,7 +230,7 @@ const Events = () => {
                   <TableCell>{event.title}</TableCell>
                   <TableCell>{event.date}</TableCell>
                   <TableCell>{event.location}</TableCell>
-                  <TableCell>{event.isPrivate ? "Sí" : "No"}</TableCell>
+                  <TableCell>{event.isPrivate}</TableCell>
                 </TableRow>
               ))}
           </TableBody>

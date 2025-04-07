@@ -91,5 +91,7 @@
   "confirmationEmailSent": "A confirmation email has been sent to your email address. Please confirm to complete the registration.",
   "goToHome": "Go to Home",
   "close": "Close",
-  "publicEvents": "Public Events"
+  "publicEvents": "Public Events",
+  "eventLocation": "Event Location",
+  "eventDate": "Event Date"
 }
