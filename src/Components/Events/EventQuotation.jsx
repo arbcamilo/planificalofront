@@ -6,6 +6,8 @@ import { getEventById } from './EventsServices';
 const EventQuotation = () => {
   const { id } = useParams();
   const [eventData, setEventData] = useState(null);
+  const [totalSummary, setTotalSummary] = useState({ productTotal: 0, serviceTotal: 0, total: 0 });
+
 
   useEffect(() => {
     const fetchEvent = async () => {
@@ -24,12 +26,24 @@ const EventQuotation = () => {
     fetchEvent();
   }, [id]);
 
+  useEffect(() => {
+    const productTotal = eventData?.productEvent.reduce((acc, product) => acc + (product.price * product.amount), 0);
+    const serviceTotal = eventData?.serviceEvent.reduce((acc, service) => acc + (service.price * service.quantity), 0);
+    const total = productTotal + serviceTotal;
+    setTotalSummary({ productTotal, serviceTotal, total });
+  }, [eventData?.serviceEvent, eventData?.productEvent]);
+
   if (!eventData) {
     return <Typography>Loading...</Typography>;
   }
 
   const serviceEvent = eventData?.serviceEvent || [];
   const productEvent = eventData?.productEvent || [];
+
+
+  const formatToCOP = (value) => {
+    return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(value).slice(0, -3);
+  };
 
   return (
     <Box display="flex" flexDirection="column" alignItems="center" minHeight="100vh" p={2}>
@@ -66,6 +80,7 @@ const EventQuotation = () => {
                 <TableCell><strong>Proveedor</strong></TableCell>
                 <TableCell><strong>Precio</strong></TableCell>
                 <TableCell><strong>Cantidad</strong></TableCell>
+                <TableCell><strong>Total</strong></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -73,14 +88,15 @@ const EventQuotation = () => {
                 <TableRow key={index}>
                   <TableCell>{service.serviceId}</TableCell>
                   <TableCell>{service.providerId}</TableCell>
-                  <TableCell>{service.price}</TableCell>
+                  <TableCell>{formatToCOP(service.price)}</TableCell>
                   <TableCell>{service.quantity}</TableCell>
+                  <TableCell>{formatToCOP(service.quantity * service.price)}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
         </TableContainer>
-
+        <div style={{ textAlign: "right", width: "100%", fontWeight: "bold" }}> <Typography variant="h12">Valor total por servicios: {formatToCOP(totalSummary.serviceTotal)}</Typography></div>
         <Divider style={{ margin: '20px 0', opacity: 0.5 }} />
 
         <Typography variant="h6" style={{ marginTop: '20px' }}>Productos Solicitados</Typography>
@@ -92,6 +108,7 @@ const EventQuotation = () => {
                 <TableCell><strong>Proveedor</strong></TableCell>
                 <TableCell><strong>Precio</strong></TableCell>
                 <TableCell><strong>Cantidad</strong></TableCell>
+                <TableCell><strong>Total</strong></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -99,22 +116,24 @@ const EventQuotation = () => {
                 <TableRow key={index}>
                   <TableCell>{product.productId}</TableCell>
                   <TableCell>{product.providerId}</TableCell>
-                  <TableCell>{product.price}</TableCell>
-                  <TableCell>{product.quantity}</TableCell>
+                  <TableCell>{formatToCOP(product.price)}</TableCell>
+                  <TableCell>{product.amount}</TableCell>
+                  <TableCell>{formatToCOP(product.amount * product.price)}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
         </TableContainer>
 
+        <div style={{ textAlign: "right", width: "100%", fontWeight: "bold" }}> <Typography variant="h12">Valor total por productos: {formatToCOP(totalSummary.productTotal)}</Typography></div>
         <Divider style={{ margin: '20px 0', opacity: 0.5 }} />
-
+        <div style={{ textAlign: "right", width: "100%", fontWeight: "bold" }}> <Typography variant="h12">Valor total Cotización: {formatToCOP(totalSummary.total)}</Typography></div>
         <Grid container spacing={2} justifyContent="flex-end">
           <Grid item>
             <Button variant="contained" href="/events-list">Ir a Eventos</Button>
           </Grid>
           <Grid item>
-            <Button variant="contained" color="primary" href="https://w.app/5ZX0hK">Realizar Pago</Button>  
+            <Button variant="contained" color="primary" href="https://w.app/5ZX0hK">Realizar Pago</Button>
           </Grid>
         </Grid>
       </Paper>

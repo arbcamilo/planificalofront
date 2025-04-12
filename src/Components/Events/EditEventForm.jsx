@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { TextField, Button, MenuItem, Typography, Grid, Paper, Box, Divider, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, IconButton } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 import { updateEvent, getServices, getProducts, getProductsProvider, getServicesProvider } from './EventsServices';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getEventById } from './EventsServices';
@@ -19,7 +20,7 @@ const EditEventForm = () => {
         imageEvent: '',
         productEvent: [],
         serviceEvent: []
-      });
+    });
     const [services, setServices] = useState([]);
     const [products, setProducts] = useState([]);
     const [service, setService] = useState({ type: '', typeName: '', provider: '', providerName: '', price: '', quantity: '' });
@@ -32,49 +33,49 @@ const EditEventForm = () => {
 
     useEffect(() => {
         const fetchEvent = async () => {
-        try {
-            const event = await getEventById(id);
-            if (event && typeof event === 'object') {
-            setEventData(event);
-            setServices((event.serviceEvent || []).map(service => {
-                const serviceType = serviceTypes.find(type => type.id === service.serviceId);
-                return ({ type: service.serviceId, typeName: serviceType.serviceType, provider: service.providerId, providerName: service.providerId, price: service.price, quantity: service.quantity });
-            }));
-            setProducts((event.productEvent || []).map(product => {
-                const productType = productTypes.find(type => type.id === product.productId);
-                return ({ type: product.productId, typeName: productType.productType, provider: product.providerId, providerName: product.providerId, price: product.price, quantity: product.amount });
-            }));
-            } else {
-            setEventData({
-        title: '',
-        date: '',
-        userId: 2, // Assuming userId is 2 for this example
-        location: '',
-        eventTypeId: 0,
-        isPrivate: '',
-        eventStatus: 'Creado',
-        imageEvent: '',
-        productEvent: [],
-        serviceEvent: []
-      });
+            try {
+                const event = await getEventById(id);
+                if (event && typeof event === 'object') {
+                    setEventData(event);
+                    setServices((event.serviceEvent || []).map(service => {
+                        const serviceType = serviceTypes.find(type => type.id === service.serviceId);
+                        return ({ type: service.serviceId, typeName: serviceType.serviceType, provider: service.providerId, providerName: service.providerId, price: service.price, quantity: service.quantity });
+                    }));
+                    setProducts((event.productEvent || []).map(product => {
+                        const productType = productTypes.find(type => type.id === product.productId);
+                        return ({ type: product.productId, typeName: productType.productType, provider: product.providerId, providerName: product.providerId, price: product.price, quantity: product.amount });
+                    }));
+                } else {
+                    setEventData({
+                        title: '',
+                        date: '',
+                        userId: 2, // Assuming userId is 2 for this example
+                        location: '',
+                        eventTypeId: 0,
+                        isPrivate: '',
+                        eventStatus: 'Creado',
+                        imageEvent: '',
+                        productEvent: [],
+                        serviceEvent: []
+                    });
+                }
+            } catch (error) {
+                console.error('Error fetching event data:', error);
+                setEventData({
+                    title: '',
+                    date: '',
+                    userId: 2, // Assuming userId is 2 for this example
+                    location: '',
+                    eventTypeId: 0,
+                    isPrivate: '',
+                    eventStatus: 'Creado',
+                    imageEvent: '',
+                    productEvent: [],
+                    serviceEvent: []
+                });
             }
-        } catch (error) {
-            console.error('Error fetching event data:', error);
-            setEventData({
-        title: '',
-        date: '',
-        userId: 2, // Assuming userId is 2 for this example
-        location: '',
-        eventTypeId: 0,
-        isPrivate: '',
-        eventStatus: 'Creado',
-        imageEvent: '',
-        productEvent: [],
-        serviceEvent: []
-      });
-        }
         };
-        if(serviceTypes&& productTypes){
+        if (serviceTypes && productTypes) {
             fetchEvent();
         }
     }, [id, serviceTypes, productTypes]);
@@ -83,6 +84,10 @@ const EditEventForm = () => {
         const fetchData = async () => {
             const servicesData = await getServices();
             const productsData = await getProducts();
+            const serviceProviders = await getServicesProvider();
+            const productProviders = await getProductsProvider();
+            setFilteredProductProviders(productProviders);
+            setFilteredServiceProviders(serviceProviders);
             setServiceTypes(servicesData);
             setProductTypes(productsData);
         };
@@ -101,13 +106,13 @@ const EditEventForm = () => {
         fetchData();
         fetchUserId();
     }, []);
-    const [totalSummary, setTotalSummary] = useState({productTotal: 0, serviceTotal: 0, total: 0});
+    const [totalSummary, setTotalSummary] = useState({ productTotal: 0, serviceTotal: 0, total: 0 });
     useEffect(() => {
-            const productTotal = products.reduce((acc, product) => acc + (product.price * product.quantity), 0);
-            const serviceTotal = services.reduce((acc, service) => acc + (service.price * service.quantity), 0);
-            const total = productTotal + serviceTotal;
-            setTotalSummary({productTotal, serviceTotal, total});
-    },[services, products]);
+        const productTotal = products.reduce((acc, product) => acc + (product.price * product.quantity), 0);
+        const serviceTotal = services.reduce((acc, service) => acc + (service.price * service.quantity), 0);
+        const total = productTotal + serviceTotal;
+        setTotalSummary({ productTotal, serviceTotal, total });
+    }, [services, products]);
     const formatToCOP = (value) => {
         return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(value).slice(0, -3);
     };
@@ -134,16 +139,12 @@ const EditEventForm = () => {
         const type = e.target.value;
         const typeName = serviceTypes.find(serviceType => serviceType.id === type).serviceType;
         setService({ ...service, type, typeName });
-        const serviceProviders = await getServicesProvider(type);
-        setFilteredServiceProviders(serviceProviders);
     };
 
     const handleProductTypeChange = async (e) => {
         const type = e.target.value;
         const typeName = productTypes.find(productType => productType.id === type).productType;
         setProduct({ ...product, type, typeName });
-        const productProviders = await getProductsProvider(type);
-        setFilteredProductProviders(productProviders);
     };
 
     const handleServiceProviderChange = (e) => {
@@ -179,6 +180,39 @@ const EditEventForm = () => {
         newProducts.splice(index, 1);
         setProducts(newProducts);
     };
+
+    const [selectedServiceToEdit, setSelectedServiceToEdit] = useState(null);
+    const [selectedProductToEdit, setSelectedProductToEdit] = useState(null);
+
+    const handleEditService = (selectedService) => {
+        if (selectedService) {
+            setServices(services.map((val, index) => val.type === selectedService.type ? service : val));
+            setService({ type: '', typeName: '', provider: '', providerName: '', price: '', quantity: '' });
+            setSelectedServiceToEdit();
+        }
+    };
+
+    const handleEditProduct = (selectedProduct) => {
+        if (selectedProduct) {
+            setProducts(products.map((val, index) => val.type === selectedProduct.type ? product : val));
+            setProduct({ type: '', typeName: '', provider: '', providerName: '', price: '', quantity: '' });
+            setSelectedProductToEdit();
+        }
+
+    };
+
+    const handleSelectService = (index) => {
+        const currentService = services.find((_, i) => i === index);
+        setSelectedServiceToEdit(currentService);
+        setService(currentService);
+    };
+
+    const handleSelectProduct = (index) => {
+        const currentProduct = products.find((_, i) => i === index);
+        setSelectedProductToEdit(currentProduct);
+        setProduct(currentProduct);
+    };
+
 
     const handleEditEvent = async () => {
         const formattedEvent = {
@@ -271,11 +305,11 @@ const EditEventForm = () => {
                         </Button>
                     </Grid>
                     <Grid item xs={12}>
-                    {eventData.imageEvent && (
+                        {eventData.imageEvent && (
                             <img src={eventData.imageEvent} alt="Event" style={{ maxWidth: '100%', height: 'auto', maxHeight: '250px' }} />
-                    )}
+                        )}
                     </Grid>
-                    
+
                 </Grid>
 
                 <Divider style={{ margin: '20px 0', opacity: 0.5 }} />
@@ -306,7 +340,7 @@ const EditEventForm = () => {
                             value={service.provider}
                             onChange={handleServiceProviderChange}
                         >
-                            {filteredServiceProviders.filter((provider)=>provider.serviceId ===(service||{}).type).map((provider) => (
+                            {filteredServiceProviders.filter((provider) => provider.serviceId === (service || {}).type).map((provider) => (
                                 <MenuItem key={provider.providerId} value={provider.providerId}>
                                     {provider.providerName || "Nombre Proverdor no disponible"}
                                 </MenuItem>
@@ -332,7 +366,13 @@ const EditEventForm = () => {
                         />
                     </Grid>
                     <Grid item xs={12} style={{ textAlign: 'left' }}>
-                        <Button variant="contained" size="small" onClick={handleAddService}>Añadir Servicio</Button>
+                        <Button variant="contained" size="small" onClick={() => {
+                            if (selectedServiceToEdit) {
+                                handleEditService(selectedServiceToEdit);
+                            } else {
+                                handleAddService();
+                            }
+                        }}>{selectedServiceToEdit ? "Editar Servicio" : "Añadir Servicio"}</Button>
                     </Grid>
                 </Grid>
 
@@ -361,6 +401,9 @@ const EditEventForm = () => {
                                             <IconButton onClick={() => handleDeleteService(index)}>
                                                 <DeleteIcon />
                                             </IconButton>
+                                            <IconButton onClick={() => handleSelectService(index)}>
+                                                <EditIcon />
+                                            </IconButton>
                                         </TableCell>
                                     </TableRow>
                                 ))}
@@ -368,7 +411,7 @@ const EditEventForm = () => {
                         </Table>
                     </TableContainer>
                 )}
-                <div style={{  textAlign: "right", width: "100%",fontWeight: "bold"}}> <Typography  variant="h12">Valor total por servicios: {formatToCOP(totalSummary.serviceTotal)}</Typography></div>
+                <div style={{ textAlign: "right", width: "100%", fontWeight: "bold" }}> <Typography variant="h12">Valor total por servicios: {formatToCOP(totalSummary.serviceTotal)}</Typography></div>
                 <Divider style={{ margin: '20px 0', opacity: 0.5 }} />
 
                 <Typography variant="h5">Productos para el evento</Typography>
@@ -397,7 +440,7 @@ const EditEventForm = () => {
                             value={product.provider}
                             onChange={handleProductProviderChange}
                         >
-                            {filteredProductProviders.filter((provider)=>(product || {}).type === provider.productId).map((provider) => (
+                            {filteredProductProviders.filter((provider) => (product || {}).type === provider.productId).map((provider) => (
                                 <MenuItem key={provider.providerId} value={provider.providerId}>
                                     {provider.providerName || "Nombre Proverdor no disponible"}
                                 </MenuItem>
@@ -423,7 +466,13 @@ const EditEventForm = () => {
                         />
                     </Grid>
                     <Grid item xs={12} style={{ textAlign: 'left' }}>
-                        <Button variant="contained" size="small" onClick={handleAddProduct}>Añadir Producto</Button>
+                        <Button variant="contained" size="small" onClick={() => {
+                            if (selectedProductToEdit) {
+                                handleEditProduct(selectedProductToEdit);
+                            } else {
+                                handleAddProduct();
+                            }
+                        }}>{selectedProductToEdit ? "Editar Producto" : "Añadir Producto"}</Button>
                     </Grid>
                 </Grid>
 
@@ -452,6 +501,9 @@ const EditEventForm = () => {
                                             <IconButton onClick={() => handleDeleteProduct(index)}>
                                                 <DeleteIcon />
                                             </IconButton>
+                                            <IconButton onClick={() => handleSelectProduct(index)}>
+                                                <EditIcon />
+                                            </IconButton>
                                         </TableCell>
                                     </TableRow>
                                 ))}
@@ -459,9 +511,9 @@ const EditEventForm = () => {
                         </Table>
                     </TableContainer>
                 )}
-                <div style={{  textAlign: "right", width: "100%",fontWeight: "bold"}}> <Typography  variant="h12">Valor total por productos: {formatToCOP(totalSummary.productTotal)}</Typography></div>
+                <div style={{ textAlign: "right", width: "100%", fontWeight: "bold" }}> <Typography variant="h12">Valor total por productos: {formatToCOP(totalSummary.productTotal)}</Typography></div>
                 <Divider style={{ margin: '20px 0', opacity: 0.5 }} />
-                <div style={{  textAlign: "right", width: "100%",fontWeight: "bold"}}> <Typography  variant="h12">Valor total Cotización: {formatToCOP(totalSummary.total)}</Typography></div>
+                <div style={{ textAlign: "right", width: "100%", fontWeight: "bold" }}> <Typography variant="h12">Valor total Cotización: {formatToCOP(totalSummary.total)}</Typography></div>
                 <Grid container spacing={2} justifyContent="flex-end">
                     <Grid item>
                         <Button variant="contained">Regresar</Button>

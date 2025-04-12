@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { TextField, Button, MenuItem, Typography, Grid, Paper, Box, Divider, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, IconButton } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 import { createEvent, getServices, getProducts, getProductsProvider, getServicesProvider } from './EventsServices';
 import { useNavigate } from 'react-router-dom';
 
@@ -50,13 +51,13 @@ const CreateEventForm = () => {
         fetchData();
         fetchUserId();
     }, []);
-    const [totalSummary, setTotalSummary] = useState({productTotal: 0, serviceTotal: 0, total: 0});
+    const [totalSummary, setTotalSummary] = useState({ productTotal: 0, serviceTotal: 0, total: 0 });
     useEffect(() => {
-            const productTotal = products.reduce((acc, product) => acc + (product.price * product.quantity), 0);
-            const serviceTotal = services.reduce((acc, service) => acc + (service.price * service.quantity), 0);
-            const total = productTotal + serviceTotal;
-            setTotalSummary({productTotal, serviceTotal, total});
-    },[services, products]);
+        const productTotal = products.reduce((acc, product) => acc + (product.price * product.quantity), 0);
+        const serviceTotal = services.reduce((acc, service) => acc + (service.price * service.quantity), 0);
+        const total = productTotal + serviceTotal;
+        setTotalSummary({ productTotal, serviceTotal, total });
+    }, [services, products]);
     const formatToCOP = (value) => {
         return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(value).slice(0, -3);
     };
@@ -117,6 +118,38 @@ const CreateEventForm = () => {
         setProduct({ type: '', typeName: '', provider: '', providerName: '', price: '', quantity: '' });
     };
 
+    const [selectedServiceToEdit, setSelectedServiceToEdit] = useState(null);
+    const [selectedProductToEdit, setSelectedProductToEdit] = useState(null);
+
+    const handleEditService = (selectedService) => {
+        if (selectedService) {
+            setServices(services.map((val, index) => val.type === selectedService.type ? service : val));
+            setService({ type: '', typeName: '', provider: '', providerName: '', price: '', quantity: '' });
+            setSelectedServiceToEdit();
+        }
+    };
+
+    const handleEditProduct = (selectedProduct) => {
+        if (selectedProduct) {
+            setProducts(products.map((val, index) => val.type === selectedProduct.type ? product : val));
+            setProduct({ type: '', typeName: '', provider: '', providerName: '', price: '', quantity: '' });
+            setSelectedProductToEdit();
+        }
+
+    };
+
+    const handleSelectService = (index) => {
+        const currentService = services.find((_, i) => i === index);
+        setSelectedServiceToEdit(currentService);
+        setService(currentService);
+    };
+
+    const handleSelectProduct = (index) => {
+        const currentProduct = products.find((_, i) => i === index);
+        setSelectedProductToEdit(currentProduct);
+        setProduct(currentProduct);
+    };
+
     const handleDeleteService = (index) => {
         const newServices = [...services];
         newServices.splice(index, 1);
@@ -156,6 +189,8 @@ const CreateEventForm = () => {
             console.error('Error creating event:', error);
         }
     };
+
+
 
     return (
         <Box display="flex" flexDirection="column" alignItems="center" minHeight="100vh" p={2}>
@@ -220,11 +255,11 @@ const CreateEventForm = () => {
                         </Button>
                     </Grid>
                     <Grid item xs={12}>
-                    {eventData.imageEvent && (
+                        {eventData.imageEvent && (
                             <img src={eventData.imageEvent} alt="Event" style={{ maxWidth: '100%', height: 'auto', maxHeight: '250px' }} />
-                    )}
+                        )}
                     </Grid>
-                    
+
                 </Grid>
 
                 <Divider style={{ margin: '20px 0', opacity: 0.5 }} />
@@ -255,7 +290,7 @@ const CreateEventForm = () => {
                             value={service.provider}
                             onChange={handleServiceProviderChange}
                         >
-                            {filteredServiceProviders.filter((provider)=>provider.serviceId ===(service||{}).type).map((provider) => (
+                            {filteredServiceProviders.filter((provider) => provider.serviceId === (service || {}).type).map((provider) => (
                                 <MenuItem key={provider.providerId} value={provider.providerId}>
                                     {provider.providerName || "Nombre Proverdor no disponible"}
                                 </MenuItem>
@@ -281,7 +316,21 @@ const CreateEventForm = () => {
                         />
                     </Grid>
                     <Grid item xs={12} style={{ textAlign: 'left' }}>
-                        <Button variant="contained" size="small" onClick={handleAddService}>Añadir Servicio</Button>
+                        <Button variant="contained" size="small" onClick={() => {
+                            if (selectedServiceToEdit) {
+                                if (services.some(existingService => existingService.type === product.type && existingService !== selectedServiceToEdit)) {
+                                    alert("Este servicio ya está en la lista.");
+                                    return;
+                                }
+                                handleEditService(selectedServiceToEdit);
+                            } else {
+                                if (services.some(existingService => existingService.type === services.type)) {
+                                    alert("Este servicio ya está en la lista.");
+                                    return;
+                                }
+                                handleAddService();
+                            }
+                        }}>{selectedServiceToEdit ? "Editar Servicio" : "Añadir Servicio"}</Button>
                     </Grid>
                 </Grid>
 
@@ -310,6 +359,9 @@ const CreateEventForm = () => {
                                             <IconButton onClick={() => handleDeleteService(index)}>
                                                 <DeleteIcon />
                                             </IconButton>
+                                            <IconButton onClick={() => handleSelectService(index)}>
+                                                <EditIcon />
+                                            </IconButton>
                                         </TableCell>
                                     </TableRow>
                                 ))}
@@ -317,7 +369,7 @@ const CreateEventForm = () => {
                         </Table>
                     </TableContainer>
                 )}
-                <div style={{  textAlign: "right", width: "100%",fontWeight: "bold"}}> <Typography  variant="h12">Valor total por servicios: {formatToCOP(totalSummary.serviceTotal)}</Typography></div>
+                <div style={{ textAlign: "right", width: "100%", fontWeight: "bold" }}> <Typography variant="h12">Valor total por servicios: {formatToCOP(totalSummary.serviceTotal)}</Typography></div>
                 <Divider style={{ margin: '20px 0', opacity: 0.5 }} />
 
                 <Typography variant="h5">Productos para el evento</Typography>
@@ -346,7 +398,7 @@ const CreateEventForm = () => {
                             value={product.provider}
                             onChange={handleProductProviderChange}
                         >
-                            {filteredProductProviders.filter((provider)=>(product || {}).type === provider.productId).map((provider) => (
+                            {filteredProductProviders.filter((provider) => (product || {}).type === provider.productId).map((provider) => (
                                 <MenuItem key={provider.providerId} value={provider.providerId}>
                                     {provider.providerName || "Nombre Proverdor no disponible"}
                                 </MenuItem>
@@ -372,7 +424,22 @@ const CreateEventForm = () => {
                         />
                     </Grid>
                     <Grid item xs={12} style={{ textAlign: 'left' }}>
-                        <Button variant="contained" size="small" onClick={handleAddProduct}>Añadir Producto</Button>
+                        <Button variant="contained" size="small" onClick={() => {
+
+                            if (selectedProductToEdit) {
+                                if (products.some(existingProduct => existingProduct.type === product.type && existingProduct !== selectedProductToEdit)) {
+                                    alert("Este producto ya está en la lista.");
+                                    return;
+                                }
+                                handleEditProduct(selectedProductToEdit);
+                            } else {
+                                if (products.some(existingProduct => existingProduct.type === product.type)) {
+                                    alert("Este producto ya está en la lista.");
+                                    return;
+                                }
+                                handleAddProduct();
+                            }
+                        }}>{selectedProductToEdit ? "Editar Producto" : "Añadir Producto"}</Button>
                     </Grid>
                 </Grid>
 
@@ -401,6 +468,9 @@ const CreateEventForm = () => {
                                             <IconButton onClick={() => handleDeleteProduct(index)}>
                                                 <DeleteIcon />
                                             </IconButton>
+                                            <IconButton onClick={() => handleSelectProduct(index)}>
+                                                <EditIcon />
+                                            </IconButton>
                                         </TableCell>
                                     </TableRow>
                                 ))}
@@ -408,12 +478,14 @@ const CreateEventForm = () => {
                         </Table>
                     </TableContainer>
                 )}
-                <div style={{  textAlign: "right", width: "100%",fontWeight: "bold"}}> <Typography  variant="h12">Valor total por productos: {formatToCOP(totalSummary.productTotal)}</Typography></div>
+                <div style={{ textAlign: "right", width: "100%", fontWeight: "bold" }}> <Typography variant="h12">Valor total por productos: {formatToCOP(totalSummary.productTotal)}</Typography></div>
                 <Divider style={{ margin: '20px 0', opacity: 0.5 }} />
-                <div style={{  textAlign: "right", width: "100%",fontWeight: "bold"}}> <Typography  variant="h12">Valor total Cotización: {formatToCOP(totalSummary.total)}</Typography></div>
+                <div style={{ textAlign: "right", width: "100%", fontWeight: "bold" }}> <Typography variant="h12">Valor total Cotización: {formatToCOP(totalSummary.total)}</Typography></div>
                 <Grid container spacing={2} justifyContent="flex-end">
                     <Grid item>
-                        <Button variant="contained">Regresar</Button>
+                        <Button variant="contained" onClick={() => {
+                            navigate(`/events-list`);
+                        }}>Regresar</Button>
                     </Grid>
                     <Grid item>
                         <Button variant="contained" color="primary" onClick={handleCreateEvent}>Crear Cotización</Button>
